@@ -225,7 +225,7 @@
             background: linear-gradient(145deg, #ffffff 0%, #f9f9f9 50%, #f2f2f2 100%);
         }
         
-        .gif-container {
+        .video-container {
             width: 150px;
             height: 150px;
             margin: 0 auto 1rem;
@@ -238,7 +238,7 @@
             position: relative;
         }
         
-        .gif-container img {
+        .video-container video {
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -316,7 +316,7 @@
                 padding: 1rem;
             }
             
-            .gif-container {
+            .video-container {
                 width: 120px;
                 height: 120px;
             }
@@ -357,7 +357,7 @@
                 grid-template-columns: repeat(2, 1fr);
             }
             
-            .gif-container {
+            .video-container {
                 width: 100px;
                 height: 100px;
             }
@@ -405,7 +405,7 @@
     </div>
 
     <script>
-        // Create 9 placeholder Doginal Dog assets
+        // Create 9 placeholder Doginal Dog assets with MP4 videos
         function loadDoginalDogs() {
             const assetGrid = document.getElementById("asset-grid");
             
@@ -417,11 +417,11 @@
                 card.className = "asset-card";
                 
                 card.innerHTML = `
-                    <div class="gif-container">
-                        <img src="images/doginal-placeholder.gif" 
-                             alt="Doginal Dog #${i}" 
-                             style="display: block;"
-                             onerror="console.log('GIF failed to load for card ${i}'); this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                    <div class="video-container">
+                        <video autoplay muted loop playsinline 
+                               onerror="console.log('MP4 failed to load for card ${i}'); this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <source src="doginal-placeholder.mp4" type="video/mp4">
+                        </video>
                         <div class="placeholder-gif" style="display: none;">🎀</div>
                     </div>
                     <p>Doginal Dog #${i}</p>
@@ -430,12 +430,28 @@
                 assetGrid.appendChild(card);
             }
             
-            console.log("Loaded 9 Doginal Dog placeholders");
+            console.log("Loaded 9 Doginal Dog MP4 placeholders");
+            
+            // Check if any videos actually loaded
+            setTimeout(() => {
+                const videos = document.querySelectorAll('.video-container video');
+                let loadedCount = 0;
+                videos.forEach(video => {
+                    if (video.style.display !== 'none' && video.readyState >= 2) {
+                        loadedCount++;
+                    }
+                });
+                console.log(`${loadedCount} out of 9 MP4s loaded successfully`);
+                
+                if (loadedCount === 0) {
+                    console.log("No MP4s loaded - check if file exists at: doginal-placeholder.mp4");
+                }
+            }, 3000);
         }
 
         // Load assets when page loads
         document.addEventListener('DOMContentLoaded', function() {
-            console.log("Page loaded, creating Doginal Dogs...");
+            console.log("Page loaded, creating Doginal Dogs with MP4...");
             loadDoginalDogs();
         });
 
