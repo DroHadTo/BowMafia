@@ -214,6 +214,9 @@ h1 {
     width: 100%; /* Full width on mobile */
     max-width: 280px; /* Max width for larger screens */
     white-space: nowrap; /* Prevent text wrapping */
+    text-align: center; /* Center the text */
+    display: inline-block; /* Ensure proper sizing */
+    box-sizing: border-box; /* Include padding in width calculation */
 }
 
 /* Left button - light purple */
@@ -253,7 +256,7 @@ h1 {
         width: auto; /* Auto width to fit content */
         font-size: 1.2rem;
         padding: 15px 35px;
-        max-width: none; /* Remove max-width restriction */
+        max-width: 320px; /* Increased max-width for longer text */
         min-width: 160px; /* Ensure minimum width */
     }
 }
@@ -268,6 +271,7 @@ h1 {
     .left-button, .right-button {
         font-size: 1.3rem;
         padding: 18px 40px;
+        max-width: 350px; /* Even larger max-width for desktop */
         min-width: 180px; /* Larger minimum width for desktop */
     }
 }
@@ -284,6 +288,7 @@ h1 {
         font-size: 1rem;
         padding: 12px 25px;
         border-radius: 20px;
+        max-width: 250px; /* Smaller max-width for small screens */
     }
 }
 
