@@ -138,31 +138,32 @@ h1 {
     will-change: transform;
 }
 
-/* Mobile video zoom out to show logo */
+/* Remove the mobile video scaling since we now have a mobile-optimized video */
+/* 
 @media (max-width: 767px) {
     .fullscreen-video {
-        transform: scale(0.4) translateZ(0); /* Zoom OUT even MORE - from 0.6 to 0.4 */
+        transform: scale(0.4) translateZ(0);
         transform-origin: center center;
-        width: 250vw; /* Compensate for scaling */
+        width: 250vw;
         height: 250vh;
-        left: -75vw; /* Center the scaled video */
+        left: -75vw;
         top: -75vh;
         object-fit: cover;
     }
 }
 
-/* For very small screens, zoom out maximum */
 @media (max-width: 480px) {
     .fullscreen-video {
-        transform: scale(0.3) translateZ(0); /* Zoom OUT MAXIMUM - from 0.5 to 0.3 */
+        transform: scale(0.3) translateZ(0);
         transform-origin: center center;
-        width: 333vw; /* Compensate for scaling */
+        width: 333vw;
         height: 333vh;
-        left: -116.5vw; /* Center the scaled video */
+        left: -116.5vw;
         top: -116.5vh;
         object-fit: cover;
     }
 }
+*/
 
 .main-image {
     width: 100%;
