@@ -189,7 +189,7 @@ h1 {
 .button-container {
     position: absolute;
     top: 65%;
-    left: 50%;
+    left: 40%; /* Changed from 50% to 40% to shift left */
     transform: translate(-50%, -50%);
     display: flex;
     flex-direction: column; /* Stack vertically on mobile */
@@ -201,49 +201,29 @@ h1 {
     max-width: 400px; /* Limit max width */
 }
 
-/* Both buttons with elongated oval shape */
-.left-button, .right-button {
-    padding: 15px 40px;
-    font-size: 1.1rem;
-    font-weight: bold;
-    border: none;
-    cursor: pointer;
-    border-radius: 50px; /* More elongated oval shape */
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    width: 100%; /* Full width on mobile */
-    max-width: 250px; /* Controlled max width */
-    white-space: nowrap; /* Prevent text wrapping */
-    text-align: center; /* Center the text */
-    display: inline-block; /* Ensure proper sizing */
-    box-sizing: border-box; /* Include padding in width calculation */
-    min-height: 50px; /* Consistent height */
-    line-height: 1.2; /* Control line height */
+/* Alternative approach - shift even more to the left */
+/* 
+.button-container {
+    position: absolute;
+    top: 65%;
+    left: 35%; 
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    z-index: 10;
+    align-items: center;
+    padding: 0 20px;
+    width: 100%;
+    max-width: 400px;
 }
+*/
 
-/* Left button - light purple */
-.left-button {
-    background: #b19cd9;
-    color: white;
-}
-
-.left-button:hover {
-    background: #9b7bc7;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
-}
-
-/* Right button - off white with light purple text */
-.right-button {
-    background: #f8f8f8;
-    color: #b19cd9;
-}
-
-.right-button:hover {
-    background: #e8e8e8;
-    color: #9b7bc7;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+/* Keep mobile centered */
+@media (max-width: 767px) {
+    .button-container {
+        left: 50%; /* Keep centered on mobile */
+    }
 }
 
 /* Tablet and larger screens */
@@ -252,6 +232,7 @@ h1 {
         flex-direction: row; /* Side by side on tablets */
         gap: 2rem;
         top: 65%;
+        left: 40%; /* Shift left on larger screens */
     }
     
     .left-button, .right-button {
@@ -268,6 +249,7 @@ h1 {
     .button-container {
         top: 65%;
         gap: 3rem;
+        left: 38%; /* Shift even more left on desktop */
     }
     
     .left-button, .right-button {
