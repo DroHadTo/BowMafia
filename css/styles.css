@@ -273,7 +273,7 @@ h1 {
     
     /* Shift only the right button further to the right */
     .right-button {
-        margin-left: 4rem; /* Add extra space to push it right */
+        margin-left: 4.5rem; /* Increased from 4rem to 4.5rem - subtle shift */
     }
 }
 
@@ -294,7 +294,7 @@ h1 {
     
     /* Increase the right shift on larger screens */
     .right-button {
-        margin-left: 6rem; /* Even more space on desktop */
+        margin-left: 6.5rem; /* Increased from 6rem to 6.5rem - subtle shift */
     }
 }
 
