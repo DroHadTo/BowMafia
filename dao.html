@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BowMafia DAO</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <main>
+        <section id="dao" class="hero">
+            <img src="assets/images/dao-background.jpg" alt="BowMafia DAO" class="fullscreen-image" />
+            <div class="dao-content">
+                <h2>Join Our Decentralized Community</h2>
+                <form class="dao-form" id="daoForm">
+                    <div class="form-group">
+                        <label for="xHandle">What is your X handle?</label>
+                        <input type="text" id="xHandle" name="xHandle" placeholder="@yourusername" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="telegramHandle">What is your Telegram handle?</label>
+                        <input type="text" id="telegramHandle" name="telegramHandle" placeholder="@yourusername" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="paymentAsset">Preferred payment method:</label>
+                        <select id="paymentAsset" name="paymentAsset" required>
+                            <option value="">Select a payment method</option>
+                            <option value="solana">Solana (SOL)</option>
+                            <option value="doge">Dogecoin (DOGE)</option>
+                            <option value="usdc">USD Coin (USDC)</option>
+                            <option value="usdt">Tether (USDT)</option>
+                            <option value="btc">Bitcoin (BTC)</option>
+                            <option value="xrp">Ripple (XRP)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Do you own a Bow dog?</label>
+                        <div class="radio-group">
+                            <input type="radio" id="bowDogYes" name="bowDog" value="yes" onchange="toggleBowDogFields()">
+                            <label for="bowDogYes">Yes</label>
+                            <input type="radio" id="bowDogNo" name="bowDog" value="no" onchange="toggleBowDogFields()">
+                            <label for="bowDogNo">No</label>
+                        </div>
+                    </div>
+
+                    <div id="bowDogFields" class="bow-dog-fields" style="display: none;">
+                        <div class="form-group">
+                            <label for="dogImage">Upload image of your Bow dog:</label>
+                            <input type="file" id="dogImage" name="dogImage" accept="image/*">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="dogeWallet">Your Doge wallet address that holds the Bow asset:</label>
+                            <input type="text" id="dogeWallet" name="dogeWallet" placeholder="Enter your Doge wallet address">
+                        </div>
+                    </div>
+
+                    <div class="form-buttons">
+                        <button type="submit" class="submit-button">Join DAO</button>
+                        <button type="button" class="back-button" onclick="window.location.href='index.html'">Back to Home</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+    <script src="js/main.js"></script>
+</body>
+</html>
