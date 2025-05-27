@@ -138,6 +138,40 @@ h1 {
     will-change: transform;
 }
 
+/* Mobile video zoom out to show logo */
+@media (max-width: 767px) {
+    .fullscreen-video {
+        transform: scale(0.8) translateZ(0);
+        transform-origin: center center;
+        width: 125vw;
+        height: 125vh;
+        left: -12.5vw;
+        top: -12.5vh;
+    }
+}
+
+/* Alternative approach - if the above doesn't work well, try this instead */
+/*
+@media (max-width: 767px) {
+    .fullscreen-video {
+        object-fit: contain;
+        background: black;
+    }
+}
+*/
+
+/* For very small screens, zoom out even more */
+@media (max-width: 480px) {
+    .fullscreen-video {
+        transform: scale(0.7) translateZ(0);
+        transform-origin: center center;
+        width: 143vw;
+        height: 143vh;
+        left: -21.5vw;
+        top: -21.5vh;
+    }
+}
+
 .main-image {
     width: 100%;
     height: auto;
