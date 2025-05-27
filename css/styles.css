@@ -237,7 +237,7 @@ h1 {
 .button-container {
     position: absolute;
     top: 65%;
-    left: 45%; /* Less shift to the left - not as far as 40% */
+    left: 50%;
     transform: translate(-50%, -50%);
     display: flex;
     flex-direction: column; /* Stack vertically on mobile */
@@ -263,10 +263,12 @@ h1 {
     max-width: 250px; /* Controlled max width */
     white-space: nowrap; /* Prevent text wrapping */
     text-align: center; /* Center the text */
-    display: inline-block; /* Ensure proper sizing */
+    display: flex; /* Changed from inline-block to flex for perfect centering */
+    align-items: center; /* Vertically center text */
+    justify-content: center; /* Horizontally center text */
     box-sizing: border-box; /* Include padding in width calculation */
     min-height: 50px; /* Consistent height */
-    line-height: 1.2; /* Control line height */
+    line-height: 1; /* Reset line height for better control */
 }
 
 /* Left button - light purple */
@@ -307,8 +309,9 @@ h1 {
         flex-direction: row; /* Side by side on tablets */
         gap: 2rem;
         top: 65%;
-        left: 45%; /* Slight shift left on larger screens */
-        justify-content: flex-start; /* Align buttons to the left of container */
+        left: 50%; /* Keep centered for perfect alignment */
+        justify-content: center; /* Center the buttons in container */
+        align-items: center; /* Vertically align buttons */
     }
     
     .left-button, .right-button {
@@ -317,11 +320,14 @@ h1 {
         padding: 16px 45px;
         max-width: 280px; /* Increased for longer text */
         min-width: 200px; /* Ensure consistent minimum size */
+        display: flex; /* Maintain flex for perfect text centering */
+        align-items: center; /* Perfect vertical centering */
+        justify-content: center; /* Perfect horizontal centering */
     }
     
-    /* Shift only the right button further to the right */
+    /* Remove margin-left for cleaner flex alignment */
     .right-button {
-        margin-left: 6.75rem; /* Increased from 6.5rem to 6.75rem - half movement */
+        margin-left: 0; /* Reset margin for proper flex centering */
     }
 }
 
@@ -330,7 +336,8 @@ h1 {
     .button-container {
         top: 65%;
         gap: 3rem;
-        left: 42%; /* Moderate shift left on desktop */
+        left: 50%; /* Keep centered for perfect alignment */
+        justify-content: center; /* Center both buttons */
     }
     
     .left-button, .right-button {
@@ -338,11 +345,14 @@ h1 {
         padding: 18px 50px;
         max-width: 320px; /* Even larger for desktop */
         min-width: 220px;
+        display: flex; /* Maintain flex for perfect centering */
+        align-items: center; /* Perfect vertical centering */
+        justify-content: center; /* Perfect horizontal centering */
     }
     
-    /* Increase the right shift on larger screens */
+    /* Remove margin-left for cleaner layout */
     .right-button {
-        margin-left: 8.75rem; /* Increased from 8.5rem to 8.75rem - half movement */
+        margin-left: 0; /* No extra margin needed with flex centering */
     }
 }
 
