@@ -141,26 +141,26 @@ h1 {
 /* Mobile video zoom out to show logo */
 @media (max-width: 767px) {
     .fullscreen-video {
-        object-fit: cover;
-        object-position: center top; /* Show top portion of video where logo is */
-        transform: none; /* Remove scaling */
+        transform: scale(1.1) translateZ(0);
+        transform-origin: center 30%; /* Focus on 30% from top where logo might be */
         width: 100vw;
         height: 100vh;
         left: 0;
         top: 0;
+        object-fit: cover;
     }
 }
 
 /* For very small screens, adjust focus */
 @media (max-width: 480px) {
     .fullscreen-video {
-        object-fit: cover;
-        object-position: center top; /* Show top portion of video where logo is */
-        transform: none; /* Remove scaling */
+        transform: scale(1.2) translateZ(0);
+        transform-origin: center 25%; /* Focus slightly higher on small screens */
         width: 100vw;
         height: 100vh;
         left: 0;
         top: 0;
+        object-fit: cover;
     }
 }
 
