@@ -235,8 +235,6 @@ h1 {
 .right-button {
     background: #f8f8f8;
     color: #b19cd9;
-    white-space: normal; /* Allow text wrapping only for the right button */
-    line-height: 1.2; /* Tighter line height for wrapped text */
 }
 
 .right-button:hover {
@@ -251,15 +249,16 @@ h1 {
     .button-container {
         flex-direction: row; /* Side by side on tablets */
         gap: 2rem;
-        top: 70%;
+        top: 65%; /* Move back to original position */
     }
     
     .left-button, .right-button {
         width: auto; /* Auto width to fit content */
         font-size: 1.2rem;
         padding: 15px 35px;
-        max-width: 320px; /* Increased max-width for longer text */
+        max-width: none; /* Remove max-width restriction */
         min-width: 160px; /* Ensure minimum width */
+        white-space: nowrap; /* Force no text wrapping on desktop */
     }
 }
 
@@ -273,8 +272,8 @@ h1 {
     .left-button, .right-button {
         font-size: 1.3rem;
         padding: 18px 40px;
-        max-width: 350px; /* Even larger max-width for desktop */
         min-width: 180px; /* Larger minimum width for desktop */
+        white-space: nowrap; /* Ensure no wrapping */
     }
 }
 
