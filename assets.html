@@ -28,6 +28,9 @@
             height: 100%;
             z-index: -1;
             object-fit: cover;
+            /* Optimize for mobile performance */
+            will-change: auto;
+            transform: translateZ(0);
         }
 
         /* Fallback background if video doesn't load */
@@ -226,6 +229,64 @@
             font-size: 1.1rem;
         }
         
+        /* Video Background - Enhanced for mobile */
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            object-fit: cover;
+            /* Optimize for mobile performance */
+            will-change: auto;
+            transform: translateZ(0);
+        }
+
+        /* Mobile video optimizations */
+        @media (max-width: 768px) {
+            .video-background {
+                /* Reduce quality on mobile for better performance */
+                transform: scale(1.1);
+                filter: blur(1px);
+            }
+            
+            /* Reduce animations on mobile */
+            .placeholder-gif {
+                animation: pulse 3s infinite;
+            }
+            
+            .asset-card {
+                transition: transform 0.2s ease;
+            }
+            
+            .treasury-item {
+                transition: transform 0.2s ease;
+            }
+        }
+        
+        /* Very small screens - minimal animations */
+        @media (max-width: 480px) {
+            .video-background {
+                transform: scale(1.2);
+                filter: blur(2px);
+            }
+            
+            /* Disable some animations on very small screens */
+            .placeholder-gif {
+                animation: none;
+                opacity: 0.9;
+            }
+            
+            .asset-card:hover {
+                transform: translateY(-2px);
+            }
+            
+            .treasury-item:hover {
+                transform: translateY(-1px);
+            }
+        }
+
         /* Mobile Responsiveness */
         @media (max-width: 768px) {
             .container {
@@ -292,7 +353,8 @@
     <div class="video-background-fallback"></div>
     
     <!-- Video background -->
-    <video class="video-background" autoplay muted loop>
+    <video class="video-background" autoplay muted loop playsinline preload="metadata">
+        <source src="DAOasset.webm" type="video/webm">
         <source src="DAOasset.mp4" type="video/mp4">
         <!-- Fallback will show if video doesn't load -->
     </video>
