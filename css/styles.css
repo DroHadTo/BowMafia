@@ -235,6 +235,8 @@ h1 {
 .right-button {
     background: #f8f8f8;
     color: #b19cd9;
+    white-space: normal; /* Allow text wrapping only for the right button */
+    line-height: 1.2; /* Tighter line height for wrapped text */
 }
 
 .right-button:hover {
