@@ -141,25 +141,25 @@ h1 {
 /* Mobile video zoom out to show logo */
 @media (max-width: 767px) {
     .fullscreen-video {
-        transform: scale(1.1) translateZ(0);
-        transform-origin: center 30%; /* Focus on 30% from top where logo might be */
-        width: 100vw;
-        height: 100vh;
-        left: 0;
-        top: 0;
+        transform: scale(0.6) translateZ(0); /* Zoom OUT significantly */
+        transform-origin: center center;
+        width: 167vw; /* Compensate for scaling */
+        height: 167vh;
+        left: -33.5vw; /* Center the scaled video */
+        top: -33.5vh;
         object-fit: cover;
     }
 }
 
-/* For very small screens, adjust focus */
+/* For very small screens, zoom out even more */
 @media (max-width: 480px) {
     .fullscreen-video {
-        transform: scale(1.2) translateZ(0);
-        transform-origin: center 25%; /* Focus slightly higher on small screens */
-        width: 100vw;
-        height: 100vh;
-        left: 0;
-        top: 0;
+        transform: scale(0.5) translateZ(0); /* Zoom OUT even more */
+        transform-origin: center center;
+        width: 200vw; /* Compensate for scaling */
+        height: 200vh;
+        left: -50vw; /* Center the scaled video */
+        top: -50vh;
         object-fit: cover;
     }
 }
