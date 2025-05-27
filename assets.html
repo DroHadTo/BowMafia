@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assets - Dogecoin DAO Wallet Tracker</title>
+    <title>BowMafia DAO Assets</title>
     <style>
         * {
             margin: 0;
@@ -59,28 +59,63 @@
             box-shadow: 0 8px 16px rgba(0,0,0,0.3);
         }
         
-        .wallet-info {
+        .treasury-box {
             background: rgba(255, 255, 255, 0.95);
             padding: 2rem;
             border-radius: 15px;
             margin-bottom: 2rem;
             box-shadow: 0 8px 32px rgba(0,0,0,0.1);
             backdrop-filter: blur(10px);
+            text-align: center;
         }
         
-        .wallet-info h2 {
+        .treasury-box h2 {
             color: #b19cd9;
             margin-bottom: 1rem;
-            font-size: 1.5rem;
+            font-size: 2rem;
         }
         
-        .wallet-info p {
+        .dao-wallet-label {
+            color: #666;
             font-size: 1.1rem;
-            margin-bottom: 1rem;
-            word-break: break-all;
+            margin-bottom: 1.5rem;
         }
         
-        .assets {
+        .treasury-assets {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .treasury-item {
+            background: rgba(177, 156, 217, 0.1);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 2px solid rgba(177, 156, 217, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .treasury-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            border-color: #b19cd9;
+        }
+        
+        .treasury-item h3 {
+            color: #b19cd9;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .treasury-item p {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .dao-assets {
             background: rgba(255, 255, 255, 0.95);
             padding: 2rem;
             border-radius: 15px;
@@ -88,7 +123,7 @@
             backdrop-filter: blur(10px);
         }
         
-        .assets h2 {
+        .dao-assets h2 {
             color: #b19cd9;
             margin-bottom: 2rem;
             font-size: 1.8rem;
@@ -97,8 +132,10 @@
         
         .asset-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1.5rem;
+            max-width: 800px;
+            margin: 0 auto;
         }
         
         .asset-card {
@@ -117,49 +154,47 @@
             border-color: #b19cd9;
         }
         
-        .asset-card img {
-            max-width: 100%;
+        .asset-card .gif-container {
+            width: 150px;
             height: 150px;
-            object-fit: cover;
+            margin: 0 auto 1rem;
             border-radius: 8px;
-            margin-bottom: 1rem;
+            overflow: hidden;
             background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .asset-card .gif-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .asset-card .placeholder-gif {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #b19cd9, #9b7bc7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
         }
         
         .asset-card p {
             font-weight: bold;
-            margin-bottom: 0.5rem;
             color: #333;
-        }
-        
-        .asset-card small {
-            color: #666;
-            font-size: 0.9rem;
-            display: block;
-            margin-top: 0.5rem;
-        }
-        
-        .loading {
-            text-align: center;
-            font-size: 1.2rem;
-            color: #b19cd9;
-            margin: 2rem 0;
-            grid-column: 1 / -1;
-        }
-        
-        .error {
-            color: #e74c3c;
-            text-align: center;
-            font-weight: bold;
-            grid-column: 1 / -1;
-        }
-        
-        .no-assets {
-            text-align: center;
-            color: #666;
             font-size: 1.1rem;
-            margin: 2rem 0;
-            grid-column: 1 / -1;
         }
         
         /* Mobile Responsiveness */
@@ -172,12 +207,17 @@
                 font-size: 2rem;
             }
             
-            .wallet-info, .assets {
+            .treasury-box, .dao-assets {
                 padding: 1.5rem;
             }
             
+            .treasury-assets {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
             .asset-grid {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
                 gap: 1rem;
             }
             
@@ -185,7 +225,8 @@
                 padding: 1rem;
             }
             
-            .asset-card img {
+            .asset-card .gif-container {
+                width: 120px;
                 height: 120px;
             }
         }
@@ -203,7 +244,12 @@
             }
             
             .asset-grid {
-                grid-template-columns: 1fr 1fr;
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .asset-card .gif-container {
+                width: 100px;
+                height: 100px;
             }
         }
     </style>
@@ -213,250 +259,55 @@
     
     <div class="container">
         <div class="header">
-            <h1>Dogecoin DAO Wallet Tracker</h1>
-            <p>Monitor wallet balance and Doginal Dog inscriptions</p>
+            <h1>BowMafia DAO Assets</h1>
         </div>
 
-        <div class="wallet-info">
-            <h2>Wallet Address</h2>
-            <p id="wallet-address">Loading...</p>
-            <h2>Wallet Balance</h2>
-            <p id="wallet-balance">Fetching...</p>
+        <div class="treasury-box">
+            <h2>Treasury</h2>
+            <div class="dao-wallet-label">DAO Wallet</div>
+            <div class="treasury-assets">
+                <div class="treasury-item">
+                    <h3>Doge</h3>
+                    <p>?</p>
+                </div>
+                <div class="treasury-item">
+                    <h3>Doginal Dogs</h3>
+                    <p>?</p>
+                </div>
+            </div>
         </div>
 
-        <div class="assets">
-            <h2>Doginal Dog Inscriptions</h2>
+        <div class="dao-assets">
+            <h2>DAO Assets</h2>
             <div class="asset-grid" id="asset-grid">
-                <div class="loading">Loading Doginal Dog assets...</div>
+                <!-- Assets will be loaded here -->
             </div>
         </div>
     </div>
 
     <script>
-        const walletAddress = "DMHA4DsEsjAKDHqDz7Vic8rDm4PR2d3oep";
-        document.getElementById('wallet-address').textContent = walletAddress;
-
-        // Function to fetch wallet balance with multiple APIs
-        async function fetchWalletBalance() {
-            const balanceElement = document.getElementById('wallet-balance');
-            
-            const balanceAPIs = [
-                {
-                    url: `https://dogechain.info/api/v1/address/balance/${walletAddress}`,
-                    processResponse: (data) => `${data.balance} DOGE`
-                },
-                {
-                    url: `https://api.blockcypher.com/v1/doge/main/addrs/${walletAddress}/balance`,
-                    processResponse: (data) => `${(data.balance / 100000000).toFixed(8)} DOGE`
-                },
-                {
-                    url: `https://sochain.com/api/v2/get_address_balance/DOGE/${walletAddress}`,
-                    processResponse: (data) => `${data.data.confirmed_balance} DOGE`
-                }
-            ];
-            
-            for (const api of balanceAPIs) {
-                try {
-                    console.log(`Trying balance API: ${api.url}`);
-                    const response = await fetch(api.url);
-                    
-                    if (response.ok) {
-                        const data = await response.json();
-                        console.log('Balance API Response:', data);
-                        balanceElement.textContent = api.processResponse(data);
-                        return;
-                    }
-                } catch (error) {
-                    console.log(`Balance API failed: ${api.url}`, error);
-                    continue;
-                }
-            }
-            
-            // If all APIs fail, show error
-            balanceElement.textContent = "Unable to fetch balance";
-        }
-
-        // Function to fetch Doginal Dogs from the wallet
-        async function fetchDoginalDogs() {
+        // Create 9 placeholder Doginal Dog assets
+        function loadDoginalDogs() {
             const assetGrid = document.getElementById("asset-grid");
             
-            try {
-                // Updated APIs for Doginal data with CORS proxies
-                const apis = [
-                    {
-                        url: `https://api.allorigins.win/get?url=${encodeURIComponent(`https://wonky-ord.dogeord.io/wallet/${walletAddress}`)}`,
-                        isProxy: true
-                    },
-                    {
-                        url: `https://cors-anywhere.herokuapp.com/https://api.dogeord.io/wallet/${walletAddress}/inscriptions`,
-                        isProxy: false
-                    },
-                    {
-                        url: `https://api.allorigins.win/get?url=${encodeURIComponent(`https://ordinals.dogechain.dog/api/wallet/${walletAddress}`)}`,
-                        isProxy: true
-                    }
-                ];
+            for (let i = 1; i <= 9; i++) {
+                const card = document.createElement("div");
+                card.className = "asset-card";
                 
-                let doginalData = [];
+                card.innerHTML = `
+                    <div class="gif-container">
+                        <img src="images/doginal-placeholder.gif" alt="Doginal Dog Placeholder" />
+                    </div>
+                    <p>Doginal Dog #${i}</p>
+                `;
                 
-                // Try each API until one works
-                for (const api of apis) {
-                    try {
-                        console.log(`Trying API: ${api.url}`);
-                        const response = await fetch(api.url);
-                        
-                        if (response.ok) {
-                            let data = await response.json();
-                            
-                            // If using proxy, parse the contents
-                            if (api.isProxy && data.contents) {
-                                data = JSON.parse(data.contents);
-                            }
-                            
-                            console.log('API Response:', data);
-                            
-                            // Process the data based on API structure
-                            if (Array.isArray(data)) {
-                                doginalData = data;
-                            } else if (data.inscriptions) {
-                                doginalData = data.inscriptions;
-                            } else if (data.data) {
-                                doginalData = data.data;
-                            } else if (data.result) {
-                                doginalData = data.result;
-                            }
-                            
-                            if (doginalData.length > 0) {
-                                break; // Stop trying other APIs if this one worked and has data
-                            }
-                        }
-                    } catch (apiError) {
-                        console.log(`API ${api.url} failed:`, apiError);
-                        continue;
-                    }
-                }
-                
-                // Filter for Doginal Dogs only
-                const doginalDogs = doginalData.filter(item => {
-                    const name = (item.name || item.inscription_id || item.title || '').toLowerCase();
-                    const content = (item.content || item.data || item.meta || '').toString().toLowerCase();
-                    const collection = (item.collection || '').toLowerCase();
-                    
-                    return name.includes('doginal') || name.includes('dog') || 
-                           content.includes('doginal') || content.includes('dog') ||
-                           collection.includes('doginal') || collection.includes('dog');
-                });
-                
-                // Clear loading message
-                assetGrid.innerHTML = '';
-                
-                if (doginalDogs.length === 0) {
-                    // Show message that we're displaying sample data
-                    const noAssetsDiv = document.createElement('div');
-                    noAssetsDiv.className = 'no-assets';
-                    noAssetsDiv.innerHTML = `
-                        <p>No Doginal Dog inscriptions found in this wallet.</p>
-                        <p><small>This could be due to API limitations or the wallet may not contain Doginal Dogs.</small></p>
-                        <p><strong>Showing sample Doginal Dogs for demonstration:</strong></p>
-                    `;
-                    assetGrid.appendChild(noAssetsDiv);
-                    
-                    // Sample data for demonstration
-                    const sampleDogs = [
-                        {
-                            id: "doginal_001",
-                            image: "https://via.placeholder.com/200x150/b19cd9/ffffff?text=Doginal+Dog+%23001",
-                            name: "Doginal Dog #001",
-                            inscription_id: "doginal_sample_001",
-                            collection: "Doginal Dogs"
-                        },
-                        {
-                            id: "doginal_002", 
-                            image: "https://via.placeholder.com/200x150/9b7bc7/ffffff?text=Doginal+Dog+%23002",
-                            name: "Doginal Dog #002",
-                            inscription_id: "doginal_sample_002",
-                            collection: "Doginal Dogs"
-                        },
-                        {
-                            id: "doginal_003",
-                            image: "https://via.placeholder.com/200x150/b19cd9/ffffff?text=Doginal+Dog+%23003", 
-                            name: "Doginal Dog #003",
-                            inscription_id: "doginal_sample_003",
-                            collection: "Doginal Dogs"
-                        },
-                        {
-                            id: "doginal_004",
-                            image: "https://via.placeholder.com/200x150/9b7bc7/ffffff?text=Doginal+Dog+%23004", 
-                            name: "Doginal Dog #004",
-                            inscription_id: "doginal_sample_004",
-                            collection: "Doginal Dogs"
-                        }
-                    ];
-                    
-                    sampleDogs.forEach(dog => createAssetCard(dog));
-                } else {
-                    console.log(`Found ${doginalDogs.length} Doginal Dogs`);
-                    doginalDogs.forEach(dog => createAssetCard(dog));
-                }
-                
-            } catch (error) {
-                console.error('Error fetching Doginal Dogs:', error);
-                assetGrid.innerHTML = '<div class="error">Error loading Doginal Dog assets. Showing sample data instead.</div>';
-                
-                // Show sample data even on error
-                setTimeout(() => {
-                    const sampleDogs = [
-                        {
-                            id: "error_sample_001",
-                            image: "https://via.placeholder.com/200x150/e74c3c/ffffff?text=Sample+Dog+%23001",
-                            name: "Sample Doginal Dog #001",
-                            inscription_id: "sample_001"
-                        }
-                    ];
-                    assetGrid.innerHTML = '';
-                    sampleDogs.forEach(dog => createAssetCard(dog));
-                }, 2000);
+                assetGrid.appendChild(card);
             }
         }
-        
-        // Function to create asset card
-        function createAssetCard(dog) {
-            const assetGrid = document.getElementById("asset-grid");
-            const card = document.createElement("div");
-            card.className = "asset-card";
-            
-            const imageUrl = dog.image || 
-                           dog.content_url || 
-                           dog.preview || 
-                           dog.thumbnail ||
-                           `https://via.placeholder.com/200x150/cccccc/666666?text=Doginal+Dog`;
-            
-            const name = dog.name || 
-                        dog.title || 
-                        `Doginal Dog #${dog.inscription_number || dog.id || 'Unknown'}`;
-            
-            const id = dog.inscription_id || 
-                      dog.id || 
-                      dog.inscription_number || 
-                      'unknown';
-            
-            card.innerHTML = `
-                <img src="${imageUrl}" alt="${name}" 
-                     onerror="this.src='https://via.placeholder.com/200x150/cccccc/666666?text=No+Image'"
-                     loading="lazy">
-                <p>${name}</p>
-                <small>ID: ${id}</small>
-                ${dog.collection ? `<small>Collection: ${dog.collection}</small>` : ''}
-                ${dog.rarity ? `<small>Rarity: ${dog.rarity}</small>` : ''}
-            `;
-            
-            assetGrid.appendChild(card);
-        }
-        
-        // Load data when page loads
+
+        // Load assets when page loads
         document.addEventListener('DOMContentLoaded', function() {
-            fetchWalletBalance();
-            fetchDoginalDogs();
+            loadDoginalDogs();
         });
     </script>
 </body>
