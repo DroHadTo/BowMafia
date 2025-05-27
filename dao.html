@@ -4,14 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BowMafia DAO</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Eagle+Lake&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="css/styles.css">
+    
+    <style>
+        /* Eagle Lake font for the main title */
+        .dao-content h2 {
+            font-family: "Eagle Lake", serif;
+            font-weight: 400;
+            font-style: normal;
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            letter-spacing: 1px;
+        }
+        
+        /* Mobile responsive for title */
+        @media (max-width: 768px) {
+            .dao-content h2 {
+                font-size: 2.2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .dao-content h2 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <main>
         <section id="dao" class="hero">
             <img src="assets/images/dao-background.jpg" alt="BowMafia DAO" class="fullscreen-image" />
             <div class="dao-content">
-                <h2>Join Our Decentralized Community</h2>
+                <h2>Join the Mafia</h2>
                 <form class="dao-form" id="daoForm">
                     <div class="form-group">
                         <label for="xHandle">What is your X handle?</label>
