@@ -203,6 +203,37 @@ h1 {
     }
 }
 
+/* iOS Safari video fix - alternative approach */
+@media (max-width: 767px) {
+    /* Detect iOS Safari */
+    @supports (-webkit-touch-callout: none) {
+        .fullscreen-video {
+            width: 100vw !important;
+            height: 100vh !important;
+            object-fit: cover !important;
+            object-position: center center !important;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            /* Force hardware acceleration */
+            -webkit-transform: translate3d(0, 0, 0);
+            transform: translate3d(0, 0, 0);
+            /* Prevent zoom/stretch */
+            -webkit-user-select: none;
+            user-select: none;
+            /* Ensure proper video sizing */
+            max-width: none !important;
+            max-height: none !important;
+        }
+        
+        .hero {
+            /* Ensure container doesn't interfere */
+            overflow: hidden;
+            position: relative;
+        }
+    }
+}
+
 .main-image {
     width: 100%;
     height: auto;
