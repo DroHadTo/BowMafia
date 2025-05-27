@@ -273,7 +273,7 @@ h1 {
     
     /* Shift only the right button further to the right */
     .right-button {
-        margin-left: 6.5rem; /* Increased from 5.5rem to 6.5rem - double the last adjustment */
+        margin-left: 6.75rem; /* Increased from 6.5rem to 6.75rem - half movement */
     }
 }
 
@@ -294,7 +294,7 @@ h1 {
     
     /* Increase the right shift on larger screens */
     .right-button {
-        margin-left: 8.5rem; /* Increased from 7.5rem to 8.5rem - double the last adjustment */
+        margin-left: 8.75rem; /* Increased from 8.5rem to 8.75rem - half movement */
     }
 }
 
