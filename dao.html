@@ -46,10 +46,20 @@
             pointer-events: none; /* Don't interfere with clicks */
             opacity: 0.7;
             transition: opacity 0.3s ease;
+            background: rgba(177, 156, 217, 0.3); /* Temporary fallback background */
+            border-radius: 50%; /* Make it a circle if no image */
+            border: 2px solid rgba(177, 156, 217, 0.5);
         }
         
         .floating-image:hover {
             opacity: 1;
+        }
+        
+        /* Hide fallback styling when image loads */
+        .floating-image.loaded {
+            background: none;
+            border: none;
+            border-radius: 0;
         }
         
         /* Mobile smaller size */
@@ -70,7 +80,7 @@
 </head>
 <body>
     <!-- Floating bouncing image -->
-    <img src="images/floating-element.png" alt="Floating Element" class="floating-image" id="floatingImage">
+    <img src="assets/images/floating-element.png" alt="Floating Element" class="floating-image" id="floatingImage" onerror="handleImageError(this)">
     
     <main>
         <section id="dao" class="hero">
@@ -133,9 +143,27 @@
     </main>
     
     <script>
+        // Handle image loading error
+        function handleImageError(img) {
+            console.log('Floating image failed to load from:', img.src);
+            console.log('Make sure to place your image at: assets/images/floating-element.png');
+            // Keep the fallback circle styling if image fails
+        }
+        
+        // Handle successful image load
+        function handleImageLoad(img) {
+            img.classList.add('loaded');
+            console.log('Floating image loaded successfully!');
+        }
+        
         // Floating image bouncing animation
         function initFloatingImage() {
             const floatingImg = document.getElementById('floatingImage');
+            
+            // Add load event listener
+            floatingImg.addEventListener('load', function() {
+                handleImageLoad(this);
+            });
             
             // Initial position and velocity
             let x = Math.random() * (window.innerWidth - 80);
