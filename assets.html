@@ -13,15 +13,40 @@
         
         body {
             font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #b19cd9 0%, #9b7bc7 100%);
             min-height: 100vh;
             color: #333;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Video Background */
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            object-fit: cover;
+        }
+
+        /* Fallback background if video doesn't load */
+        .video-background-fallback {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #b19cd9 0%, #9b7bc7 100%);
+            z-index: -2;
         }
         
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 2rem;
+            position: relative;
+            z-index: 1;
         }
         
         .header {
@@ -33,7 +58,7 @@
         .header h1 {
             font-size: 2.5rem;
             margin-bottom: 0.5rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
         
         .back-btn {
@@ -50,13 +75,14 @@
             transition: all 0.3s ease;
             text-decoration: none;
             display: inline-block;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            z-index: 1000;
         }
         
         .back-btn:hover {
             background: white;
             transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.4);
         }
         
         .treasury-box {
@@ -64,7 +90,7 @@
             padding: 2rem;
             border-radius: 15px;
             margin-bottom: 2rem;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
             backdrop-filter: blur(10px);
             text-align: center;
         }
@@ -119,7 +145,7 @@
             background: rgba(255, 255, 255, 0.95);
             padding: 2rem;
             border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
             backdrop-filter: blur(10px);
         }
         
@@ -150,7 +176,7 @@
         
         .asset-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.2);
             border-color: #b19cd9;
         }
         
@@ -160,7 +186,7 @@
             margin: 0 auto 1rem;
             border-radius: 8px;
             overflow: hidden;
-            background: #f0f0f0;
+            background: #ffb1dd;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -262,6 +288,15 @@
     </style>
 </head>
 <body>
+    <!-- Fallback background -->
+    <div class="video-background-fallback"></div>
+    
+    <!-- Video background -->
+    <video class="video-background" autoplay muted loop>
+        <source src="DAOasset.mp4" type="video/mp4">
+        <!-- Fallback will show if video doesn't load -->
+    </video>
+
     <a href="index.html" class="back-btn">← Back to Home</a>
     
     <div class="container">
@@ -309,7 +344,7 @@
                         <img src="images/doginal-placeholder.gif" 
                              alt="Doginal Dog #${i}" 
                              style="display: block;"
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                             onerror="console.log('GIF failed to load for card ${i}'); this.style.display='none'; this.nextElementSibling.style.display='flex';" />
                         <div class="placeholder-gif" style="display: none;">🎀</div>
                     </div>
                     <p>Doginal Dog #${i}</p>
@@ -319,6 +354,22 @@
             }
             
             console.log("Loaded 9 Doginal Dog placeholders");
+            
+            // Check if any images actually loaded
+            setTimeout(() => {
+                const images = document.querySelectorAll('.gif-container img');
+                let loadedCount = 0;
+                images.forEach(img => {
+                    if (img.style.display !== 'none' && img.complete) {
+                        loadedCount++;
+                    }
+                });
+                console.log(`${loadedCount} out of 9 GIFs loaded successfully`);
+                
+                if (loadedCount === 0) {
+                    console.log("No GIFs loaded - check if file exists at: images/doginal-placeholder.gif");
+                }
+            }, 2000);
         }
 
         // Load assets when page loads
