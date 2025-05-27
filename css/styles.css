@@ -138,38 +138,24 @@ h1 {
     will-change: transform;
 }
 
-/* Mobile video optimization for 1080x1920 portrait video */
+/* Clean mobile video optimization */
 @media (max-width: 767px) {
     .fullscreen-video {
         width: 100vw;
         height: 100vh;
         object-fit: cover;
         object-position: center center;
-        /* iOS Safari specific fixes */
+        position: fixed; /* Better for mobile */
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1;
+        /* iOS optimizations */
         -webkit-transform: translateZ(0);
+        transform: translateZ(0);
         -webkit-backface-visibility: hidden;
         backface-visibility: hidden;
-        transform: translateZ(0);
-    }
-}
-
-/* iOS Safari specific video fixes */
-@supports (-webkit-appearance: none) {
-    @media (max-width: 767px) {
-        .fullscreen-video {
-            width: 100vw;
-            height: 100vh;
-            object-fit: cover;
-            object-position: center center;
-            /* Force correct aspect ratio on iOS */
-            min-width: 100%;
-            min-height: 100%;
-            /* Prevent iOS Safari from stretching */
-            -webkit-transform: translate3d(0, 0, 0);
-            transform: translate3d(0, 0, 0);
-            /* iOS video playback optimization */
-            -webkit-playsinline: true;
-        }
     }
 }
 
