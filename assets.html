@@ -123,6 +123,7 @@
             object-fit: cover;
             border-radius: 8px;
             margin-bottom: 1rem;
+            background: #f0f0f0;
         }
         
         .asset-card p {
@@ -134,6 +135,8 @@
         .asset-card small {
             color: #666;
             font-size: 0.9rem;
+            display: block;
+            margin-top: 0.5rem;
         }
         
         .loading {
@@ -141,12 +144,22 @@
             font-size: 1.2rem;
             color: #b19cd9;
             margin: 2rem 0;
+            grid-column: 1 / -1;
         }
         
         .error {
             color: #e74c3c;
             text-align: center;
             font-weight: bold;
+            grid-column: 1 / -1;
+        }
+        
+        .no-assets {
+            text-align: center;
+            color: #666;
+            font-size: 1.1rem;
+            margin: 2rem 0;
+            grid-column: 1 / -1;
         }
         
         /* Mobile Responsiveness */
@@ -214,13 +227,13 @@
         <div class="assets">
             <h2>Doginal Dog Inscriptions</h2>
             <div class="asset-grid" id="asset-grid">
-                <div class="loading">Loading assets...</div>
+                <div class="loading">Loading Doginal Dog assets...</div>
             </div>
         </div>
     </div>
 
     <script>
-        const walletAddress = "DBXu2kgc3xtvCUWFcxFE3r9hEYgmuaaCyD";
+        const walletAddress = "DMHA4DsEsjAKDHqDz7Vic8rDm4PR2d3oep";
         document.getElementById('wallet-address').textContent = walletAddress;
 
         // Fetch wallet balance from SoChain
@@ -230,54 +243,133 @@
                 document.getElementById('wallet-balance').textContent = `${data.data.confirmed_balance} DOGE`;
             })
             .catch(err => {
-                console.error(err);
+                console.error('Balance fetch error:', err);
                 document.getElementById('wallet-balance').textContent = "Error fetching balance.";
             });
 
-        // Sample Doginal Dog assets (replace this with real API when available)
-        const doginalDogs = [
-            {
-                id: "dog001",
-                image: "https://via.placeholder.com/200x150/b19cd9/ffffff?text=Dog+001",
-                name: "Doginal Dog #001"
-            },
-            {
-                id: "dog002",
-                image: "https://via.placeholder.com/200x150/9b7bc7/ffffff?text=Dog+002",
-                name: "Doginal Dog #002"
-            },
-            {
-                id: "dog003",
-                image: "https://via.placeholder.com/200x150/b19cd9/ffffff?text=Dog+003",
-                name: "Doginal Dog #003"
-            },
-            {
-                id: "dog004",
-                image: "https://via.placeholder.com/200x150/9b7bc7/ffffff?text=Dog+004",
-                name: "Doginal Dog #004"
+        // Function to fetch Doginal Dogs from the wallet
+        async function fetchDoginalDogs() {
+            const assetGrid = document.getElementById("asset-grid");
+            
+            try {
+                // Try multiple APIs for Doginal data
+                const apis = [
+                    `https://wonky-ord.dogeord.io/wallet/${walletAddress}`,
+                    `https://api.dogeord.io/wallet/${walletAddress}/inscriptions`,
+                    `https://ordinals.dogechain.dog/api/wallet/${walletAddress}`
+                ];
+                
+                let doginalData = [];
+                
+                // Try each API until one works
+                for (const apiUrl of apis) {
+                    try {
+                        console.log(`Trying API: ${apiUrl}`);
+                        const response = await fetch(apiUrl);
+                        
+                        if (response.ok) {
+                            const data = await response.json();
+                            console.log('API Response:', data);
+                            
+                            // Process the data based on API structure
+                            if (Array.isArray(data)) {
+                                doginalData = data;
+                            } else if (data.inscriptions) {
+                                doginalData = data.inscriptions;
+                            } else if (data.data) {
+                                doginalData = data.data;
+                            }
+                            
+                            break; // Stop trying other APIs if this one worked
+                        }
+                    } catch (apiError) {
+                        console.log(`API ${apiUrl} failed:`, apiError);
+                        continue;
+                    }
+                }
+                
+                // Filter for Doginal Dogs only
+                const doginalDogs = doginalData.filter(item => {
+                    const name = (item.name || item.inscription_id || '').toLowerCase();
+                    const content = (item.content || item.data || '').toLowerCase();
+                    return name.includes('doginal') || name.includes('dog') || 
+                           content.includes('doginal') || content.includes('dog');
+                });
+                
+                // Clear loading message
+                assetGrid.innerHTML = '';
+                
+                if (doginalDogs.length === 0) {
+                    // Show sample Doginal Dogs if no real data found
+                    assetGrid.innerHTML = '<div class="no-assets">No Doginal Dog inscriptions found in this wallet.<br><br>Showing sample assets:</div>';
+                    
+                    // Sample data for demonstration
+                    const sampleDogs = [
+                        {
+                            id: "sample001",
+                            image: "https://via.placeholder.com/200x150/b19cd9/ffffff?text=Doginal+Dog+%23001",
+                            name: "Doginal Dog #001",
+                            inscription_id: "sample_001"
+                        },
+                        {
+                            id: "sample002", 
+                            image: "https://via.placeholder.com/200x150/9b7bc7/ffffff?text=Doginal+Dog+%23002",
+                            name: "Doginal Dog #002",
+                            inscription_id: "sample_002"
+                        },
+                        {
+                            id: "sample003",
+                            image: "https://via.placeholder.com/200x150/b19cd9/ffffff?text=Doginal+Dog+%23003", 
+                            name: "Doginal Dog #003",
+                            inscription_id: "sample_003"
+                        }
+                    ];
+                    
+                    sampleDogs.forEach(dog => createAssetCard(dog));
+                } else {
+                    doginalDogs.forEach(dog => createAssetCard(dog));
+                }
+                
+            } catch (error) {
+                console.error('Error fetching Doginal Dogs:', error);
+                assetGrid.innerHTML = '<div class="error">Error loading Doginal Dog assets. Please try again later.</div>';
             }
-        ];
-
-        const assetGrid = document.getElementById("asset-grid");
-
-        // Clear loading message
-        assetGrid.innerHTML = '';
-
-        doginalDogs.forEach(dog => {
+        }
+        
+        // Function to create asset card
+        function createAssetCard(dog) {
+            const assetGrid = document.getElementById("asset-grid");
             const card = document.createElement("div");
             card.className = "asset-card";
+            
+            const imageUrl = dog.image || 
+                           dog.content_url || 
+                           dog.preview || 
+                           `https://via.placeholder.com/200x150/cccccc/666666?text=Doginal+Dog`;
+            
+            const name = dog.name || 
+                        dog.title || 
+                        `Doginal Dog #${dog.inscription_number || dog.id || 'Unknown'}`;
+            
+            const id = dog.inscription_id || 
+                      dog.id || 
+                      dog.inscription_number || 
+                      'unknown';
+            
             card.innerHTML = `
-                <img src="${dog.image}" alt="${dog.name}" onerror="this.src='https://via.placeholder.com/200x150/cccccc/666666?text=No+Image'">
-                <p>${dog.name}</p>
-                <small>ID: ${dog.id}</small>
+                <img src="${imageUrl}" alt="${name}" 
+                     onerror="this.src='https://via.placeholder.com/200x150/cccccc/666666?text=No+Image'"
+                     loading="lazy">
+                <p>${name}</p>
+                <small>ID: ${id}</small>
+                ${dog.rarity ? `<small>Rarity: ${dog.rarity}</small>` : ''}
             `;
+            
             assetGrid.appendChild(card);
-        });
-
-        // If no assets found
-        if (doginalDogs.length === 0) {
-            assetGrid.innerHTML = '<div class="loading">No assets found in this wallet.</div>';
         }
+        
+        // Load Doginal Dogs when page loads
+        fetchDoginalDogs();
     </script>
 </body>
 </html>
