@@ -609,3 +609,129 @@ h1 {
         font-size: 1.1rem;
     }
 }
+
+/* Hamburger Menu Styles */
+.hamburger-menu {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.hamburger-btn {
+    background: rgba(177, 156, 217, 0.9);
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 40px;
+    height: 40px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.hamburger-btn:hover {
+    background: rgba(155, 123, 199, 0.9);
+    transform: scale(1.05);
+}
+
+.hamburger-line {
+    width: 20px;
+    height: 2px;
+    background: white;
+    transition: all 0.3s ease;
+    transform-origin: center;
+}
+
+/* Hamburger Animation */
+.hamburger-btn.active .hamburger-line:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+
+.hamburger-btn.active .hamburger-line:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger-btn.active .hamburger-line:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -6px);
+}
+
+/* Menu Overlay */
+.menu-overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(20px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.menu-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.menu-content {
+    text-align: center;
+}
+
+.menu-item {
+    display: block;
+    color: white;
+    text-decoration: none;
+    font-size: 2rem;
+    font-weight: bold;
+    padding: 1rem 2rem;
+    margin: 1rem 0;
+    border-radius: 25px;
+    background: rgba(177, 156, 217, 0.8);
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.menu-item:hover {
+    background: rgba(155, 123, 199, 1);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    border-color: white;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .hamburger-menu {
+        top: 15px;
+        right: 15px;
+    }
+    
+    .menu-item {
+        font-size: 1.5rem;
+        padding: 0.8rem 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .hamburger-btn {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .hamburger-line {
+        width: 18px;
+    }
+    
+    .menu-item {
+        font-size: 1.3rem;
+        padding: 0.7rem 1.2rem;
+    }
+}

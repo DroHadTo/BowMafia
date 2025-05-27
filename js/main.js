@@ -124,7 +124,35 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 250);
     });
     
+    // Hamburger Menu Functionality
+    const hamburgerBtn = document.getElementById('hamburger-btn');
+    const menuOverlay = document.getElementById('menu-overlay');
+    
+    if (hamburgerBtn && menuOverlay) {
+        hamburgerBtn.addEventListener('click', function() {
+            hamburgerBtn.classList.toggle('active');
+            menuOverlay.classList.toggle('active');
+        });
+        
+        // Close menu when clicking outside or on menu items
+        menuOverlay.addEventListener('click', function(e) {
+            if (e.target === menuOverlay || e.target.classList.contains('menu-item')) {
+                hamburgerBtn.classList.remove('active');
+                menuOverlay.classList.remove('active');
+            }
+        });
+        
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && menuOverlay.classList.contains('active')) {
+                hamburgerBtn.classList.remove('active');
+                menuOverlay.classList.remove('active');
+            }
+        });
+    }
+    
     // Log for debugging
     console.log('Mobile detected:', isMobile());
     console.log('Video sources loaded');
+    console.log('Hamburger menu initialized');
 });
