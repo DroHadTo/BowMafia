@@ -154,7 +154,7 @@
             border-color: #b19cd9;
         }
         
-        .asset-card .gif-container {
+        .gif-container {
             width: 150px;
             height: 150px;
             margin: 0 auto 1rem;
@@ -164,15 +164,17 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
         }
         
-        .asset-card .gif-container img {
+        .gif-container img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            border-radius: 8px;
         }
         
-        .asset-card .placeholder-gif {
+        .placeholder-gif {
             width: 100%;
             height: 100%;
             background: linear-gradient(45deg, #b19cd9, #9b7bc7);
@@ -180,15 +182,16 @@
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 2rem;
+            font-size: 3rem;
             font-weight: bold;
             animation: pulse 2s infinite;
+            border-radius: 8px;
         }
         
         @keyframes pulse {
-            0% { opacity: 0.7; }
-            50% { opacity: 1; }
-            100% { opacity: 0.7; }
+            0% { opacity: 0.7; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+            100% { opacity: 0.7; transform: scale(1); }
         }
         
         .asset-card p {
@@ -225,7 +228,7 @@
                 padding: 1rem;
             }
             
-            .asset-card .gif-container {
+            .gif-container {
                 width: 120px;
                 height: 120px;
             }
@@ -247,9 +250,13 @@
                 grid-template-columns: repeat(2, 1fr);
             }
             
-            .asset-card .gif-container {
+            .gif-container {
                 width: 100px;
                 height: 100px;
+            }
+            
+            .placeholder-gif {
+                font-size: 2rem;
             }
         }
     </style>
@@ -280,7 +287,7 @@
         <div class="dao-assets">
             <h2>DAO Assets</h2>
             <div class="asset-grid" id="asset-grid">
-                <!-- Assets will be loaded here -->
+                <!-- 9 Doginal Dog cards will be generated here -->
             </div>
         </div>
     </div>
@@ -290,25 +297,43 @@
         function loadDoginalDogs() {
             const assetGrid = document.getElementById("asset-grid");
             
+            // Clear any existing content
+            assetGrid.innerHTML = '';
+            
             for (let i = 1; i <= 9; i++) {
                 const card = document.createElement("div");
                 card.className = "asset-card";
                 
                 card.innerHTML = `
                     <div class="gif-container">
-                        <img src="images/doginal-placeholder.gif" alt="Doginal Dog Placeholder" />
+                        <img src="images/doginal-placeholder.gif" 
+                             alt="Doginal Dog #${i}" 
+                             style="display: block;"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                        <div class="placeholder-gif" style="display: none;">🐕</div>
                     </div>
                     <p>Doginal Dog #${i}</p>
                 `;
                 
                 assetGrid.appendChild(card);
             }
+            
+            console.log("Loaded 9 Doginal Dog placeholders");
         }
 
         // Load assets when page loads
         document.addEventListener('DOMContentLoaded', function() {
+            console.log("Page loaded, creating Doginal Dogs...");
             loadDoginalDogs();
         });
+
+        // Fallback - load after a short delay if needed
+        setTimeout(function() {
+            if (document.getElementById("asset-grid").children.length === 0) {
+                console.log("Fallback: Loading Doginal Dogs...");
+                loadDoginalDogs();
+            }
+        }, 1000);
     </script>
 </body>
 </html>
