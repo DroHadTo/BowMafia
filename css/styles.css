@@ -214,8 +214,6 @@ h1 {
     width: 100%; /* Full width on mobile */
     max-width: 280px; /* Max width for larger screens */
     white-space: nowrap; /* Prevent text wrapping */
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 /* Left button - light purple */
@@ -252,9 +250,11 @@ h1 {
     }
     
     .left-button, .right-button {
-        width: auto;
+        width: auto; /* Auto width to fit content */
         font-size: 1.2rem;
         padding: 15px 35px;
+        max-width: none; /* Remove max-width restriction */
+        min-width: 160px; /* Ensure minimum width */
     }
 }
 
@@ -268,6 +268,7 @@ h1 {
     .left-button, .right-button {
         font-size: 1.3rem;
         padding: 18px 40px;
+        min-width: 180px; /* Larger minimum width for desktop */
     }
 }
 
