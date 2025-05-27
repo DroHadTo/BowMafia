@@ -36,9 +36,42 @@
                 font-size: 1.8rem;
             }
         }
+        
+        /* Floating bouncing image */
+        .floating-image {
+            position: fixed;
+            width: 80px;
+            height: 80px;
+            z-index: 5; /* Behind the form but above background */
+            pointer-events: none; /* Don't interfere with clicks */
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+        
+        .floating-image:hover {
+            opacity: 1;
+        }
+        
+        /* Mobile smaller size */
+        @media (max-width: 768px) {
+            .floating-image {
+                width: 60px;
+                height: 60px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .floating-image {
+                width: 40px;
+                height: 40px;
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- Floating bouncing image -->
+    <img src="images/floating-element.png" alt="Floating Element" class="floating-image" id="floatingImage">
+    
     <main>
         <section id="dao" class="hero">
             <img src="assets/images/dao-background.jpg" alt="BowMafia DAO" class="fullscreen-image" />
@@ -98,6 +131,79 @@
             </div>
         </section>
     </main>
+    
+    <script>
+        // Floating image bouncing animation
+        function initFloatingImage() {
+            const floatingImg = document.getElementById('floatingImage');
+            
+            // Initial position and velocity
+            let x = Math.random() * (window.innerWidth - 80);
+            let y = Math.random() * (window.innerHeight - 80);
+            let velocityX = (Math.random() - 0.5) * 4; // Random direction, speed 2px per frame
+            let velocityY = (Math.random() - 0.5) * 4;
+            
+            // Minimum speed to prevent getting stuck
+            if (Math.abs(velocityX) < 1) velocityX = velocityX > 0 ? 1 : -1;
+            if (Math.abs(velocityY) < 1) velocityY = velocityY > 0 ? 1 : -1;
+            
+            function animate() {
+                // Update position
+                x += velocityX;
+                y += velocityY;
+                
+                // Get current image size for responsive bouncing
+                const imgRect = floatingImg.getBoundingClientRect();
+                const imgWidth = imgRect.width;
+                const imgHeight = imgRect.height;
+                
+                // Bounce off walls
+                if (x <= 0 || x >= window.innerWidth - imgWidth) {
+                    velocityX = -velocityX;
+                    x = Math.max(0, Math.min(x, window.innerWidth - imgWidth));
+                }
+                
+                if (y <= 0 || y >= window.innerHeight - imgHeight) {
+                    velocityY = -velocityY;
+                    y = Math.max(0, Math.min(y, window.innerHeight - imgHeight));
+                }
+                
+                // Apply position
+                floatingImg.style.left = x + 'px';
+                floatingImg.style.top = y + 'px';
+                
+                // Continue animation
+                requestAnimationFrame(animate);
+            }
+            
+            // Start animation
+            animate();
+            
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                // Keep image within new bounds
+                const imgRect = floatingImg.getBoundingClientRect();
+                x = Math.min(x, window.innerWidth - imgRect.width);
+                y = Math.min(y, window.innerHeight - imgRect.height);
+            });
+        }
+        
+        // Start floating animation when page loads
+        window.addEventListener('load', initFloatingImage);
+        
+        // Existing toggleBowDogFields function
+        function toggleBowDogFields() {
+            const bowDogYes = document.getElementById('bowDogYes');
+            const bowDogFields = document.getElementById('bowDogFields');
+            
+            if (bowDogYes.checked) {
+                bowDogFields.style.display = 'block';
+            } else {
+                bowDogFields.style.display = 'none';
+            }
+        }
+    </script>
+    
     <script src="js/main.js"></script>
 </body>
 </html>
