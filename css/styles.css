@@ -138,32 +138,35 @@ h1 {
     will-change: transform;
 }
 
-/* Remove the mobile video scaling since we now have a mobile-optimized video */
-/* 
+/* Mobile video optimization for 1080x1920 portrait video */
 @media (max-width: 767px) {
     .fullscreen-video {
-        transform: scale(0.4) translateZ(0);
-        transform-origin: center center;
-        width: 250vw;
-        height: 250vh;
-        left: -75vw;
-        top: -75vh;
-        object-fit: cover;
+        width: 100vw;
+        height: 100vh;
+        object-fit: cover; /* This will properly crop the 1080x1920 video to fit mobile screens */
+        object-position: center center; /* Center the video content */
     }
 }
 
+/* For very small mobile screens - fine-tune positioning */
 @media (max-width: 480px) {
     .fullscreen-video {
-        transform: scale(0.3) translateZ(0);
-        transform-origin: center center;
-        width: 333vw;
-        height: 333vh;
-        left: -116.5vw;
-        top: -116.5vh;
+        width: 100vw;
+        height: 100vh;
         object-fit: cover;
+        object-position: center center; /* Keep centered on small screens */
     }
 }
-*/
+
+/* Desktop video - use the updated desktop video */
+@media (min-width: 768px) {
+    .fullscreen-video {
+        width: 100vw;
+        height: 100vh;
+        object-fit: cover;
+        object-position: center center;
+    }
+}
 
 .main-image {
     width: 100%;
