@@ -8,8 +8,51 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rubik+Puddles&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .back-to-home-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: white;
+            color: black;
+            border: 2px solid black;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .back-to-home-btn:hover {
+            background: black;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .back-to-home-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .back-to-home-btn {
+                top: 15px;
+                left: 15px;
+                padding: 8px 16px;
+                font-size: 12px;
+            }
+        }
+    </style>
 </head>
 <body>
+    <!-- Back to Home Button -->
+    <a href="index.html" class="back-to-home-btn">Back to Home</a>
+    
     <div class="shop-page">
         <div class="handwritten-text">
             <h1 class="silk-sicarios">Silk & Sicarios</h1>
