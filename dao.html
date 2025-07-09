@@ -72,17 +72,17 @@
         .dao-pricing {
             background: rgba(177, 156, 217, 0.15);
             border: 2px solid #b19cd9;
-            border-radius: 10px;
-            padding: 0.8rem;
-            margin-bottom: 1rem;
+            border-radius: 8px;
+            padding: 0.5rem;
+            margin-bottom: 0.8rem;
             text-align: center;
         }
         
         .dao-pricing h3 {
             font-family: "Eagle Lake", serif;
             color: #b19cd9;
-            font-size: 1.1rem;
-            margin-bottom: 0.8rem;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
         }
         
@@ -90,25 +90,25 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 1rem;
-            flex-wrap: wrap;
+            gap: 0.8rem;
+            flex-wrap: nowrap;
         }
         
         .price-option {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 0.2rem;
+            gap: 0.1rem;
         }
         
         .currency {
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             color: rgba(255,255,255,0.8);
             font-weight: 600;
         }
         
         .amount {
-            font-size: 1.2rem;
+            font-size: 1rem;
             font-weight: bold;
             color: #b19cd9;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
@@ -116,48 +116,62 @@
         }
         
         .price-divider {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             font-weight: bold;
             color: white;
-            padding: 0 0.6rem;
+            padding: 0 0.4rem;
         }
         
         /* Mobile responsive for pricing */
         @media (max-width: 768px) {
             .dao-pricing h3 {
-                font-size: 1rem;
+                font-size: 0.8rem;
             }
             
             .pricing-options {
-                flex-direction: column;
                 gap: 0.6rem;
+                flex-wrap: nowrap;
             }
             
             .price-divider {
-                transform: rotate(90deg);
-                padding: 0.2rem 0;
+                font-size: 0.7rem;
+                padding: 0 0.3rem;
             }
             
             .amount {
-                font-size: 1.1rem;
+                font-size: 0.9rem;
+            }
+            
+            .currency {
+                font-size: 0.6rem;
             }
         }
         
         @media (max-width: 480px) {
             .dao-pricing {
-                padding: 0.6rem;
+                padding: 0.4rem;
             }
             
             .dao-pricing h3 {
-                font-size: 0.9rem;
+                font-size: 0.75rem;
+                margin-bottom: 0.4rem;
             }
             
             .amount {
-                font-size: 1rem;
+                font-size: 0.8rem;
             }
             
             .currency {
-                font-size: 0.7rem;
+                font-size: 0.55rem;
+            }
+            
+            .pricing-options {
+                gap: 0.4rem;
+            }
+            
+            .price-divider {
+                font-size: 0.6rem;
+                padding: 0 0.2rem;
             }
         }
     </style>
