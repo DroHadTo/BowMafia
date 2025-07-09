@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Smooth scrolling for navigation links with improved performance
+    // Smooth scrolling for navigation links
     const navLinks = document.querySelectorAll('.nav-menu a');
     
     navLinks.forEach(link => {
@@ -9,13 +9,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const targetSection = document.querySelector(targetId);
             
             if (targetSection) {
-                // Use native smooth scrolling with better performance
                 targetSection.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
+                    behavior: 'smooth'
                 });
             }
-        }, { passive: false });
+        });
     });
 });
 
@@ -39,50 +37,48 @@ document.addEventListener('DOMContentLoaded', function() {
         return window.innerWidth <= 767 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     }
     
-    // Only enhance video loading if sources aren't already present
-    function enhanceVideoSources() {
-        if (!video) return; // Exit if no video element
+    // Function to load appropriate video sources
+    function loadVideoSources() {
+        if (!video) return;
         
-        // Check if video already has sources
-        const existingSources = video.querySelectorAll('source');
-        if (existingSources.length > 0) {
-            // Sources already exist, just ensure proper loading
-            video.load();
-            return;
-        }
+        // Clear existing sources
+        video.innerHTML = '';
         
-        // If no sources, add them dynamically
         if (isMobile()) {
             // Mobile sources
-            const mobileSourceWebm = document.createElement('source');
-            mobileSourceWebm.src = 'assets/videos/bowmafia-videomobile.webm';
-            mobileSourceWebm.type = 'video/webm';
-            video.appendChild(mobileSourceWebm);
-            
             const mobileSourceMp4 = document.createElement('source');
             mobileSourceMp4.src = 'assets/videos/bowmafia-videomobile.mp4';
             mobileSourceMp4.type = 'video/mp4';
             video.appendChild(mobileSourceMp4);
+            
+            const mobileSourceWebm = document.createElement('source');
+            mobileSourceWebm.src = 'assets/videos/bowmafia-videomobile.webm';
+            mobileSourceWebm.type = 'video/webm';
+            video.appendChild(mobileSourceWebm);
         } else {
             // Desktop sources
-            const desktopSourceWebm = document.createElement('source');
-            desktopSourceWebm.src = 'assets/videos/bowmafia-video.webm';
-            desktopSourceWebm.type = 'video/webm';
-            video.appendChild(desktopSourceWebm);
-            
             const desktopSourceMp4 = document.createElement('source');
             desktopSourceMp4.src = 'assets/videos/bowmafia-video.mp4';
             desktopSourceMp4.type = 'video/mp4';
             video.appendChild(desktopSourceMp4);
+            
+            const desktopSourceWebm = document.createElement('source');
+            desktopSourceWebm.src = 'assets/videos/bowmafia-video.webm';
+            desktopSourceWebm.type = 'video/webm';
+            video.appendChild(desktopSourceWebm);
         }
+        
+        // Add fallback text
+        const fallbackText = document.createTextNode('Your browser does not support the video tag.');
+        video.appendChild(fallbackText);
         
         // Force video to reload with new sources
         video.load();
     }
     
-    // Enhance video loading if needed
+    // Load initial video sources
     if (video) {
-        enhanceVideoSources();
+        loadVideoSources();
     }
     
     // Reload video sources on window resize (in case orientation changes)
@@ -90,19 +86,16 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('resize', function() {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(function() {
-            if (video) enhanceVideoSources();
+            if (video) loadVideoSources();
         }, 250);
-    }, { passive: true });
+    });
     
     // Hamburger Menu Functionality
     const hamburgerBtn = document.getElementById('hamburger-btn');
     const menuOverlay = document.getElementById('menu-overlay');
     
-    console.log('Hamburger elements found:', hamburgerBtn, menuOverlay); // Debug log
-    
     if (hamburgerBtn && menuOverlay) {
         hamburgerBtn.addEventListener('click', function() {
-            console.log('Hamburger clicked'); // Debug log
             hamburgerBtn.classList.toggle('active');
             menuOverlay.classList.toggle('active');
         });
@@ -122,41 +115,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 menuOverlay.classList.remove('active');
             }
         });
-        
-        console.log('Hamburger menu initialized successfully');
-    } else {
-        console.error('Hamburger menu elements not found');
     }
     
-    // Passive event listeners for better performance
-    window.addEventListener('resize', function() {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(function() {
-            if (video) loadVideoSources();
-        }, 250);
-    }, { passive: true });
-    
-    // Log for debugging (only in development)
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        console.log('Mobile detected:', isMobile());
-        console.log('Video sources loaded');
-        console.log('Hamburger menu initialized');
-    }
+    // Log for debugging
+    console.log('Mobile detected:', isMobile());
+    console.log('Video sources loaded');
+    console.log('Hamburger menu initialized');
 });
-
-// Service Worker registration for better performance
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/sw.js')
-            .then(function(registration) {
-                if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-                    console.log('ServiceWorker registration successful');
-                }
-            })
-            .catch(function(error) {
-                if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-                    console.log('ServiceWorker registration failed: ', error);
-                }
-            });
-    });
-}
