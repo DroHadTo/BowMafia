@@ -13,6 +13,19 @@
     <link rel="stylesheet" href="css/styles.css">
     
     <style>
+        /* Ensure no scrolling issues */
+        html, body {
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+        }
+        
+        main {
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+        }
+        
         /* Eagle Lake font for the main title */
         .payment-content h2 {
             font-family: "Eagle Lake", serif;
@@ -26,11 +39,24 @@
             color: white;
         }
         
-        .payment-container {
+        .payment-content {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 10;
+            color: white;
+            width: 95%;
             max-width: 600px;
-            margin: 0 auto;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        
+        .payment-container {
+            background: rgba(0, 0, 0, 0.85);
             padding: 2rem;
-            background: rgba(0,0,0,0.8);
             border-radius: 15px;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(177, 156, 217, 0.3);
@@ -222,9 +248,14 @@
                 font-size: 2.2rem;
             }
             
+            .payment-content {
+                width: 98%;
+                padding: 5px;
+                max-height: 95vh;
+            }
+            
             .payment-container {
                 padding: 1rem;
-                margin: 1rem;
             }
             
             .wallet-address {
@@ -246,6 +277,15 @@
             .payment-content h2 {
                 font-size: 1.8rem;
             }
+            
+            .payment-container {
+                padding: 0.8rem;
+            }
+        }
+        
+        /* Hide footer on payment page to prevent scroll issues */
+        .footer {
+            display: none;
         }
     </style>
 </head>
