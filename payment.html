@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment - BowMafia DAO</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Eagle+Lake&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <style>
+        /* Eagle Lake font for the main title */
+        .payment-content h2 {
+            font-family: "Eagle Lake", serif;
+            font-weight: 400;
+            font-style: normal;
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            letter-spacing: 1px;
+            text-align: center;
+            color: white;
+        }
+        
+        .payment-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: rgba(0,0,0,0.8);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(177, 156, 217, 0.3);
+        }
+        
+        .wallet-section {
+            background: rgba(177, 156, 217, 0.1);
+            border: 2px solid #b19cd9;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .payment-method {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #b19cd9;
+            margin-bottom: 1rem;
+        }
+        
+        .wallet-address {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: monospace;
+            font-size: 14px;
+            color: white;
+            word-break: break-all;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+        
+        .copy-btn {
+            background: #b19cd9;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .copy-btn:hover {
+            background: #9b7bc7;
+            transform: translateY(-2px);
+        }
+        
+        .copy-btn.copied {
+            background: #4CAF50;
+        }
+        
+        .payment-instructions {
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        
+        .payment-instructions ol {
+            padding-left: 1.5rem;
+        }
+        
+        .payment-instructions li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .confirmation-form {
+            background: rgba(0,0,0,0.5);
+            border-radius: 10px;
+            padding: 2rem;
+            border: 1px solid rgba(177, 156, 217, 0.3);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            color: white;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .required {
+            color: #ff6b6b;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid rgba(177, 156, 217, 0.3);
+            border-radius: 8px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #b19cd9;
+            box-shadow: 0 0 0 3px rgba(177, 156, 217, 0.2);
+        }
+        
+        .form-group input::placeholder {
+            color: rgba(255,255,255,0.6);
+        }
+        
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid rgba(177, 156, 217, 0.3);
+            border-radius: 8px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 16px;
+            min-height: 100px;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+            font-family: monospace;
+        }
+        
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #b19cd9;
+            box-shadow: 0 0 0 3px rgba(177, 156, 217, 0.2);
+        }
+        
+        .form-group textarea::placeholder {
+            color: rgba(255,255,255,0.6);
+        }
+        
+        .help-text {
+            font-size: 14px;
+            color: rgba(255,255,255,0.7);
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+        
+        .form-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+        
+        .submit-button {
+            background: linear-gradient(135deg, #b19cd9 0%, #9b7bc7 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .submit-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+        
+        .back-button {
+            background: transparent;
+            color: #b19cd9;
+            border: 2px solid #b19cd9;
+            padding: 10px 28px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .back-button:hover {
+            background: #b19cd9;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .payment-content h2 {
+                font-size: 2.2rem;
+            }
+            
+            .payment-container {
+                padding: 1rem;
+                margin: 1rem;
+            }
+            
+            .wallet-address {
+                font-size: 12px;
+            }
+            
+            .form-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .submit-button, .back-button {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .payment-content h2 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <section id="payment" class="hero">
+            <img src="assets/images/dao-background.jpg" alt="BowMafia DAO Payment" class="fullscreen-image" />
+            <div class="payment-content">
+                <h2>Complete Your Payment</h2>
+                <div class="payment-container">
+                    
+                    <!-- Wallet Address Section -->
+                    <div class="wallet-section">
+                        <div class="payment-method" id="paymentMethod">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
+                        <div class="wallet-address" id="walletAddress">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
+                        <button class="copy-btn" onclick="copyWalletAddress()">Copy Address</button>
+                    </div>
+                    
+                    <!-- Payment Instructions -->
+                    <div class="payment-instructions">
+                        <h3 style="color: #b19cd9; margin-bottom: 1rem;">Payment Instructions:</h3>
+                        <ol>
+                            <li>Copy the wallet address above</li>
+                            <li>Send your payment to this address using your preferred wallet</li>
+                            <li>Copy the transaction hash/signature from your wallet</li>
+                            <li>Fill out the confirmation form below</li>
+                            <li>Submit to complete your DAO membership</li>
+                        </ol>
+                    </div>
+                    
+                    <!-- Confirmation Form -->
+                    <div class="confirmation-form">
+                        <h3 style="color: #b19cd9; margin-bottom: 1.5rem; text-align: center;">Confirm Your Payment</h3>
+                        <form id="paymentConfirmationForm">
+                            <div class="form-group">
+                                <label for="transactionHash">Transaction Hash/ID <span class="required">*</span></label>
+                                <textarea id="transactionHash" name="transactionHash" placeholder="Enter your transaction hash/signature" required></textarea>
+                                <div class="help-text">Copy the transaction hash from your wallet after sending payment</div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="amountSent">Amount Sent</label>
+                                <input type="text" id="amountSent" name="amountSent" placeholder="Enter the amount you sent">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="userWallet">Your Wallet Address <span class="required">*</span></label>
+                                <input type="text" id="userWallet" name="userWallet" placeholder="Enter your wallet address" required>
+                            </div>
+                            
+                            <div class="form-buttons">
+                                <button type="submit" class="submit-button">Confirm Payment</button>
+                                <button type="button" class="back-button" onclick="window.location.href='dao.html'">Back to Form</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        BowMafiaDAO © 2025 | <a href="#terms">Terms & Conditions</a>
+    </footer>
+    
+    <script>
+        // Wallet addresses for different payment methods
+        const walletAddresses = {
+            solana: 'So11111111111111111111111111111112',  // Replace with actual Solana wallet
+            doge: 'D7Y55r6hNkcqDuqYJ1RjEDqF2TceMAAT9o'     // Replace with actual Dogecoin wallet
+        };
+        
+        // Initialize payment page
+        function initPaymentPage() {
+            // Get payment method from URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const paymentMethod = urlParams.get('method') || 'solana';
+            
+            // Set payment method display
+            const methodDisplay = paymentMethod === 'solana' ? 'Solana (SOL)' : 'Dogecoin (DOGE)';
+            document.getElementById('paymentMethod').textContent = `Send payment via ${methodDisplay}`;
+            
+            // Set wallet address
+            document.getElementById('walletAddress').textContent = walletAddresses[paymentMethod];
+        }
+        
+        // Copy wallet address to clipboard
+        function copyWalletAddress() {
+            const walletAddress = document.getElementById('walletAddress').textContent;
+            const copyBtn = document.querySelector('.copy-btn');
+            
+            navigator.clipboard.writeText(walletAddress).then(function() {
+                copyBtn.textContent = 'Copied!';
+                copyBtn.classList.add('copied');
+                
+                setTimeout(function() {
+                    copyBtn.textContent = 'Copy Address';
+                    copyBtn.classList.remove('copied');
+                }, 2000);
+            }).catch(function(err) {
+                console.error('Could not copy text: ', err);
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = walletAddress;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                copyBtn.textContent = 'Copied!';
+                copyBtn.classList.add('copied');
+                setTimeout(function() {
+                    copyBtn.textContent = 'Copy Address';
+                    copyBtn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+        
+        // Handle payment confirmation form submission
+        document.getElementById('paymentConfirmationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            
+            // Basic validation
+            if (!data.transactionHash || !data.userWallet) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+            
+            // Here you would normally send the data to your server
+            console.log('Payment confirmation submitted:', data);
+            alert('Thank you! Your payment confirmation has been submitted. We will verify your transaction and contact you soon.');
+            
+            // Redirect to success page or home
+            window.location.href = 'index.html';
+        });
+        
+        // Initialize page when loaded
+        window.addEventListener('load', initPaymentPage);
+    </script>
+</body>
+</html>

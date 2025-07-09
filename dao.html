@@ -203,6 +203,41 @@
                 bowDogFields.style.display = 'none';
             }
         }
+        
+        // DAO Form submission handler
+        document.addEventListener('DOMContentLoaded', function() {
+            const daoForm = document.getElementById('daoForm');
+            
+            if (daoForm) {
+                daoForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Get form data
+                    const formData = new FormData(this);
+                    const data = Object.fromEntries(formData);
+                    
+                    // Basic validation
+                    if (!data.xHandle || !data.telegramHandle || !data.paymentAsset || !data.bowDog) {
+                        alert('Please fill in all required fields.');
+                        return;
+                    }
+                    
+                    // If they own a bow dog, check for additional fields
+                    if (data.bowDog === 'yes') {
+                        if (!data.dogeWallet) {
+                            alert('Please enter your Doge wallet address.');
+                            return;
+                        }
+                    }
+                    
+                    // Store form data in sessionStorage for later use
+                    sessionStorage.setItem('daoFormData', JSON.stringify(data));
+                    
+                    // Redirect to payment page with selected payment method
+                    window.location.href = `payment.html?method=${data.paymentAsset}`;
+                });
+            }
+        });
     </script>
     
     <script src="js/main.js"></script>
