@@ -78,6 +78,15 @@
             margin-bottom: 1rem;
         }
         
+        .payment-amount {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #b19cd9;
+            margin-bottom: 1rem;
+            font-family: "Eagle Lake", serif;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+        
         .wallet-address {
             background: rgba(255,255,255,0.1);
             border: 1px solid rgba(255,255,255,0.3);
@@ -258,6 +267,10 @@
                 padding: 1rem;
             }
             
+            .payment-amount {
+                font-size: 2rem;
+            }
+            
             .wallet-address {
                 font-size: 12px;
             }
@@ -281,6 +294,10 @@
             .payment-container {
                 padding: 0.8rem;
             }
+            
+            .payment-amount {
+                font-size: 1.7rem;
+            }
         }
         
         /* Hide footer on payment page to prevent scroll issues */
@@ -300,6 +317,9 @@
                     <!-- Wallet Address Section -->
                     <div class="wallet-section">
                         <div class="payment-method" id="paymentMethod">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
+                        <div class="payment-amount" id="paymentAmount">
                             <!-- Will be populated by JavaScript -->
                         </div>
                         <div class="wallet-address" id="walletAddress">
@@ -357,10 +377,15 @@
     </footer>
     
     <script>
-        // Wallet addresses for different payment methods
+        // Wallet addresses and pricing for different payment methods
         const walletAddresses = {
             solana: 'Sol wallet here',  // Replace with actual Solana wallet
             doge: 'Doge wallet here'    // Replace with actual Dogecoin wallet
+        };
+        
+        const paymentAmounts = {
+            solana: '2.5 SOL',
+            doge: '2,000 DOGE'
         };
         
         // Initialize payment page
@@ -372,6 +397,9 @@
             // Set payment method display
             const methodDisplay = paymentMethod === 'solana' ? 'Solana (SOL)' : 'Dogecoin (DOGE)';
             document.getElementById('paymentMethod').textContent = `Send payment via ${methodDisplay}`;
+            
+            // Set payment amount
+            document.getElementById('paymentAmount').textContent = paymentAmounts[paymentMethod];
             
             // Set wallet address
             document.getElementById('walletAddress').textContent = walletAddresses[paymentMethod];
