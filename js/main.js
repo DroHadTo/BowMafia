@@ -39,34 +39,35 @@ document.addEventListener('DOMContentLoaded', function() {
         return window.innerWidth <= 767 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     }
     
-    // Function to load appropriate video sources
+    // Function to load appropriate video sources - only if video element exists
     function loadVideoSources() {
+        if (!video) return; // Exit if no video element
+        
         // Clear existing sources
         video.innerHTML = '';
         
         if (isMobile()) {
             // Mobile sources
-            const mobileSourceMp4 = document.createElement('source');
-            mobileSourceMp4.src = 'assets/videos/bowmafia-videomobile.mp4';
-            mobileSourceMp4.type = 'video/mp4';
-            video.appendChild(mobileSourceMp4);
-            
-            // If you have a mobile webm version, add it too
             const mobileSourceWebm = document.createElement('source');
             mobileSourceWebm.src = 'assets/videos/bowmafia-videomobile.webm';
             mobileSourceWebm.type = 'video/webm';
             video.appendChild(mobileSourceWebm);
+            
+            const mobileSourceMp4 = document.createElement('source');
+            mobileSourceMp4.src = 'assets/videos/bowmafia-videomobile.mp4';
+            mobileSourceMp4.type = 'video/mp4';
+            video.appendChild(mobileSourceMp4);
         } else {
             // Desktop sources
-            const desktopSourceMp4 = document.createElement('source');
-            desktopSourceMp4.src = 'assets/videos/bowmafia-video.mp4';
-            desktopSourceMp4.type = 'video/mp4';
-            video.appendChild(desktopSourceMp4);
-            
             const desktopSourceWebm = document.createElement('source');
             desktopSourceWebm.src = 'assets/videos/bowmafia-video.webm';
             desktopSourceWebm.type = 'video/webm';
             video.appendChild(desktopSourceWebm);
+            
+            const desktopSourceMp4 = document.createElement('source');
+            desktopSourceMp4.src = 'assets/videos/bowmafia-video.mp4';
+            desktopSourceMp4.type = 'video/mp4';
+            video.appendChild(desktopSourceMp4);
         }
         
         // Add fallback text
@@ -77,8 +78,10 @@ document.addEventListener('DOMContentLoaded', function() {
         video.load();
     }
     
-    // Load initial video sources
-    loadVideoSources();
+    // Load initial video sources only if video exists
+    if (video) {
+        loadVideoSources();
+    }
     
     // Reload video sources on window resize (in case orientation changes)
     let resizeTimer;

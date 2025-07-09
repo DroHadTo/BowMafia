@@ -2,13 +2,33 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1a1a1a">
+    <meta name="description" content="BowMafia DAO Assets - View our Doginal Dogs collection">
+    <meta name="robots" content="index, follow">
     <title>BowMafia DAO Assets</title>
     
-    <!-- Google Fonts -->
+    <!-- DNS Prefetch for external resources -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="css/styles.css" as="style">
+    <link rel="preload" href="DAOasset.webm" as="video" type="video/webm">
+    
+    <!-- Google Fonts with display=swap for better performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Eagle+Lake&display=swap" rel="stylesheet">
+    
+    <!-- Main stylesheet -->
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <!-- PWA manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/images/BowMafia.png">
     
     <style>
         * {
@@ -397,6 +417,23 @@
     </style>
 </head>
 <body>
+    <!-- Hamburger Menu -->
+    <div class="hamburger-menu">
+        <button class="hamburger-btn" id="hamburger-btn">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+        </button>
+        <nav class="menu-overlay" id="menu-overlay">
+            <div class="menu-content">
+                <a href="index.html" class="menu-item">Home</a>
+                <a href="popouts.html" class="menu-item">Pop outs</a>
+                <a href="dao.html" class="menu-item">Join DAO</a>
+                <a href="shop.html" class="menu-item">Shop</a>
+            </div>
+        </nav>
+    </div>
+
     <!-- Fallback background -->
     <div class="video-background-fallback"></div>
     
@@ -496,5 +533,8 @@
             }
         }, 1000);
     </script>
+    
+    <!-- Load main JavaScript asynchronously for navigation -->
+    <script src="js/main.js" async></script>
 </body>
 </html>
