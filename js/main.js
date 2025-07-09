@@ -39,13 +39,19 @@ document.addEventListener('DOMContentLoaded', function() {
         return window.innerWidth <= 767 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     }
     
-    // Function to load appropriate video sources - only if video element exists
-    function loadVideoSources() {
+    // Only enhance video loading if sources aren't already present
+    function enhanceVideoSources() {
         if (!video) return; // Exit if no video element
         
-        // Clear existing sources
-        video.innerHTML = '';
+        // Check if video already has sources
+        const existingSources = video.querySelectorAll('source');
+        if (existingSources.length > 0) {
+            // Sources already exist, just ensure proper loading
+            video.load();
+            return;
+        }
         
+        // If no sources, add them dynamically
         if (isMobile()) {
             // Mobile sources
             const mobileSourceWebm = document.createElement('source');
@@ -70,17 +76,13 @@ document.addEventListener('DOMContentLoaded', function() {
             video.appendChild(desktopSourceMp4);
         }
         
-        // Add fallback text
-        const fallbackText = document.createTextNode('Your browser does not support the video tag.');
-        video.appendChild(fallbackText);
-        
         // Force video to reload with new sources
         video.load();
     }
     
-    // Load initial video sources only if video exists
+    // Enhance video loading if needed
     if (video) {
-        loadVideoSources();
+        enhanceVideoSources();
     }
     
     // Reload video sources on window resize (in case orientation changes)
