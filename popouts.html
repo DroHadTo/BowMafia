@@ -2,9 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1a1a1a">
+    <meta name="description" content="BowMafia Pop Out Events - Miami, Vegas, LA and more">
+    <meta name="robots" content="index, follow">
     <title>Pop outs - BowMafia</title>
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="css/styles.css" as="style">
+    <link rel="preload" href="assets/images/floating-element.png" as="image">
+    
+    <!-- Main stylesheet -->
     <link rel="stylesheet" href="css/styles.css">
+    
+    <!-- PWA manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/images/BowMafia.png">
+    
     <style>
         .popouts-page {
             min-height: 100vh;
@@ -365,6 +381,7 @@
         window.addEventListener('load', initFloatingImages);
     </script>
     
-    <script src="js/main.js"></script>
+    <!-- Load main JavaScript asynchronously -->
+    <script src="js/main.js" async></script>
 </body>
 </html>

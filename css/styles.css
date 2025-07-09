@@ -1,7 +1,18 @@
+/* Performance optimizations */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+html {
+    /* Improve font rendering */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Better scrolling on mobile */
+    -webkit-overflow-scrolling: touch;
+    /* Improve text rendering */
+    text-rendering: optimizeSpeed;
 }
 
 html, body {
@@ -16,6 +27,9 @@ main {
     height: 100vh;
     width: 100vw;
     min-height: 100vh; /* Ensure full height on mobile */
+    /* Hardware acceleration for better performance */
+    transform: translateZ(0);
+    will-change: transform;
 }
 
 body {
@@ -23,6 +37,8 @@ body {
     line-height: 1.6;
     color: #333;
     background-color: #f4f4f4;
+    /* Improve rendering performance */
+    backface-visibility: hidden;
 }
 
 header {
@@ -46,6 +62,8 @@ h1 {
     width: 100%;
     top: 0;
     z-index: 1000;
+    /* Hardware acceleration */
+    transform: translateZ(0);
 }
 
 .nav-container {
@@ -260,6 +278,10 @@ h1 {
     transition: all 0.3s ease;
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     width: 100%; /* Full width on mobile */
+    /* Performance optimizations */
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    will-change: transform, opacity;
     max-width: 250px; /* Controlled max width */
     white-space: nowrap; /* Prevent text wrapping */
     text-align: center; /* Center the text */

@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Smooth scrolling for navigation links
+    // Smooth scrolling for navigation links with improved performance
     const navLinks = document.querySelectorAll('.nav-menu a');
     
     navLinks.forEach(link => {
@@ -9,11 +9,13 @@ document.addEventListener('DOMContentLoaded', function() {
             const targetSection = document.querySelector(targetId);
             
             if (targetSection) {
+                // Use native smooth scrolling with better performance
                 targetSection.scrollIntoView({
-                    behavior: 'smooth'
+                    behavior: 'smooth',
+                    block: 'start'
                 });
             }
-        });
+        }, { passive: false });
     });
 });
 
@@ -114,8 +116,35 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Log for debugging
-    console.log('Mobile detected:', isMobile());
-    console.log('Video sources loaded');
-    console.log('Hamburger menu initialized');
+    // Passive event listeners for better performance
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function() {
+            if (video) loadVideoSources();
+        }, 250);
+    }, { passive: true });
+    
+    // Log for debugging (only in development)
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        console.log('Mobile detected:', isMobile());
+        console.log('Video sources loaded');
+        console.log('Hamburger menu initialized');
+    }
 });
+
+// Service Worker registration for better performance
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js')
+            .then(function(registration) {
+                if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                    console.log('ServiceWorker registration successful');
+                }
+            })
+            .catch(function(error) {
+                if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                    console.log('ServiceWorker registration failed: ', error);
+                }
+            });
+    });
+}

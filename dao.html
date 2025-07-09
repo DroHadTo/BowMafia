@@ -5,12 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BowMafia DAO</title>
     
-    <!-- Google Fonts -->
+    <!-- Preload critical resources -->
+    <link rel="preload" href="css/styles.css" as="style">
+    <link rel="preload" href="assets/images/dao-background.jpg" as="image">
+    <link rel="preload" href="assets/images/floating-element.png" as="image">
+    
+    <!-- Google Fonts with display swap for better performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Eagle+Lake&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="css/styles.css">
+    
+    <!-- PWA manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/images/BowMafia.png">
+    
+    <!-- Mobile optimization -->
+    <meta name="theme-color" content="#b19cd9">
+    <meta name="apple-mobile-web-app-capable" content="yes")>
     
     <style>
         /* Eagle Lake font for the main title */

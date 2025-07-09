@@ -2,15 +2,33 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1a1a1a">
+    <meta name="description" content="Complete your BowMafia DAO membership payment - Solana or Dogecoin">
+    <meta name="robots" content="noindex, nofollow">
     <title>Payment - BowMafia DAO</title>
     
-    <!-- Google Fonts -->
+    <!-- DNS Prefetch for external resources -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="css/styles.css" as="style">
+    <link rel="preload" href="assets/images/dao-background.jpg" as="image">
+    
+    <!-- Google Fonts with display=swap for better performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Eagle+Lake&display=swap" rel="stylesheet">
     
+    <!-- Main stylesheet -->
     <link rel="stylesheet" href="css/styles.css">
+    
+    <!-- PWA manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/images/BowMafia.png">
     
     <style>
         /* Ensure no scrolling issues */
@@ -464,5 +482,8 @@
         // Initialize page when loaded
         window.addEventListener('load', initPaymentPage);
     </script>
+    
+    <!-- Load main JavaScript asynchronously (if needed for navigation) -->
+    <script src="js/main.js" async></script>
 </body>
 </html>
