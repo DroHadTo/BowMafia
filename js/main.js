@@ -90,16 +90,19 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('resize', function() {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(function() {
-            loadVideoSources();
+            if (video) enhanceVideoSources();
         }, 250);
-    });
+    }, { passive: true });
     
     // Hamburger Menu Functionality
     const hamburgerBtn = document.getElementById('hamburger-btn');
     const menuOverlay = document.getElementById('menu-overlay');
     
+    console.log('Hamburger elements found:', hamburgerBtn, menuOverlay); // Debug log
+    
     if (hamburgerBtn && menuOverlay) {
         hamburgerBtn.addEventListener('click', function() {
+            console.log('Hamburger clicked'); // Debug log
             hamburgerBtn.classList.toggle('active');
             menuOverlay.classList.toggle('active');
         });
@@ -119,6 +122,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 menuOverlay.classList.remove('active');
             }
         });
+        
+        console.log('Hamburger menu initialized successfully');
+    } else {
+        console.error('Hamburger menu elements not found');
     }
     
     // Passive event listeners for better performance
