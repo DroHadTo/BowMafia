@@ -75,6 +75,11 @@ const createOptimizedVideoElement = () => {
     return video;
 };
 
+// Legacy function for backward compatibility
+const loadVideoSources = () => {
+    return createOptimizedVideoElement();
+};
+
 // Make toggleBowDogFields function global so it can be called from HTML
 function toggleBowDogFields() {
     const bowDogYes = document.getElementById('bowDogYes');
