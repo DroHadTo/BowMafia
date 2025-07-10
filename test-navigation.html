@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navigation Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #1a1a1a;
+            color: white;
+        }
+        
+        .test-links {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 300px;
+        }
+        
+        .test-link {
+            display: block;
+            padding: 15px;
+            background: #b19cd9;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .test-link:hover {
+            background: #9675c7;
+            transform: translateY(-2px);
+        }
+        
+        h1 {
+            color: #b19cd9;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .note {
+            background: rgba(177, 156, 217, 0.1);
+            border: 1px solid #b19cd9;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <h1>BowMafia Navigation Test</h1>
+    
+    <div class="test-links">
+        <a href="src/index.html" class="test-link">🏠 Home (Video Background)</a>
+        <a href="src/dao.html" class="test-link">⚡ DAO Page</a>
+        <a href="src/assets.html" class="test-link">💎 Assets Page</a>
+        <a href="src/popouts.html" class="test-link">🎉 Pop outs Page</a>
+        <a href="src/shop.html" class="test-link">🛍️ Shop Page</a>
+        <a href="src/payment.html?method=solana" class="test-link">💰 Payment Page</a>
+    </div>
+    
+    <div class="note">
+        <h3>Testing Instructions:</h3>
+        <ol>
+            <li>Click on any page link above</li>
+            <li>Test the hamburger menu on each page</li>
+            <li>Navigate back to Home using the hamburger menu</li>
+            <li>Verify the video background loads properly on Home</li>
+            <li>Test the responsiveness on mobile</li>
+        </ol>
+        
+        <h3>Fixed Issues:</h3>
+        <ul>
+            <li>✅ Added hamburger menu to all pages</li>
+            <li>✅ Consistent navigation across all pages</li>
+            <li>✅ Improved video loading and page transition handling</li>
+            <li>✅ Better error handling for video loading</li>
+            <li>✅ Fixed JavaScript conflicts between pages</li>
+        </ul>
+    </div>
+</body>
+</html>
