@@ -4,19 +4,11 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeAll();
 });
 
-// Handle browser back/forward navigation and page cache
+// Handle browser back/forward navigation and page cache - simplified
 window.addEventListener('pageshow', function(event) {
     console.log('Page show event triggered, persisted:', event.persisted);
-    // Always reinitialize when page is shown (including from back/forward cache)
-    initializeAll();
-});
-
-// Handle visibility changes (when user returns to tab)
-document.addEventListener('visibilitychange', function() {
-    if (!document.hidden) {
-        console.log('Page became visible, reinitializing...');
-        initializeAll();
-    }
+    // Small delay to ensure everything is ready
+    setTimeout(initializeAll, 50);
 });
 
 // Master initialization function
@@ -31,14 +23,6 @@ function initializeAll() {
     
     // Initialize smooth scrolling
     initSmoothScrolling();
-    
-    // Force any specific page functions to run
-    if (window.location.pathname.includes('dao.html')) {
-        // Ensure DAO form functions are working
-        if (typeof togglePaymentAddress === 'function') {
-            console.log('DAO page specific functions available');
-        }
-    }
 }
 
 // Make toggleBowDogFields function global so it can be called from HTML
@@ -161,7 +145,7 @@ function initVideoBackground() {
     console.log('Video background initialized successfully');
 }
 
-// Hamburger Menu Functionality - ENHANCED FOR NAVIGATION ISSUES
+// Hamburger Menu Functionality - SIMPLIFIED TO AVOID CONFLICTS
 function initHamburgerMenu() {
     const hamburgerBtn = document.getElementById('hamburger-btn');
     const menuOverlay = document.getElementById('menu-overlay');
@@ -173,48 +157,28 @@ function initHamburgerMenu() {
     
     console.log('Initializing hamburger menu');
     
-    // Remove existing event listeners to prevent duplicates
-    const newHamburgerBtn = hamburgerBtn.cloneNode(true);
-    hamburgerBtn.parentNode.replaceChild(newHamburgerBtn, hamburgerBtn);
+    // Ensure menu is closed
+    hamburgerBtn.classList.remove('active');
+    menuOverlay.classList.remove('active');
     
-    const newMenuOverlay = menuOverlay.cloneNode(true);
-    menuOverlay.parentNode.replaceChild(newMenuOverlay, menuOverlay);
-    
-    // Get references to the new elements
-    const freshHamburgerBtn = document.getElementById('hamburger-btn');
-    const freshMenuOverlay = document.getElementById('menu-overlay');
-    
-    // Add click handler to hamburger button
-    freshHamburgerBtn.addEventListener('click', function(e) {
+    // Simple approach - just reset the onclick handlers
+    hamburgerBtn.onclick = function(e) {
         e.preventDefault();
         e.stopPropagation();
         console.log('Hamburger button clicked');
         
-        freshHamburgerBtn.classList.toggle('active');
-        freshMenuOverlay.classList.toggle('active');
-    });
+        hamburgerBtn.classList.toggle('active');
+        menuOverlay.classList.toggle('active');
+    };
     
-    // Close menu when clicking outside or on menu items
-    freshMenuOverlay.addEventListener('click', function(e) {
-        if (e.target === freshMenuOverlay || e.target.classList.contains('menu-item')) {
+    // Close menu when clicking on overlay or menu items
+    menuOverlay.onclick = function(e) {
+        if (e.target === menuOverlay || e.target.classList.contains('menu-item')) {
             console.log('Menu overlay clicked, closing menu');
-            freshHamburgerBtn.classList.remove('active');
-            freshMenuOverlay.classList.remove('active');
+            hamburgerBtn.classList.remove('active');
+            menuOverlay.classList.remove('active');
         }
-    });
-    
-    // Close menu when clicking anywhere on document (with escape key)
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && freshMenuOverlay.classList.contains('active')) {
-            console.log('Escape key pressed, closing menu');
-            freshHamburgerBtn.classList.remove('active');
-            freshMenuOverlay.classList.remove('active');
-        }
-    });
-    
-    // Ensure menu is closed on page load
-    freshHamburgerBtn.classList.remove('active');
-    freshMenuOverlay.classList.remove('active');
+    };
     
     console.log('Hamburger menu initialized successfully');
 }

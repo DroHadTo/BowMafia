@@ -435,35 +435,40 @@
         // Start floating animation when page loads
         window.addEventListener('load', initFloatingImage);
         
-        // Existing toggleBowDogFields function
-        function toggleBowDogFields() {
-            const bowDogYes = document.getElementById('bowDogYes');
-            const bowDogFields = document.getElementById('bowDogFields');
+        // Form submission handler - add event listener directly to avoid navigation issues
+        document.addEventListener('DOMContentLoaded', function() {
+            const daoForm = document.getElementById('daoForm');
             
-            if (bowDogYes.checked) {
-                bowDogFields.style.display = 'block';
-            } else {
-                bowDogFields.style.display = 'none';
+            if (daoForm) {
+                daoForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Get form data
+                    const formData = new FormData(this);
+                    const data = Object.fromEntries(formData);
+                    
+                    // Basic validation
+                    if (!data.xHandle || !data.telegramHandle || !data.paymentAsset || !data.bowDog) {
+                        alert('Please fill in all required fields.');
+                        return;
+                    }
+                    
+                    // If they own a bow dog, check for additional fields
+                    if (data.bowDog === 'yes') {
+                        if (!data.dogeWallet) {
+                            alert('Please enter your Doge wallet address.');
+                            return;
+                        }
+                    }
+                    
+                    // Store form data in sessionStorage for later use
+                    sessionStorage.setItem('daoFormData', JSON.stringify(data));
+                    
+                    // Redirect to payment page with selected payment method
+                    window.location.href = `payment.html?method=${data.paymentAsset}`;
+                });
             }
-        }
-        
-        // Toggle payment address field based on selected payment method
-        function togglePaymentAddress() {
-            const paymentAsset = document.getElementById('paymentAsset').value;
-            const solanaAddressField = document.getElementById('solanaAddressField');
-            const dogeAddressField = document.getElementById('dogeAddressField');
-            
-            // Hide both fields first
-            solanaAddressField.style.display = 'none';
-            dogeAddressField.style.display = 'none';
-            
-            // Show the appropriate field based on selection
-            if (paymentAsset === 'solana') {
-                solanaAddressField.style.display = 'block';
-            } else if (paymentAsset === 'doge') {
-                dogeAddressField.style.display = 'block';
-            }
-        }
+        });
         
         // Copy address to clipboard
         function copyToClipboard(elementId) {
@@ -498,65 +503,98 @@
         // Handle page show event for back/forward navigation
         window.addEventListener('pageshow', function(event) {
             console.log('DAO page show event, reinitializing form');
-            initializeDAOForm();
+            setTimeout(initializeDAOForm, 100); // Small delay to ensure DOM is ready
+        });
+        
+        // Also handle when page becomes visible again
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                console.log('Page became visible, checking form state');
+                setTimeout(initializeDAOForm, 100);
+            }
         });
         
         function initializeDAOForm() {
             const daoForm = document.getElementById('daoForm');
             
             if (daoForm) {
-                // Remove existing event listener if any
-                const newForm = daoForm.cloneNode(true);
-                daoForm.parentNode.replaceChild(newForm, daoForm);
+                // Don't clone the form, just reset its state and ensure event handlers work
+                console.log('DAO form found, resetting state');
                 
-                // Get fresh reference
-                const freshForm = document.getElementById('daoForm');
+                // Reset form to default state
+                daoForm.reset();
                 
-                freshForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
+                // Ensure dropdown functionality is working by resetting state
+                const paymentAsset = document.getElementById('paymentAsset');
+                if (paymentAsset) {
+                    paymentAsset.selectedIndex = 0;
                     
-                    // Get form data
-                    const formData = new FormData(this);
-                    const data = Object.fromEntries(formData);
+                    // Force hide all address fields
+                    const solanaField = document.getElementById('solanaAddressField');
+                    const dogeField = document.getElementById('dogeAddressField');
+                    if (solanaField) solanaField.style.display = 'none';
+                    if (dogeField) dogeField.style.display = 'none';
                     
-                    // Basic validation
-                    if (!data.xHandle || !data.telegramHandle || !data.paymentAsset || !data.bowDog) {
-                        alert('Please fill in all required fields.');
-                        return;
-                    }
-                    
-                    // If they own a bow dog, check for additional fields
-                    if (data.bowDog === 'yes') {
-                        if (!data.dogeWallet) {
-                            alert('Please enter your Doge wallet address.');
-                            return;
-                        }
-                    }
-                    
-                    // Store form data in sessionStorage for later use
-                    sessionStorage.setItem('daoFormData', JSON.stringify(data));
-                    
-                    // Redirect to payment page with selected payment method
-                    window.location.href = `payment.html?method=${data.paymentAsset}`;
-                });
+                    console.log('Payment dropdown reset and ready');
+                }
                 
-                console.log('DAO form initialized successfully');
-            }
-            
-            // Ensure dropdown functionality is working
-            const paymentAsset = document.getElementById('paymentAsset');
-            if (paymentAsset) {
-                // Reset dropdown state
-                paymentAsset.selectedIndex = 0;
-                // Hide all address fields
-                const solanaField = document.getElementById('solanaAddressField');
-                const dogeField = document.getElementById('dogeAddressField');
-                if (solanaField) solanaField.style.display = 'none';
-                if (dogeField) dogeField.style.display = 'none';
+                // Reset bow dog fields
+                const bowDogFields = document.getElementById('bowDogFields');
+                if (bowDogFields) {
+                    bowDogFields.style.display = 'none';
+                }
                 
-                console.log('Payment dropdown reset and ready');
+                console.log('DAO form state reset successfully');
             }
         }
+        
+        // Enhanced toggle functions that work after navigation
+        window.togglePaymentAddress = function() {
+            console.log('togglePaymentAddress called');
+            const paymentAsset = document.getElementById('paymentAsset');
+            const solanaAddressField = document.getElementById('solanaAddressField');
+            const dogeAddressField = document.getElementById('dogeAddressField');
+            
+            if (!paymentAsset || !solanaAddressField || !dogeAddressField) {
+                console.error('Required elements not found for payment toggle');
+                return;
+            }
+            
+            const selectedValue = paymentAsset.value;
+            console.log('Payment method selected:', selectedValue);
+            
+            // Hide both fields first
+            solanaAddressField.style.display = 'none';
+            dogeAddressField.style.display = 'none';
+            
+            // Show the appropriate field based on selection
+            if (selectedValue === 'solana') {
+                solanaAddressField.style.display = 'block';
+                console.log('Showing Solana address field');
+            } else if (selectedValue === 'doge') {
+                dogeAddressField.style.display = 'block';
+                console.log('Showing Dogecoin address field');
+            }
+        };
+        
+        window.toggleBowDogFields = function() {
+            console.log('toggleBowDogFields called');
+            const bowDogYes = document.getElementById('bowDogYes');
+            const bowDogFields = document.getElementById('bowDogFields');
+            
+            if (!bowDogYes || !bowDogFields) {
+                console.error('Required elements not found for bow dog toggle');
+                return;
+            }
+            
+            if (bowDogYes.checked) {
+                bowDogFields.style.display = 'block';
+                console.log('Showing bow dog fields');
+            } else {
+                bowDogFields.style.display = 'none';
+                console.log('Hiding bow dog fields');
+            }
+        };
     </script>
     
     <script src="js/main.js"></script>
