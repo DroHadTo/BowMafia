@@ -148,12 +148,30 @@ h1 {
     left: 0;
     z-index: 1;
     
-    /* Improve video quality */
+    /* Optimize for desktop browsers */
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
     backface-visibility: hidden;
     transform: translateZ(0);
     will-change: transform;
+    
+    /* Ensure video always loads and displays */
+    opacity: 1;
+    visibility: visible;
+    
+    /* Desktop browser optimizations */
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    -webkit-backface-visibility: hidden;
+    
+    /* Prevent any poster/placeholder behavior */
+    background: transparent;
+    
+    /* Force proper sizing */
+    min-width: 100vw;
+    min-height: 100vh;
+    max-width: none;
+    max-height: none;
 }
 
 /* Clean mobile video optimization */
