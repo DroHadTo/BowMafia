@@ -331,6 +331,15 @@
                         <small class="address-note">Send exactly 2.5 SOL to complete your DAO membership</small>
                     </div>
 
+                    <div id="dogeAddressField" class="form-group payment-address-field" style="display: none;">
+                        <label for="dogeAddress">Send payment to this Dogecoin address:</label>
+                        <div class="address-container">
+                            <input type="text" id="dogeAddress" name="dogeAddress" value="DNANJ3UPLiYHCpjVanc8HUaGN699uZwqv5" readonly>
+                            <button type="button" class="copy-button" onclick="copyToClipboard('dogeAddress')">Copy</button>
+                        </div>
+                        <small class="address-note">Send exactly 2,000 DOGE to complete your DAO membership</small>
+                    </div>
+
                     <div class="form-group">
                         <label>Do you own a Bow dog?</label>
                         <div class="radio-group">
@@ -442,11 +451,17 @@
         function togglePaymentAddress() {
             const paymentAsset = document.getElementById('paymentAsset').value;
             const solanaAddressField = document.getElementById('solanaAddressField');
+            const dogeAddressField = document.getElementById('dogeAddressField');
             
+            // Hide both fields first
+            solanaAddressField.style.display = 'none';
+            dogeAddressField.style.display = 'none';
+            
+            // Show the appropriate field based on selection
             if (paymentAsset === 'solana') {
                 solanaAddressField.style.display = 'block';
-            } else {
-                solanaAddressField.style.display = 'none';
+            } else if (paymentAsset === 'doge') {
+                dogeAddressField.style.display = 'block';
             }
         }
         
