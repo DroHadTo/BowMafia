@@ -438,7 +438,7 @@
         <div class="dao-assets">
             <h2>DAO Assets</h2>
             <div class="asset-grid" id="asset-grid">
-                <!-- 5 Doginal Dog cards will be generated here -->
+                <!-- 9 Doginal Dog cards will be generated here -->
             </div>
         </div>
     </div>
@@ -449,14 +449,14 @@
     </footer>
 
     <script>
-        // Create 5 Doginal Dog assets with first four being specific images
+        // Create 9 Doginal Dog assets with first four being specific images
         function loadDoginalDogs() {
             const assetGrid = document.getElementById("asset-grid");
             
             // Clear any existing content
             assetGrid.innerHTML = '';
             
-            for (let i = 1; i <= 5; i++) {
+            for (let i = 1; i <= 9; i++) {
                 const card = document.createElement("div");
                 card.className = "asset-card";
                 
@@ -534,7 +534,7 @@
                 assetGrid.appendChild(card);
             }
             
-            console.log("Loaded 5 Doginal Dog cards - first 4 with specific images");
+            console.log("Loaded 9 Doginal Dog cards - first 4 with specific images, 5 placeholders");
             
             // Check loading status after delay
             setTimeout(() => {
