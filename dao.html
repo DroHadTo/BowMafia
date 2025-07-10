@@ -186,6 +186,77 @@
                 padding: 0 0.2rem;
             }
         }
+        
+        /* Payment Address Field Styles */
+        .payment-address-field {
+            background: rgba(177, 156, 217, 0.1);
+            border: 1px solid #b19cd9;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .address-container {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        
+        .address-container input[readonly] {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(177, 156, 217, 0.5);
+            padding: 0.5rem;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 0.85rem;
+            font-family: monospace;
+        }
+        
+        .copy-button {
+            background: #b19cd9;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: background-color 0.3s ease;
+        }
+        
+        .copy-button:hover {
+            background: #9d82c7;
+        }
+        
+        .copy-button:active {
+            background: #8968b5;
+        }
+        
+        .address-note {
+            display: block;
+            margin-top: 0.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.8rem;
+            font-style: italic;
+        }
+        
+        /* Mobile responsive for address field */
+        @media (max-width: 768px) {
+            .address-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .address-container input[readonly] {
+                font-size: 0.75rem;
+                padding: 0.4rem;
+            }
+            
+            .copy-button {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.75rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -244,11 +315,20 @@
 
                     <div class="form-group">
                         <label for="paymentAsset">Preferred payment method:</label>
-                        <select id="paymentAsset" name="paymentAsset" required>
+                        <select id="paymentAsset" name="paymentAsset" required onchange="togglePaymentAddress()">
                             <option value="">Select a payment method</option>
                             <option value="solana">Solana (SOL)</option>
                             <option value="doge">Dogecoin (DOGE)</option>
                         </select>
+                    </div>
+
+                    <div id="solanaAddressField" class="form-group payment-address-field" style="display: none;">
+                        <label for="solanaAddress">Send payment to this Solana address:</label>
+                        <div class="address-container">
+                            <input type="text" id="solanaAddress" name="solanaAddress" value="2EKvXbzi1mHUjn4XBSimmnn2bmEgB6uGZismSM3Ftf7p" readonly>
+                            <button type="button" class="copy-button" onclick="copyToClipboard('solanaAddress')">Copy</button>
+                        </div>
+                        <small class="address-note">Send exactly 2.5 SOL to complete your DAO membership</small>
                     </div>
 
                     <div class="form-group">
@@ -355,6 +435,42 @@
                 bowDogFields.style.display = 'block';
             } else {
                 bowDogFields.style.display = 'none';
+            }
+        }
+        
+        // Toggle payment address field based on selected payment method
+        function togglePaymentAddress() {
+            const paymentAsset = document.getElementById('paymentAsset').value;
+            const solanaAddressField = document.getElementById('solanaAddressField');
+            
+            if (paymentAsset === 'solana') {
+                solanaAddressField.style.display = 'block';
+            } else {
+                solanaAddressField.style.display = 'none';
+            }
+        }
+        
+        // Copy address to clipboard
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            element.select();
+            element.setSelectionRange(0, 99999); // For mobile devices
+            
+            try {
+                document.execCommand('copy');
+                // Show temporary feedback
+                const button = element.nextElementSibling;
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.style.background = '#4CAF50';
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = '#b19cd9';
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy: ', err);
+                alert('Failed to copy address. Please copy manually.');
             }
         }
         
