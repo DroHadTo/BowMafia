@@ -30,49 +30,32 @@
     <link rel="icon" type="image/png" href="assets/images/BowMafia.png">
     
     <style>
-        .back-to-home-btn {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background: white;
-            color: black;
-            border: 2px solid black;
-            padding: 10px 20px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            z-index: 1000;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        
-        .back-to-home-btn:hover {
-            background: black;
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-        
-        .back-to-home-btn:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        
         /* Mobile responsiveness */
         @media (max-width: 768px) {
-            .back-to-home-btn {
+            .hamburger-menu {
                 top: 15px;
                 left: 15px;
-                padding: 8px 16px;
-                font-size: 12px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Back to Home Button -->
-    <a href="index.html" class="back-to-home-btn">Back to Home</a>
+    <!-- Hamburger Menu -->
+    <div class="hamburger-menu">
+        <button class="hamburger-btn" id="hamburger-btn">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+        </button>
+        <nav class="menu-overlay" id="menu-overlay">
+            <div class="menu-content">
+                <a href="index.html" class="menu-item">Home</a>
+                <a href="dao.html" class="menu-item">Join the DAO</a>
+                <a href="assets.html" class="menu-item">Assets</a>
+                <a href="popouts.html" class="menu-item">Pop outs</a>
+            </div>
+        </nav>
+    </div>
     
     <div class="shop-page">
         <div class="handwritten-text">

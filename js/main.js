@@ -1,20 +1,15 @@
+// Global navigation and page utilities
 document.addEventListener('DOMContentLoaded', function() {
-    // Smooth scrolling for navigation links
-    const navLinks = document.querySelectorAll('.nav-menu a');
+    console.log('Main.js loaded for page:', window.location.pathname);
     
-    navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href');
-            const targetSection = document.querySelector(targetId);
-            
-            if (targetSection) {
-                targetSection.scrollIntoView({
-                    behavior: 'smooth'
-                });
-            }
-        });
-    });
+    // Initialize hamburger menu if present
+    initHamburgerMenu();
+    
+    // Initialize video background if present
+    initVideoBackground();
+    
+    // Initialize smooth scrolling
+    initSmoothScrolling();
 });
 
 // Make toggleBowDogFields function global so it can be called from HTML
@@ -29,8 +24,71 @@ function toggleBowDogFields() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+// Hamburger Menu Functionality
+function initHamburgerMenu() {
+    const hamburgerBtn = document.getElementById('hamburger-btn');
+    const menuOverlay = document.getElementById('menu-overlay');
+    
+    if (!hamburgerBtn || !menuOverlay) {
+        console.log('Hamburger menu not found on this page');
+        return;
+    }
+    
+    console.log('Initializing hamburger menu');
+    
+    // Toggle menu on button click
+    hamburgerBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const isActive = hamburgerBtn.classList.contains('active');
+        
+        if (isActive) {
+            closeMenu();
+        } else {
+            openMenu();
+        }
+    });
+    
+    // Close menu when clicking on overlay or menu items
+    menuOverlay.addEventListener('click', function(e) {
+        if (e.target === menuOverlay || e.target.classList.contains('menu-item')) {
+            closeMenu();
+        }
+    });
+    
+    // Close menu on escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && menuOverlay.classList.contains('active')) {
+            closeMenu();
+        }
+    });
+    
+    function openMenu() {
+        hamburgerBtn.classList.add('active');
+        menuOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Prevent scrolling
+    }
+    
+    function closeMenu() {
+        hamburgerBtn.classList.remove('active');
+        menuOverlay.classList.remove('active');
+        document.body.style.overflow = ''; // Restore scrolling
+    }
+    
+    console.log('Hamburger menu initialized successfully');
+}
+
+// Video Background Functionality
+function initVideoBackground() {
     const video = document.querySelector('.fullscreen-video');
+    
+    if (!video) {
+        console.log('No video background found on this page');
+        return;
+    }
+    
+    console.log('Initializing video background');
     
     // Function to detect if device is mobile
     function isMobile() {
@@ -39,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Function to load appropriate video sources
     function loadVideoSources() {
-        if (!video) return;
+        console.log('Loading video sources, mobile:', isMobile());
         
         // Clear existing sources
         video.innerHTML = '';
@@ -74,51 +132,96 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Force video to reload with new sources
         video.load();
+        
+        // Ensure video plays after loading
+        video.play().catch(function(error) {
+            console.log('Video autoplay was prevented:', error);
+        });
     }
     
+    // Handle video loading errors
+    video.addEventListener('error', function(e) {
+        console.error('Video loading error:', e);
+        // Try reloading the video
+        setTimeout(loadVideoSources, 1000);
+    });
+    
     // Load initial video sources
-    if (video) {
-        loadVideoSources();
-    }
+    loadVideoSources();
     
     // Reload video sources on window resize (in case orientation changes)
     let resizeTimer;
     window.addEventListener('resize', function() {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(function() {
-            if (video) loadVideoSources();
+            loadVideoSources();
         }, 250);
     });
     
-    // Hamburger Menu Functionality
-    const hamburgerBtn = document.getElementById('hamburger-btn');
-    const menuOverlay = document.getElementById('menu-overlay');
+    console.log('Video background initialized successfully');
+}
+
+// Smooth scrolling for navigation links
+function initSmoothScrolling() {
+    const navLinks = document.querySelectorAll('.nav-menu a, .menu-item[href^="#"]');
     
-    if (hamburgerBtn && menuOverlay) {
-        hamburgerBtn.addEventListener('click', function() {
-            hamburgerBtn.classList.toggle('active');
-            menuOverlay.classList.toggle('active');
-        });
-        
-        // Close menu when clicking outside or on menu items
-        menuOverlay.addEventListener('click', function(e) {
-            if (e.target === menuOverlay || e.target.classList.contains('menu-item')) {
-                hamburgerBtn.classList.remove('active');
-                menuOverlay.classList.remove('active');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            
+            // Only handle internal links (those starting with #)
+            if (href && href.startsWith('#')) {
+                e.preventDefault();
+                const targetSection = document.querySelector(href);
+                
+                if (targetSection) {
+                    targetSection.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
             }
         });
-        
-        // Close menu on escape key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && menuOverlay.classList.contains('active')) {
-                hamburgerBtn.classList.remove('active');
-                menuOverlay.classList.remove('active');
-            }
+    });
+}
+
+// Page visibility handling to ensure video plays when returning to page
+document.addEventListener('visibilitychange', function() {
+    if (!document.hidden) {
+        const video = document.querySelector('.fullscreen-video');
+        if (video && video.paused) {
+            video.play().catch(function(error) {
+                console.log('Video play failed on visibility change:', error);
+            });
+        }
+    }
+});
+
+// Handle page navigation events to ensure proper initialization
+window.addEventListener('pageshow', function(event) {
+    console.log('Page show event, persisted:', event.persisted);
+    
+    if (event.persisted) {
+        // Page was loaded from cache, reinitialize
+        setTimeout(function() {
+            initVideoBackground();
+            initHamburgerMenu();
+        }, 100);
+    }
+});
+
+// Ensure proper cleanup and initialization when navigating
+window.addEventListener('beforeunload', function() {
+    console.log('Page unloading');
+});
+
+// Force video reload when returning to a page
+window.addEventListener('focus', function() {
+    const video = document.querySelector('.fullscreen-video');
+    if (video && video.paused) {
+        video.play().catch(function(error) {
+            console.log('Video play failed on focus:', error);
         });
     }
-    
-    // Log for debugging
-    console.log('Mobile detected:', isMobile());
-    console.log('Video sources loaded');
-    console.log('Hamburger menu initialized');
 });
+
+console.log('Main.js initialization complete');
