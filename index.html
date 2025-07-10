@@ -2,9 +2,36 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1a1a1a">
+    <meta name="description" content="BowMafia DAO - Join the exclusive community of Bow enthusiasts">
+    <meta name="robots" content="index, follow">
     <title>BowMafia - BowDAO</title>
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="css/styles.css" as="style">
+    <link rel="preload" href="js/main.js" as="script">
+    <link rel="prefetch" href="assets/videos/bowmafia-video.webm" media="(min-width: 768px)">
+    <link rel="prefetch" href="assets/videos/bowmafia-videomobile.webm" media="(max-width: 767px)">
+    
+    <!-- DNS prefetch for external resources -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    
+    <!-- Critical CSS -->
     <link rel="stylesheet" href="css/styles.css">
+    
+    <!-- PWA manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/images/BowMafia.png">
+    
+    <!-- Optimize for mobile -->
+    <meta name="theme-color" content="#b19cd9">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
 <body>
     <!-- Hamburger Menu -->
@@ -16,18 +43,17 @@
         </button>
         <nav class="menu-overlay" id="menu-overlay">
             <div class="menu-content">
-                <a href="dao.html" class="menu-item">Join the DAO</a>
                 <a href="assets.html" class="menu-item">Assets</a>
                 <a href="popouts.html" class="menu-item">Pop outs</a>
-                <a href="shop.html" class="menu-item">Silk & Bows</a>
             </div>
         </nav>
     </div>
 
     <main>
         <section id="home" class="hero">
-            <video class="fullscreen-video" autoplay muted loop playsinline preload="auto" webkit-playsinline="true" crossorigin="anonymous">
-                <!-- Sources will be added dynamically by JavaScript for optimal browser compatibility -->
+            <video class="fullscreen-video" autoplay muted loop playsinline preload="metadata" webkit-playsinline="true" poster="assets/images/dao-background.jpg">
+                <!-- Sources will be added dynamically by JavaScript for better performance -->
+                Your browser does not support the video tag.
             </video>
             <div class="button-container">
                 <button class="left-button" onclick="window.location.href='dao.html'">Join the DAO</button>
@@ -41,6 +67,7 @@
         BowMafiaDAO © 2025 | <a href="#terms">Terms & Conditions</a>
     </footer>
     
-    <script src="js/main.js"></script>
+    <!-- Load JavaScript asynchronously -->
+    <script src="js/main.js" async></script>
 </body>
 </html>
