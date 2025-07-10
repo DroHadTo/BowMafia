@@ -461,26 +461,28 @@
                 card.className = "asset-card";
                 
                 if (i === 1) {
-                    // First card - Doginal Dog #5095 with PNG image
+                    // First card - Doginal Dog #5095 with PNG image - try multiple path approaches
                     card.innerHTML = `
                         <div class="video-container">
-                            <img src="assets/images/doginal-dog-5095.png" 
+                            <img src="./assets/images/doginal-dog-5095.png" 
                                  alt="Doginal Dog #5095" 
                                  style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; border: 2px solid red;"
                                  onload="console.log('✅ PNG image #5095 loaded successfully! Size:', this.naturalWidth + 'x' + this.naturalHeight);"
-                                 onerror="console.error('❌ Failed to load PNG image #5095. Full src:', this.src); console.error('Error details:', event); this.style.display='none'; this.parentElement.style.background='#ffb1dd'; this.parentElement.innerHTML='<div style=&quot;color: white; font-size: 2rem; display: flex; align-items: center; justify-content: center; height: 100%;&quot;>🎀 #5095</div>';">
+                                 onerror="console.error('❌ Failed to load PNG image #5095. Trying alternative path...'); this.src='assets/images/BowMafia.png'; this.onerror=function(){console.error('❌ Fallback also failed. Directory access issue.'); this.style.display='none'; this.parentElement.style.background='#ffb1dd'; this.parentElement.innerHTML='<div style=&quot;color: white; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; height: 100%; text-align: center;&quot;>🎀<br>#5095<br>Image Missing</div>';}"
+                                 data-original-src="./assets/images/doginal-dog-5095.png">
                         </div>
                         <p>Doginal Dog #5095</p>
                     `;
                 } else if (i === 2) {
-                    // Second card - Doginal Dog #2377 with PNG image
+                    // Second card - Doginal Dog #2377 with PNG image - try multiple path approaches
                     card.innerHTML = `
                         <div class="video-container">
-                            <img src="assets/images/doginal-dog-2377.png" 
+                            <img src="./assets/images/doginal-dog-2377.png" 
                                  alt="Doginal Dog #2377" 
                                  style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; border: 2px solid blue;"
                                  onload="console.log('✅ PNG image #2377 loaded successfully! Size:', this.naturalWidth + 'x' + this.naturalHeight);"
-                                 onerror="console.error('❌ Failed to load PNG image #2377. Full src:', this.src); console.error('Error details:', event); this.style.display='none'; this.parentElement.style.background='#ffb1dd'; this.parentElement.innerHTML='<div style=&quot;color: white; font-size: 2rem; display: flex; align-items: center; justify-content: center; height: 100%;&quot;>🎀 #2377</div>';">
+                                 onerror="console.error('❌ Failed to load PNG image #2377. Trying alternative path...'); this.src='assets/images/BowMafia.png'; this.onerror=function(){console.error('❌ Fallback also failed. Directory access issue.'); this.style.display='none'; this.parentElement.style.background='#ffb1dd'; this.parentElement.innerHTML='<div style=&quot;color: white; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; height: 100%; text-align: center;&quot;>🎀<br>#2377<br>Image Missing</div>';}"
+                                 data-original-src="./assets/images/doginal-dog-2377.png">
                         </div>
                         <p>Doginal Dog #2377</p>
                     `;
@@ -561,14 +563,32 @@
             console.log("Base URL:", window.location.origin + window.location.pathname.replace('assets.html', ''));
             loadDoginalDogs();
             
-            // Test if we can access the images directory
-            fetch('assets/images/BowMafia.png')
-                .then(response => {
-                    console.log('✅ assets/images/ directory is accessible, BowMafia.png response:', response.status);
-                })
-                .catch(error => {
-                    console.error('❌ Cannot access assets/images/ directory:', error);
-                });
+            // Test if we can access the images directory with multiple approaches
+            const testPaths = [
+                'assets/images/BowMafia.png',
+                './assets/images/BowMafia.png', 
+                'assets/images/doginal-dog-5095.png',
+                './assets/images/doginal-dog-5095.png'
+            ];
+            
+            testPaths.forEach((path, index) => {
+                fetch(path)
+                    .then(response => {
+                        console.log(`✅ Path ${index + 1} (${path}) accessible, response:`, response.status);
+                    })
+                    .catch(error => {
+                        console.error(`❌ Path ${index + 1} (${path}) failed:`, error);
+                    });
+            });
+            
+            // Also try creating a test image element
+            setTimeout(() => {
+                console.log("🔍 Testing image creation manually...");
+                const testImg = new Image();
+                testImg.onload = () => console.log("✅ Manual test image loaded successfully!");
+                testImg.onerror = () => console.error("❌ Manual test image failed to load");
+                testImg.src = "assets/images/BowMafia.png";
+            }, 1000);
         });
 
         // Fallback - load after a short delay if needed
