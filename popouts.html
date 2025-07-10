@@ -335,54 +335,11 @@
             });
         }
         
-        // Hamburger Menu Functionality - ensure it works on this page
-        function initHamburgerMenu() {
-            const hamburgerBtn = document.getElementById('hamburger-btn');
-            const menuOverlay = document.getElementById('menu-overlay');
-            
-            console.log('Hamburger button:', hamburgerBtn);
-            console.log('Menu overlay:', menuOverlay);
-            
-            if (hamburgerBtn && menuOverlay) {
-                hamburgerBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    console.log('Hamburger clicked');
-                    hamburgerBtn.classList.toggle('active');
-                    menuOverlay.classList.toggle('active');
-                });
-                
-                // Close menu when clicking outside or on menu items
-                menuOverlay.addEventListener('click', function(e) {
-                    if (e.target === menuOverlay || e.target.classList.contains('menu-item')) {
-                        hamburgerBtn.classList.remove('active');
-                        menuOverlay.classList.remove('active');
-                    }
-                });
-                
-                // Close menu on escape key
-                document.addEventListener('keydown', function(e) {
-                    if (e.key === 'Escape' && menuOverlay.classList.contains('active')) {
-                        hamburgerBtn.classList.remove('active');
-                        menuOverlay.classList.remove('active');
-                    }
-                });
-                
-                console.log('Hamburger menu initialized successfully');
-            } else {
-                console.error('Hamburger menu elements not found');
-            }
-        }
-        
-        // Initialize everything when DOM is loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            initHamburgerMenu();
-        });
-        
-        // Start floating animation when page loads
+        // Initialize floating images when page loads
         window.addEventListener('load', initFloatingImages);
     </script>
     
-    <!-- Load main JavaScript asynchronously -->
-    <script src="js/main.js" async></script>
+    <!-- Load main JavaScript -->
+    <script src="js/main.js"></script>
 </body>
 </html>
