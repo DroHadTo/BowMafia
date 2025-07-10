@@ -12,12 +12,7 @@ const PERFORMANCE_CONFIG = {
 // State management
 let appState = {
     isMenuOpen: false,
-    isInitialized: false,
-    videoLoaded: false,
-    activeDropdown: null,
-    currentPage: 'home',
-    hamburgerListenerAttached: false,
-    videoRetryCount: 0
+    videoLoaded: false
 };
 
 // Utility functions
@@ -210,23 +205,19 @@ const initializeHamburgerMenu = () => {
     
     if (!hamburgerBtn || !menuOverlay) return;
     
-    // Remove existing event listeners by removing and re-adding the element
-    if (appState.hamburgerListenerAttached) {
-        console.log('Resetting hamburger menu listeners');
-        // Reset menu state
-        hamburgerBtn.classList.remove('active');
-        menuOverlay.classList.remove('active');
-        document.body.classList.remove('menu-open');
-        appState.isMenuOpen = false;
-    }
+    // Reset menu state
+    hamburgerBtn.classList.remove('active');
+    menuOverlay.classList.remove('active');
+    document.body.classList.remove('menu-open');
+    appState.isMenuOpen = false;
     
+    // Simple toggle function
     const toggleMenu = (e) => {
         e.stopPropagation();
         appState.isMenuOpen = !appState.isMenuOpen;
         hamburgerBtn.classList.toggle('active', appState.isMenuOpen);
         menuOverlay.classList.toggle('active', appState.isMenuOpen);
         document.body.classList.toggle('menu-open', appState.isMenuOpen);
-        console.log('Menu toggled:', appState.isMenuOpen);
     };
     
     const closeMenu = () => {
@@ -235,33 +226,27 @@ const initializeHamburgerMenu = () => {
             hamburgerBtn.classList.remove('active');
             menuOverlay.classList.remove('active');
             document.body.classList.remove('menu-open');
-            console.log('Menu closed');
         }
     };
     
-    // Remove existing listeners first
+    // Add event listeners (remove first to prevent duplicates)
     hamburgerBtn.removeEventListener('click', toggleMenu);
-    
-    // Add fresh listeners
     hamburgerBtn.addEventListener('click', toggleMenu);
     
-    // Close menu when clicking outside (only add once)
-    if (!appState.hamburgerListenerAttached) {
-        document.addEventListener('click', (e) => {
-            if (appState.isMenuOpen && !menuOverlay.contains(e.target) && !hamburgerBtn.contains(e.target)) {
-                closeMenu();
-            }
-        });
-        
-        // Close menu on escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && appState.isMenuOpen) {
-                closeMenu();
-            }
-        });
-    }
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (appState.isMenuOpen && !menuOverlay.contains(e.target) && !hamburgerBtn.contains(e.target)) {
+            closeMenu();
+        }
+    });
     
-    appState.hamburgerListenerAttached = true;
+    // Close menu on escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && appState.isMenuOpen) {
+            closeMenu();
+        }
+    });
+    
     console.log('Hamburger menu initialized');
 };
 
@@ -296,16 +281,15 @@ const initializeServiceWorker = () => {
 
 // Main initialization
 const initializeApp = async () => {
-    console.log('App initialization started, current state:', appState.isInitialized);
+    console.log('App initialization started');
     
     try {
-        // Always initialize core features to handle page navigation properly
+        // Initialize core features
         await initializeVideoBackground();
         initializeHamburgerMenu();
         initializeSmoothScrolling();
         initializeServiceWorker();
         
-        appState.isInitialized = true;
         console.log('App initialized successfully');
         
     } catch (error) {
@@ -313,68 +297,16 @@ const initializeApp = async () => {
     }
 };
 
-// Reset app state when navigating to ensure proper reinitialization
-const resetAppState = () => {
-    appState.isInitialized = false;
-    appState.videoLoaded = false;
-    appState.hamburgerListenerAttached = false;
-    console.log('App state reset for navigation');
-};
-
-// Universal page initialization handler
-const handlePageInitialization = (source) => {
-    console.log(`Page initialization triggered by: ${source}`);
-    resetAppState();
-    // Small delay to ensure DOM is ready
-    setTimeout(() => {
-        initializeApp();
-    }, 50);
-};
-
-// Page visibility and focus handlers
-document.addEventListener('visibilitychange', () => {
-    if (!document.hidden) {
-        handlePageInitialization('visibilitychange');
-    }
-});
-
-window.addEventListener('focus', () => {
-    handlePageInitialization('focus');
-});
-
-// Handle page navigation events - comprehensive approach for all browsers
+// Simple page navigation handler
 window.addEventListener('pageshow', (event) => {
     console.log('Page show event, persisted:', event.persisted);
-    handlePageInitialization(`pageshow-${event.persisted ? 'cached' : 'fresh'}`);
-});
-
-// Handle browser back/forward navigation
-window.addEventListener('popstate', () => {
-    console.log('Browser navigation detected (popstate)');
-    handlePageInitialization('popstate');
-});
-
-// Additional handler for Brave browser compatibility
-window.addEventListener('beforeunload', () => {
-    console.log('Page unloading, will reinitialize on return');
-    resetAppState();
-});
-
-// Enhanced load event for navigation detection
-window.addEventListener('load', () => {
-    console.log('Window load event');
-    handlePageInitialization('load');
-});
-
-// Detect URL changes (for SPA-like behavior)
-let currentUrl = window.location.href;
-setInterval(() => {
-    if (window.location.href !== currentUrl) {
-        console.log('URL change detected:', window.location.href);
-        currentUrl = window.location.href;
-        handlePageInitialization('url-change');
+    if (event.persisted) {
+        // Page was restored from cache, reinitialize
+        setTimeout(() => {
+            initializeApp();
+        }, 100);
     }
-}, 100);
+});
 
 // DOM ready handler
 if (document.readyState === 'loading') {
