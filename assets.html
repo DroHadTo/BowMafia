@@ -449,7 +449,7 @@
     </footer>
 
     <script>
-        // Create 9 placeholder Doginal Dog assets with proper fallbacks
+        // Create 9 Doginal Dog assets with first one being #5095
         function loadDoginalDogs() {
             const assetGrid = document.getElementById("asset-grid");
             
@@ -460,34 +460,54 @@
                 const card = document.createElement("div");
                 card.className = "asset-card";
                 
-                card.innerHTML = `
-                    <div class="video-container">
-                        <video autoplay muted loop playsinline 
-                               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                            <source src="assets/videos/doginal-placeholder.mp4" type="video/mp4">
-                        </video>
-                        <div class="placeholder-gif" style="display: none;">
-                            <img src="assets/images/doginal-placeholder.gif" 
-                                 alt="Doginal Dog #${i}" 
+                if (i === 1) {
+                    // First card - Doginal Dog #5095 with PNG image
+                    card.innerHTML = `
+                        <div class="video-container">
+                            <img src="assets/images/Doginal Dog #5095.png" 
+                                 alt="Doginal Dog #5095" 
                                  style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;"
-                                 onerror="this.style.display='none'; this.parentElement.style.background='#ffb1dd';">
+                                 onerror="this.style.display='none'; this.parentElement.style.background='#ffb1dd'; this.parentElement.innerHTML='<div style=&quot;color: white; font-size: 2rem;&quot;>🎀</div>';">
                         </div>
-                    </div>
-                    <p>Doginal Dog #${i}</p>
-                `;
+                        <p>Doginal Dog #5095</p>
+                    `;
+                } else {
+                    // Other cards - placeholder video/GIF
+                    card.innerHTML = `
+                        <div class="video-container">
+                            <video autoplay muted loop playsinline 
+                                   onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                <source src="assets/videos/doginal-placeholder.mp4" type="video/mp4">
+                            </video>
+                            <div class="placeholder-gif" style="display: none;">
+                                <img src="assets/images/doginal-placeholder.gif" 
+                                     alt="Doginal Dog #${i}" 
+                                     style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;"
+                                     onerror="this.style.display='none'; this.parentElement.style.background='#ffb1dd';">
+                            </div>
+                        </div>
+                        <p>Doginal Dog #${i}</p>
+                    `;
+                }
                 
                 assetGrid.appendChild(card);
             }
             
-            console.log("Loaded 9 Doginal Dog cards with MP4 and GIF fallbacks");
+            console.log("Loaded 9 Doginal Dog cards - first card is #5095 PNG, others are MP4/GIF placeholders");
             
             // Check loading status after delay
             setTimeout(() => {
                 const videos = document.querySelectorAll('.video-container video');
                 const gifs = document.querySelectorAll('.placeholder-gif img');
+                const pngImage = document.querySelector('.video-container img[src*="5095"]');
                 
                 let videoCount = 0;
                 let gifCount = 0;
+                let pngLoaded = false;
+                
+                if (pngImage && pngImage.complete && pngImage.naturalWidth > 0) {
+                    pngLoaded = true;
+                }
                 
                 videos.forEach(video => {
                     if (video.style.display !== 'none' && video.readyState >= 2) {
@@ -501,10 +521,12 @@
                     }
                 });
                 
+                console.log(`Doginal Dog #5095 PNG: ${pngLoaded ? 'loaded' : 'failed'}`);
                 console.log(`${videoCount} MP4s and ${gifCount} GIFs loaded successfully`);
                 
-                if (videoCount === 0 && gifCount === 0) {
+                if (!pngLoaded && videoCount === 0 && gifCount === 0) {
                     console.log("No media loaded - check if files exist:");
+                    console.log("- assets/images/Doginal Dog #5095.png");
                     console.log("- assets/videos/doginal-placeholder.mp4");
                     console.log("- assets/images/doginal-placeholder.gif");
                 }
