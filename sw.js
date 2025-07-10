@@ -1,18 +1,20 @@
 // Service Worker for BowMafia DAO
-const CACHE_NAME = 'bowmafia-v1';
+const CACHE_NAME = 'bowmafia-v2'; // Updated version
 const urlsToCache = [
   '/',
   '/index.html',
   '/dao.html',
   '/shop.html',
   '/popouts.html',
-  '/payment.html',
+  '/assets.html',
   '/css/styles.css',
   '/js/main.js',
   '/assets/images/BowMafia.png',
   '/assets/images/dao-background.jpg',
   '/assets/images/floating-element.png',
-  '/manifest.json'
+  '/assets/images/BOB.png',
+  '/assets/videos/DAOasset.webm',
+  '/assets/videos/DAOasset.mp4'
 ];
 
 // Install event
@@ -23,17 +25,28 @@ self.addEventListener('install', function(event) {
         return cache.addAll(urlsToCache);
       })
   );
+  self.skipWaiting(); // Force activation
 });
 
-// Fetch event
+// Fetch event with network-first strategy for better performance
 self.addEventListener('fetch', function(event) {
   event.respondWith(
-    caches.match(event.request)
+    fetch(event.request)
       .then(function(response) {
-        // Return cached version or fetch from network
-        return response || fetch(event.request);
-      }
-    )
+        // If fetch succeeds, update cache and return response
+        if (response.status === 200) {
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME)
+            .then(function(cache) {
+              cache.put(event.request, responseClone);
+            });
+        }
+        return response;
+      })
+      .catch(function() {
+        // If fetch fails, try cache
+        return caches.match(event.request);
+      })
   );
 });
 
@@ -50,4 +63,5 @@ self.addEventListener('activate', function(event) {
       );
     })
   );
+  self.clients.claim(); // Take control immediately
 });

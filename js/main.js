@@ -1,316 +1,188 @@
-// Performance optimizations
-const PERFORMANCE_CONFIG = {
-    enableLazyLoading: true,
-    debounceDelay: 300,
-    intersectionThreshold: 0.1,
-    maxRetries: 3,
-    retryDelay: 1000,
-    videoLoadTimeout: 10000,
-    preventMultipleListeners: true
-};
+// BowMafia Website - Simplified Main JS
+// Fast, reliable initialization without complex state management
 
-// State management
-let appState = {
-    isMenuOpen: false,
-    videoLoaded: false
-};
-
-// Utility functions
-const debounce = (func, delay) => {
-    let timeoutId;
-    return (...args) => {
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => func.apply(null, args), delay);
-    };
-};
-
-const createOptimizedVideoElement = () => {
-    const video = document.querySelector('.fullscreen-video');
-    if (!video) return null;
+// Core initialization
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('BowMafia website initialized');
     
-    // Clear any existing sources
+    // Load video with proper sources
+    loadVideoSources();
+    
+    // Setup hamburger menu
+    setupHamburgerMenu();
+    
+    // Setup smooth scrolling
+    setupSmoothScrolling();
+    
+    // Setup form handlers
+    setupFormHandlers();
+});
+
+// Video loading - simple and reliable
+function loadVideoSources() {
+    const video = document.querySelector('.fullscreen-video');
+    if (!video) return;
+    
+    // Clear existing sources
     video.innerHTML = '';
     
-    // Create source elements
-    const sources = [];
+    // Add appropriate sources based on screen size
+    const isMobile = window.innerWidth < 768;
     
-    // WebM sources (prioritized for better performance)
-    if (window.innerWidth >= 768) {
-        sources.push({
-            src: 'assets/videos/bowmafia-video.webm',
-            type: 'video/webm'
-        });
-        sources.push({
-            src: 'assets/videos/bowmafia-video.mp4',
-            type: 'video/mp4'
-        });
+    if (isMobile) {
+        // Mobile sources
+        video.innerHTML = `
+            <source src="assets/videos/bowmafia-videomobile.webm" type="video/webm">
+            <source src="assets/videos/bowmafia-videomobile.mp4" type="video/mp4">
+        `;
     } else {
-        sources.push({
-            src: 'assets/videos/bowmafia-videomobile.webm',
-            type: 'video/webm'
-        });
-        sources.push({
-            src: 'assets/videos/bowmafia-videomobile.mp4',
-            type: 'video/mp4'
-        });
+        // Desktop sources
+        video.innerHTML = `
+            <source src="assets/videos/bowmafia-video.webm" type="video/webm">
+            <source src="assets/videos/bowmafia-video.mp4" type="video/mp4">
+        `;
     }
     
-    // Add sources to video element
-    sources.forEach(source => {
-        const sourceElement = document.createElement('source');
-        sourceElement.src = source.src;
-        sourceElement.type = source.type;
-        video.appendChild(sourceElement);
+    // Load the video
+    video.load();
+    
+    // Play if possible
+    video.play().catch(e => {
+        console.log('Video autoplay prevented by browser');
     });
-    
-    // Add fallback text
-    const fallbackText = document.createTextNode('Your browser does not support the video tag.');
-    video.appendChild(fallbackText);
-    
-    return video;
-};
-
-// Legacy function for backward compatibility
-const loadVideoSources = () => {
-    return createOptimizedVideoElement();
-};
-
-// Make toggleBowDogFields function global so it can be called from HTML
-function toggleBowDogFields() {
-    const bowDogYes = document.getElementById('bowDogYes');
-    const bowDogFields = document.getElementById('bowDogFields');
-    
-    if (bowDogYes && bowDogYes.checked) {
-        bowDogFields.style.display = 'block';
-    } else {
-        bowDogFields.style.display = 'none';
-    }
 }
 
-// Enhanced video loading with retry logic
-const loadVideoWithRetry = (video, retryCount = 0) => {
-    return new Promise((resolve, reject) => {
-        if (!video) {
-            reject(new Error('Video element not found'));
-            return;
-        }
-        
-        const timeoutId = setTimeout(() => {
-            console.warn('Video load timeout');
-            if (retryCount < PERFORMANCE_CONFIG.maxRetries) {
-                console.log(`Retrying video load... Attempt ${retryCount + 1}`);
-                setTimeout(() => {
-                    loadVideoWithRetry(video, retryCount + 1)
-                        .then(resolve)
-                        .catch(reject);
-                }, PERFORMANCE_CONFIG.retryDelay);
-            } else {
-                reject(new Error('Video load failed after maximum retries'));
-            }
-        }, PERFORMANCE_CONFIG.videoLoadTimeout);
-        
-        const onLoadedData = () => {
-            clearTimeout(timeoutId);
-            video.removeEventListener('loadeddata', onLoadedData);
-            video.removeEventListener('error', onError);
-            appState.videoLoaded = true;
-            console.log('Video loaded successfully');
-            resolve(video);
-        };
-        
-        const onError = (error) => {
-            clearTimeout(timeoutId);
-            video.removeEventListener('loadeddata', onLoadedData);
-            video.removeEventListener('error', onError);
-            console.error('Video load error:', error);
-            
-            if (retryCount < PERFORMANCE_CONFIG.maxRetries) {
-                console.log(`Retrying video load... Attempt ${retryCount + 1}`);
-                setTimeout(() => {
-                    // Recreate video sources for retry
-                    createOptimizedVideoElement();
-                    loadVideoWithRetry(video, retryCount + 1)
-                        .then(resolve)
-                        .catch(reject);
-                }, PERFORMANCE_CONFIG.retryDelay);
-            } else {
-                reject(error);
-            }
-        };
-        
-        video.addEventListener('loadeddata', onLoadedData, { once: true });
-        video.addEventListener('error', onError, { once: true });
-        
-        // Force load if not already loading
-        if (video.readyState < 3) {
-            video.load();
-        } else {
-            onLoadedData();
-        }
+// Hamburger menu - simple toggle
+function setupHamburgerMenu() {
+    const hamburger = document.querySelector('.hamburger-btn');
+    const navMenu = document.querySelector('.menu-overlay');
+    
+    if (!hamburger || !navMenu) return;
+    
+    hamburger.addEventListener('click', function() {
+        hamburger.classList.toggle('active');
+        navMenu.classList.toggle('active');
     });
-};
-
-// Initialize video background
-const initializeVideoBackground = async () => {
-    try {
-        const video = createOptimizedVideoElement();
-        if (!video) return;
-        
-        // Set video attributes for optimal performance
-        video.setAttribute('playsinline', 'true');
-        video.setAttribute('webkit-playsinline', 'true');
-        video.muted = true;
-        video.loop = true;
-        video.autoplay = true;
-        video.preload = 'metadata';
-        
-        // Load and play video
-        await loadVideoWithRetry(video);
-        
-        // Ensure video plays
-        try {
-            await video.play();
-            console.log('Video playing successfully');
-        } catch (playError) {
-            console.warn('Video autoplay failed:', playError);
-            // Try to play on user interaction
-            document.addEventListener('click', () => {
-                video.play().catch(console.error);
-            }, { once: true });
-        }
-        
-        // Handle visibility change to resume video
-        document.addEventListener('visibilitychange', () => {
-            if (!document.hidden && video.paused) {
-                video.play().catch(console.error);
-            }
+    
+    // Close menu when clicking nav links
+    document.querySelectorAll('.menu-overlay a').forEach(link => {
+        link.addEventListener('click', function() {
+            hamburger.classList.remove('active');
+            navMenu.classList.remove('active');
         });
-        
-        // Handle window focus to resume video
-        window.addEventListener('focus', () => {
-            if (video.paused) {
-                video.play().catch(console.error);
-            }
-        });
-        
-    } catch (error) {
-        console.error('Failed to initialize video background:', error);
-    }
-};
-
-// Initialize hamburger menu
-const initializeHamburgerMenu = () => {
-    const hamburgerBtn = document.getElementById('hamburger-btn');
-    const menuOverlay = document.getElementById('menu-overlay');
-    
-    if (!hamburgerBtn || !menuOverlay) return;
-    
-    // Reset menu state
-    hamburgerBtn.classList.remove('active');
-    menuOverlay.classList.remove('active');
-    document.body.classList.remove('menu-open');
-    appState.isMenuOpen = false;
-    
-    // Simple toggle function
-    const toggleMenu = (e) => {
-        e.stopPropagation();
-        appState.isMenuOpen = !appState.isMenuOpen;
-        hamburgerBtn.classList.toggle('active', appState.isMenuOpen);
-        menuOverlay.classList.toggle('active', appState.isMenuOpen);
-        document.body.classList.toggle('menu-open', appState.isMenuOpen);
-    };
-    
-    const closeMenu = () => {
-        if (appState.isMenuOpen) {
-            appState.isMenuOpen = false;
-            hamburgerBtn.classList.remove('active');
-            menuOverlay.classList.remove('active');
-            document.body.classList.remove('menu-open');
-        }
-    };
-    
-    // Add event listeners (remove first to prevent duplicates)
-    hamburgerBtn.removeEventListener('click', toggleMenu);
-    hamburgerBtn.addEventListener('click', toggleMenu);
-    
-    // Close menu when clicking outside
-    document.addEventListener('click', (e) => {
-        if (appState.isMenuOpen && !menuOverlay.contains(e.target) && !hamburgerBtn.contains(e.target)) {
-            closeMenu();
-        }
     });
-    
-    // Close menu on escape key
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && appState.isMenuOpen) {
-            closeMenu();
-        }
-    });
-    
-    console.log('Hamburger menu initialized');
-};
+}
 
-// Initialize smooth scrolling
-const initializeSmoothScrolling = () => {
+// Smooth scrolling
+function setupSmoothScrolling() {
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
             const target = document.querySelector(this.getAttribute('href'));
             if (target) {
                 target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
+                    behavior: 'smooth'
                 });
             }
         });
     });
-};
+}
 
-// Initialize service worker
-const initializeServiceWorker = () => {
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js')
-            .then(registration => {
-                console.log('Service Worker registered:', registration);
-            })
-            .catch(error => {
-                console.error('Service Worker registration failed:', error);
-            });
+// Form handlers
+function setupFormHandlers() {
+    // BowDog fields toggle
+    const bowDogYes = document.getElementById('bowDogYes');
+    const bowDogNo = document.getElementById('bowDogNo');
+    
+    if (bowDogYes && bowDogNo) {
+        bowDogYes.addEventListener('change', toggleBowDogFields);
+        bowDogNo.addEventListener('change', toggleBowDogFields);
     }
-};
+    
+    // Payment asset change
+    const paymentAsset = document.getElementById('paymentAsset');
+    if (paymentAsset) {
+        paymentAsset.addEventListener('change', togglePaymentFields);
+    }
+}
 
-// Main initialization
-const initializeApp = async () => {
-    console.log('App initialization started');
+// Toggle BowDog fields
+function toggleBowDogFields() {
+    const bowDogYes = document.getElementById('bowDogYes');
+    const bowDogFields = document.getElementById('bowDogFields');
+    
+    if (bowDogYes && bowDogFields) {
+        bowDogFields.style.display = bowDogYes.checked ? 'block' : 'none';
+    }
+}
+
+// Toggle payment fields
+function togglePaymentFields() {
+    const paymentAsset = document.getElementById('paymentAsset');
+    const solanaAddressField = document.getElementById('solanaAddressField');
+    const dogeAddressField = document.getElementById('dogeAddressField');
+    
+    if (!paymentAsset || !solanaAddressField || !dogeAddressField) return;
+    
+    const selectedValue = paymentAsset.value;
+    
+    // Hide both fields first
+    solanaAddressField.style.display = 'none';
+    dogeAddressField.style.display = 'none';
+    
+    // Show the appropriate field
+    if (selectedValue === 'solana') {
+        solanaAddressField.style.display = 'block';
+    } else if (selectedValue === 'doge') {
+        dogeAddressField.style.display = 'block';
+    }
+}
+
+// Copy to clipboard
+function copyToClipboard(elementId) {
+    const element = document.getElementById(elementId);
+    if (!element) return;
+    
+    element.select();
+    element.setSelectionRange(0, 99999);
     
     try {
-        // Initialize core features
-        await initializeVideoBackground();
-        initializeHamburgerMenu();
-        initializeSmoothScrolling();
-        initializeServiceWorker();
-        
-        console.log('App initialized successfully');
-        
-    } catch (error) {
-        console.error('App initialization failed:', error);
+        document.execCommand('copy');
+        const button = element.nextElementSibling;
+        if (button) {
+            const originalText = button.textContent;
+            button.textContent = 'Copied!';
+            button.style.background = '#4CAF50';
+            
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.style.background = '#b19cd9';
+            }, 2000);
+        }
+    } catch (err) {
+        console.error('Copy failed:', err);
     }
-};
+}
 
-// Simple page navigation handler
-window.addEventListener('pageshow', (event) => {
-    console.log('Page show event, persisted:', event.persisted);
+// Handle page cache restoration
+window.addEventListener('pageshow', function(event) {
     if (event.persisted) {
-        // Page was restored from cache, reinitialize
-        setTimeout(() => {
-            initializeApp();
-        }, 100);
+        const video = document.querySelector('.fullscreen-video');
+        if (video && video.paused) {
+            video.play().catch(e => console.log('Video resume from cache failed:', e));
+        }
     }
 });
 
-// DOM ready handler
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeApp);
-} else {
-    initializeApp();
+// Service worker registration
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js')
+            .then(function(registration) {
+                console.log('ServiceWorker registered successfully');
+            })
+            .catch(function(error) {
+                console.log('ServiceWorker registration failed:', error);
+            });
+    });
 }

@@ -2,30 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#1a1a1a">
-    <meta name="description" content="BowMafia DAO Assets - View our Doginal Dogs collection">
-    <meta name="robots" content="index, follow">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BowMafia DAO Assets</title>
     
-    <!-- DNS Prefetch for external resources -->
-    <link rel="dns-prefetch" href="//fonts.googleapis.com">
-    <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    
-    <!-- Preload critical resources -->
-    <link rel="preload" href="css/styles.css" as="style">
-    <link rel="preload" href="DAOasset.webm" as="video" type="video/webm">
-    
-    <!-- Google Fonts with display=swap for better performance -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Eagle+Lake&display=swap" rel="stylesheet">
-    
-    <!-- Main stylesheet -->
-    <link rel="stylesheet" href="css/styles.css">
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="assets/images/BowMafia.png">
     
     <style>
         * {
@@ -40,7 +23,6 @@
             color: #333;
             position: relative;
             overflow-x: hidden;
-            background: transparent; /* Remove any background */
         }
 
         /* Video Background */
@@ -73,7 +55,6 @@
             padding: 2rem;
             position: relative;
             z-index: 1;
-            background: transparent; /* Ensure no background blocks video */
         }
         
         .header {
@@ -90,6 +71,30 @@
             margin-bottom: 0.5rem;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
             letter-spacing: 1px;
+        }
+        
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #b19cd9;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            z-index: 1000;
+        }
+        
+        .back-btn:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.4);
         }
         
         .treasury-box {
@@ -262,6 +267,17 @@
             font-weight: bold;
             animation: pulse 2s infinite;
             border-radius: 8px;
+            background-image: url('assets/images/doginal-placeholder.gif');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        
+        /* If GIF doesn't load, show emoji */
+        .placeholder-gif::before {
+            content: '🎀';
+            position: absolute;
+            z-index: 1;
         }
         
         @keyframes pulse {
@@ -347,6 +363,13 @@
                 transform: translateY(-1px);
             }
             
+            .back-btn {
+                top: 10px;
+                left: 10px;
+                padding: 8px 15px;
+                font-size: 0.9rem;
+            }
+            
             .header h1 {
                 font-size: 1.8rem;
             }
@@ -385,32 +408,17 @@
     </style>
 </head>
 <body>
-    <!-- Hamburger Menu -->
-    <div class="hamburger-menu">
-        <button class="hamburger-btn" id="hamburger-btn">
-            <span class="hamburger-line"></span>
-            <span class="hamburger-line"></span>
-            <span class="hamburger-line"></span>
-        </button>
-        <nav class="menu-overlay" id="menu-overlay">
-            <div class="menu-content">
-                <a href="index.html" class="menu-item">Home</a>
-                <a href="dao.html" class="menu-item">Join the DAO</a>
-                <a href="popouts.html" class="menu-item">Pop outs</a>
-                <a href="shop.html" class="menu-item">Silk & Bows</a>
-            </div>
-        </nav>
-    </div>
-
     <!-- Fallback background -->
     <div class="video-background-fallback"></div>
     
-    <!-- Video background -->
+    <!-- Video background with correct path -->
     <video class="video-background" autoplay muted loop playsinline preload="metadata">
-        <source src="DAOasset.webm" type="video/webm">
-        <source src="DAOasset.mp4" type="video/mp4">
+        <source src="assets/videos/DAOasset.webm" type="video/webm">
+        <source src="assets/videos/DAOasset.mp4" type="video/mp4">
     </video>
 
+    <a href="index.html" class="back-btn">← Back to Home</a>
+    
     <div class="container">
         <div class="header">
             <h1>BowMafia DAO Assets</h1>
@@ -441,7 +449,7 @@
     </footer>
 
     <script>
-        // Create 9 placeholder Doginal Dog assets with MP4 videos
+        // Create 9 placeholder Doginal Dog assets with proper fallbacks
         function loadDoginalDogs() {
             const assetGrid = document.getElementById("asset-grid");
             
@@ -455,10 +463,15 @@
                 card.innerHTML = `
                     <div class="video-container">
                         <video autoplay muted loop playsinline 
-                               onerror="console.log('MP4 failed to load for card ${i}'); this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                            <source src="doginal-placeholder.mp4" type="video/mp4">
+                               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <source src="assets/videos/doginal-placeholder.mp4" type="video/mp4">
                         </video>
-                        <div class="placeholder-gif" style="display: none;">🎀</div>
+                        <div class="placeholder-gif" style="display: none;">
+                            <img src="assets/images/doginal-placeholder.gif" 
+                                 alt="Doginal Dog #${i}" 
+                                 style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;"
+                                 onerror="this.style.display='none'; this.parentElement.style.background='#ffb1dd';">
+                        </div>
                     </div>
                     <p>Doginal Dog #${i}</p>
                 `;
@@ -466,28 +479,41 @@
                 assetGrid.appendChild(card);
             }
             
-            console.log("Loaded 9 Doginal Dog MP4 placeholders");
+            console.log("Loaded 9 Doginal Dog cards with MP4 and GIF fallbacks");
             
-            // Check if any videos actually loaded
+            // Check loading status after delay
             setTimeout(() => {
                 const videos = document.querySelectorAll('.video-container video');
-                let loadedCount = 0;
+                const gifs = document.querySelectorAll('.placeholder-gif img');
+                
+                let videoCount = 0;
+                let gifCount = 0;
+                
                 videos.forEach(video => {
                     if (video.style.display !== 'none' && video.readyState >= 2) {
-                        loadedCount++;
+                        videoCount++;
                     }
                 });
-                console.log(`${loadedCount} out of 9 MP4s loaded successfully`);
                 
-                if (loadedCount === 0) {
-                    console.log("No MP4s loaded - check if file exists at: doginal-placeholder.mp4");
+                gifs.forEach(gif => {
+                    if (gif.style.display !== 'none' && gif.complete) {
+                        gifCount++;
+                    }
+                });
+                
+                console.log(`${videoCount} MP4s and ${gifCount} GIFs loaded successfully`);
+                
+                if (videoCount === 0 && gifCount === 0) {
+                    console.log("No media loaded - check if files exist:");
+                    console.log("- assets/videos/doginal-placeholder.mp4");
+                    console.log("- assets/images/doginal-placeholder.gif");
                 }
             }, 3000);
         }
 
         // Load assets when page loads
         document.addEventListener('DOMContentLoaded', function() {
-            console.log("Page loaded, creating Doginal Dogs with MP4...");
+            console.log("Page loaded, creating Doginal Dogs with media fallbacks...");
             loadDoginalDogs();
         });
 
@@ -499,8 +525,5 @@
             }
         }, 1000);
     </script>
-    
-    <!-- Load main JavaScript asynchronously for navigation -->
-    <script src="js/main.js"></script>
 </body>
 </html>
