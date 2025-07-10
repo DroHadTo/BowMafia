@@ -486,6 +486,19 @@
                         </div>
                         <p>Doginal Dog #2377</p>
                     `;
+                } else if (i === 3) {
+                    // Third card - Doginal Dog #4893 with PNG image (web-safe filename)
+                    card.innerHTML = `
+                        <div class="video-container">
+                            <img src="assets/images/Doginal Dog 4893.png" 
+                                 alt="Doginal Dog #4893" 
+                                 style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;"
+                                 onload="console.log('✅ PNG image #4893 loaded successfully! Size:', this.naturalWidth + 'x' + this.naturalHeight);"
+                                 onerror="console.error('❌ Failed to load PNG image #4893 at path:', this.src); this.style.display='none'; this.parentElement.style.background='#ffb1dd'; this.parentElement.innerHTML='<div style=&quot;color: white; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; height: 100%; text-align: center;&quot;>🎀<br>#4893<br>Missing</div>';"
+                                 >
+                        </div>
+                        <p>Doginal Dog #4893</p>
+                    `;
                 } else {
                     // Other cards - placeholder video/GIF
                     card.innerHTML = `
@@ -514,9 +527,11 @@
             setTimeout(() => {
                 const pngImage5095 = document.querySelector('img[src*="Doginal Dog 5095"]');
                 const pngImage2377 = document.querySelector('img[src*="Doginal Dog 2377"]');
+                const pngImage4893 = document.querySelector('img[src*="Doginal Dog 4893"]');
                 
                 let png5095Loaded = false;
                 let png2377Loaded = false;
+                let png4893Loaded = false;
                 
                 if (pngImage5095) {
                     png5095Loaded = pngImage5095.complete && pngImage5095.naturalWidth > 0;
@@ -526,13 +541,19 @@
                     png2377Loaded = pngImage2377.complete && pngImage2377.naturalWidth > 0;
                 }
                 
+                if (pngImage4893) {
+                    png4893Loaded = pngImage4893.complete && pngImage4893.naturalWidth > 0;
+                }
+                
                 console.log(`Doginal Dog #5095 PNG: ${png5095Loaded ? '✅ loaded' : '❌ failed'}`);
                 console.log(`Doginal Dog #2377 PNG: ${png2377Loaded ? '✅ loaded' : '❌ failed'}`);
+                console.log(`Doginal Dog #4893 PNG: ${png4893Loaded ? '✅ loaded' : '❌ failed'}`);
                 
-                if (!png5095Loaded || !png2377Loaded) {
+                if (!png5095Loaded || !png2377Loaded || !png4893Loaded) {
                     console.log("❌ Image loading failed. Check if files exist:");
-                    console.log("- assets/images/doginal-dog-5095.png");
-                    console.log("- assets/images/doginal-dog-2377.png");
+                    console.log("- assets/images/Doginal Dog 5095.png");
+                    console.log("- assets/images/Doginal Dog 2377.png");
+                    console.log("- assets/images/Doginal Dog 4893.png");
                 }
             }, 2000);
         }
@@ -543,10 +564,11 @@
             console.log("Current URL:", window.location.href);
             loadDoginalDogs();
             
-            // Test if we can access the web-safe image files
+            // Test if we can access the image files
             const testPaths = [
-                'assets/images/doginal-dog-5095.png',
-                'assets/images/doginal-dog-2377.png'
+                'assets/images/Doginal Dog 5095.png',
+                'assets/images/Doginal Dog 2377.png',
+                'assets/images/Doginal Dog 4893.png'
             ];
             
             testPaths.forEach((path, index) => {
