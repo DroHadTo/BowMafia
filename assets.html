@@ -467,10 +467,22 @@
                             <img src="assets/images/doginal-dog-5095.png" 
                                  alt="Doginal Dog #5095" 
                                  style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;"
-                                 onload="console.log('PNG image loaded successfully!');"
-                                 onerror="console.log('Failed to load PNG image:', this.src); this.style.display='none'; this.parentElement.style.background='#ffb1dd'; this.parentElement.innerHTML='<div style=&quot;color: white; font-size: 2rem; display: flex; align-items: center; justify-content: center; height: 100%;&quot;>🎀</div>';">
+                                 onload="console.log('PNG image #5095 loaded successfully!');"
+                                 onerror="console.log('Failed to load PNG image #5095:', this.src); this.style.display='none'; this.parentElement.style.background='#ffb1dd'; this.parentElement.innerHTML='<div style=&quot;color: white; font-size: 2rem; display: flex; align-items: center; justify-content: center; height: 100%;&quot;>🎀</div>';">
                         </div>
                         <p>Doginal Dog #5095</p>
+                    `;
+                } else if (i === 2) {
+                    // Second card - Doginal Dog #2377 with PNG image
+                    card.innerHTML = `
+                        <div class="video-container">
+                            <img src="assets/images/doginal-dog-2377.png" 
+                                 alt="Doginal Dog #2377" 
+                                 style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;"
+                                 onload="console.log('PNG image #2377 loaded successfully!');"
+                                 onerror="console.log('Failed to load PNG image #2377:', this.src); this.style.display='none'; this.parentElement.style.background='#ffb1dd'; this.parentElement.innerHTML='<div style=&quot;color: white; font-size: 2rem; display: flex; align-items: center; justify-content: center; height: 100%;&quot;>🎀</div>';">
+                        </div>
+                        <p>Doginal Dog #2377</p>
                     `;
                 } else {
                     // Other cards - placeholder video/GIF
@@ -494,28 +506,26 @@
                 assetGrid.appendChild(card);
             }
             
-            console.log("Loaded 9 Doginal Dog cards - first card is #5095 PNG, others are MP4/GIF placeholders");
+            console.log("Loaded 9 Doginal Dog cards - #5095 and #2377 PNGs, others are MP4/GIF placeholders");
             
             // Check loading status after delay
             setTimeout(() => {
                 const videos = document.querySelectorAll('.video-container video');
                 const gifs = document.querySelectorAll('.placeholder-gif img');
-                const pngImage = document.querySelector('.video-container img[src*="doginal-dog-5095"]');
+                const pngImage5095 = document.querySelector('.video-container img[src*="doginal-dog-5095"]');
+                const pngImage2377 = document.querySelector('.video-container img[src*="doginal-dog-2377"]');
                 
                 let videoCount = 0;
                 let gifCount = 0;
-                let pngLoaded = false;
+                let png5095Loaded = false;
+                let png2377Loaded = false;
                 
-                if (pngImage) {
-                    pngLoaded = pngImage.complete && pngImage.naturalWidth > 0;
-                    if (!pngLoaded) {
-                        console.log('PNG image element found but not loaded properly');
-                        console.log('Image complete:', pngImage.complete);
-                        console.log('Image naturalWidth:', pngImage.naturalWidth);
-                        console.log('Image src:', pngImage.src);
-                    }
-                } else {
-                    console.log('PNG image element not found');
+                if (pngImage5095) {
+                    png5095Loaded = pngImage5095.complete && pngImage5095.naturalWidth > 0;
+                }
+                
+                if (pngImage2377) {
+                    png2377Loaded = pngImage2377.complete && pngImage2377.naturalWidth > 0;
                 }
                 
                 videos.forEach(video => {
@@ -530,12 +540,14 @@
                     }
                 });
                 
-                console.log(`Doginal Dog #5095 PNG: ${pngLoaded ? 'loaded' : 'failed'}`);
+                console.log(`Doginal Dog #5095 PNG: ${png5095Loaded ? 'loaded' : 'failed'}`);
+                console.log(`Doginal Dog #2377 PNG: ${png2377Loaded ? 'loaded' : 'failed'}`);
                 console.log(`${videoCount} MP4s and ${gifCount} GIFs loaded successfully`);
                 
-                if (!pngLoaded && videoCount === 0 && gifCount === 0) {
-                    console.log("No media loaded - check if files exist:");
+                if (!png5095Loaded || !png2377Loaded || (videoCount === 0 && gifCount === 0)) {
+                    console.log("Check if files exist:");
                     console.log("- assets/images/doginal-dog-5095.png");
+                    console.log("- assets/images/doginal-dog-2377.png");
                     console.log("- assets/videos/doginal-placeholder.mp4");
                     console.log("- assets/images/doginal-placeholder.gif");
                 }
