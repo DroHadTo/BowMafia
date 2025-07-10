@@ -205,17 +205,23 @@ const initializeVideoBackground = async () => {
 
 // Initialize hamburger menu
 const initializeHamburgerMenu = () => {
-    // Prevent multiple listeners
-    if (appState.hamburgerListenerAttached) return;
-    
     const hamburgerBtn = document.getElementById('hamburger-btn');
     const menuOverlay = document.getElementById('menu-overlay');
     
     if (!hamburgerBtn || !menuOverlay) return;
     
+    // Clear any existing listeners by cloning elements
+    if (appState.hamburgerListenerAttached) {
+        const newHamburgerBtn = hamburgerBtn.cloneNode(true);
+        hamburgerBtn.parentNode.replaceChild(newHamburgerBtn, hamburgerBtn);
+        console.log('Hamburger menu listeners reset');
+    }
+    
+    const currentHamburgerBtn = document.getElementById('hamburger-btn');
+    
     const toggleMenu = () => {
         appState.isMenuOpen = !appState.isMenuOpen;
-        hamburgerBtn.classList.toggle('active', appState.isMenuOpen);
+        currentHamburgerBtn.classList.toggle('active', appState.isMenuOpen);
         menuOverlay.classList.toggle('active', appState.isMenuOpen);
         document.body.classList.toggle('menu-open', appState.isMenuOpen);
     };
@@ -223,21 +229,21 @@ const initializeHamburgerMenu = () => {
     const closeMenu = () => {
         if (appState.isMenuOpen) {
             appState.isMenuOpen = false;
-            hamburgerBtn.classList.remove('active');
+            currentHamburgerBtn.classList.remove('active');
             menuOverlay.classList.remove('active');
             document.body.classList.remove('menu-open');
         }
     };
     
     // Add click listener for hamburger button
-    hamburgerBtn.addEventListener('click', (e) => {
+    currentHamburgerBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         toggleMenu();
     });
     
     // Close menu when clicking outside
     document.addEventListener('click', (e) => {
-        if (appState.isMenuOpen && !menuOverlay.contains(e.target) && !hamburgerBtn.contains(e.target)) {
+        if (appState.isMenuOpen && !menuOverlay.contains(e.target) && !currentHamburgerBtn.contains(e.target)) {
             closeMenu();
         }
     });
@@ -250,6 +256,7 @@ const initializeHamburgerMenu = () => {
     });
     
     appState.hamburgerListenerAttached = true;
+    console.log('Hamburger menu initialized');
 };
 
 // Initialize smooth scrolling
@@ -283,10 +290,10 @@ const initializeServiceWorker = () => {
 
 // Main initialization
 const initializeApp = async () => {
-    if (appState.isInitialized) return;
+    console.log('App initialization started, current state:', appState.isInitialized);
     
     try {
-        // Initialize core features
+        // Always initialize core features to handle page navigation properly
         await initializeVideoBackground();
         initializeHamburgerMenu();
         initializeSmoothScrolling();
@@ -300,17 +307,44 @@ const initializeApp = async () => {
     }
 };
 
+// Reset app state when navigating to ensure proper reinitialization
+const resetAppState = () => {
+    appState.isInitialized = false;
+    appState.videoLoaded = false;
+    appState.hamburgerListenerAttached = false;
+    console.log('App state reset for navigation');
+};
+
 // Page visibility and focus handlers
 document.addEventListener('visibilitychange', () => {
     if (!document.hidden) {
-        // Reinitialize when page becomes visible
+        console.log('Page became visible, reinitializing...');
+        resetAppState();
         initializeApp();
     }
 });
 
 window.addEventListener('focus', () => {
-    // Reinitialize when window gains focus
+    console.log('Window gained focus, reinitializing...');
+    resetAppState();
     initializeApp();
+});
+
+// Handle page navigation events
+window.addEventListener('pageshow', (event) => {
+    console.log('Page show event, persisted:', event.persisted);
+    if (event.persisted) {
+        // Page was restored from cache, need to reinitialize
+        resetAppState();
+        setTimeout(() => initializeApp(), 100);
+    }
+});
+
+// Handle browser back/forward navigation
+window.addEventListener('popstate', () => {
+    console.log('Browser navigation detected, reinitializing...');
+    resetAppState();
+    setTimeout(() => initializeApp(), 100);
 });
 
 // DOM ready handler
