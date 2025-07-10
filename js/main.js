@@ -75,6 +75,18 @@ const createOptimizedVideoElement = () => {
     return video;
 };
 
+// Make toggleBowDogFields function global so it can be called from HTML
+function toggleBowDogFields() {
+    const bowDogYes = document.getElementById('bowDogYes');
+    const bowDogFields = document.getElementById('bowDogFields');
+    
+    if (bowDogYes && bowDogYes.checked) {
+        bowDogFields.style.display = 'block';
+    } else {
+        bowDogFields.style.display = 'none';
+    }
+}
+
 // Enhanced video loading with retry logic
 const loadVideoWithRetry = (video, retryCount = 0) => {
     return new Promise((resolve, reject) => {
