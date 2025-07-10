@@ -102,19 +102,6 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
         }
         
-        .wallet-address {
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.3);
-            border-radius: 8px;
-            padding: 1rem;
-            font-family: monospace;
-            font-size: 14px;
-            color: white;
-            word-break: break-all;
-            margin-bottom: 1rem;
-            position: relative;
-        }
-        
         .payment-instructions {
             color: rgba(255,255,255,0.9);
             margin-bottom: 2rem;
@@ -266,10 +253,6 @@
                 font-size: 1.3rem;
             }
             
-            .wallet-address {
-                font-size: 12px;
-            }
-            
             .form-buttons {
                 flex-direction: column;
                 align-items: center;
@@ -335,17 +318,14 @@
                         <div class="payment-amount" id="paymentAmount">
                             <!-- Will be populated by JavaScript -->
                         </div>
-                        <div class="wallet-address" id="walletAddress">
-                            <!-- Will be populated by JavaScript -->
-                        </div>
                     </div>
                     
                     <!-- Payment Instructions -->
                     <div class="payment-instructions">
                         <h3 style="color: #b19cd9; margin-bottom: 1rem;">Payment Instructions:</h3>
                         <ol>
-                            <li>Note the wallet address above</li>
-                            <li>Send your payment to this address using your preferred wallet</li>
+                            <li>Contact us for the wallet address for your chosen payment method</li>
+                            <li>Send your payment to the provided address using your preferred wallet</li>
                             <li>Copy the transaction hash/signature from your wallet</li>
                             <li>Fill out the confirmation form below</li>
                             <li>Submit to complete your DAO membership</li>
@@ -412,9 +392,6 @@
             
             // Set payment amount
             document.getElementById('paymentAmount').textContent = paymentAmounts[paymentMethod];
-            
-            // Set wallet address
-            document.getElementById('walletAddress').textContent = walletAddresses[paymentMethod];
         }
         
         // Handle payment confirmation form submission
