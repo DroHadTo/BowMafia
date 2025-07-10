@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Image Test</title>
+</head>
+<body>
+    <h2>Testing Image Paths</h2>
+    
+    <h3>Doginal Dog #5095 (web-safe name):</h3>
+    <img src="assets/images/doginal-dog-5095.png" alt="Test 5095" style="width: 200px; border: 2px solid red;" 
+         onload="console.log('5095 loaded successfully!')" 
+         onerror="console.log('5095 failed to load')">
+    
+    <h3>Doginal Dog #2377 (web-safe name):</h3>
+    <img src="assets/images/doginal-dog-2377.png" alt="Test 2377" style="width: 200px; border: 2px solid blue;" 
+         onload="console.log('2377 loaded successfully!')" 
+         onerror="console.log('2377 failed to load')">
+    
+    <h3>BowMafia Logo (known working):</h3>
+    <img src="assets/images/BowMafia.png" alt="Logo test" style="width: 200px; border: 2px solid green;" 
+         onload="console.log('Logo loaded successfully!')" 
+         onerror="console.log('Logo failed to load')">
+    
+    <script>
+        console.log('Test page loaded');
+        
+        // Check if files exist after 2 seconds
+        setTimeout(() => {
+            const images = document.querySelectorAll('img');
+            images.forEach((img, index) => {
+                console.log(`Image ${index + 1}: complete=${img.complete}, naturalWidth=${img.naturalWidth}, src=${img.src}`);
+            });
+        }, 2000);
+    </script>
+</body>
+</html>

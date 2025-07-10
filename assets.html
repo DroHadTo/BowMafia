@@ -466,9 +466,9 @@
                         <div class="video-container">
                             <img src="assets/images/doginal-dog-5095.png" 
                                  alt="Doginal Dog #5095" 
-                                 style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;"
-                                 onload="console.log('PNG image #5095 loaded successfully!');"
-                                 onerror="console.log('Failed to load PNG image #5095:', this.src); this.style.display='none'; this.parentElement.style.background='#ffb1dd'; this.parentElement.innerHTML='<div style=&quot;color: white; font-size: 2rem; display: flex; align-items: center; justify-content: center; height: 100%;&quot;>🎀</div>';">
+                                 style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; border: 2px solid red;"
+                                 onload="console.log('✅ PNG image #5095 loaded successfully! Size:', this.naturalWidth + 'x' + this.naturalHeight);"
+                                 onerror="console.error('❌ Failed to load PNG image #5095. Full src:', this.src); console.error('Error details:', event); this.style.display='none'; this.parentElement.style.background='#ffb1dd'; this.parentElement.innerHTML='<div style=&quot;color: white; font-size: 2rem; display: flex; align-items: center; justify-content: center; height: 100%;&quot;>🎀 #5095</div>';">
                         </div>
                         <p>Doginal Dog #5095</p>
                     `;
@@ -478,9 +478,9 @@
                         <div class="video-container">
                             <img src="assets/images/doginal-dog-2377.png" 
                                  alt="Doginal Dog #2377" 
-                                 style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;"
-                                 onload="console.log('PNG image #2377 loaded successfully!');"
-                                 onerror="console.log('Failed to load PNG image #2377:', this.src); this.style.display='none'; this.parentElement.style.background='#ffb1dd'; this.parentElement.innerHTML='<div style=&quot;color: white; font-size: 2rem; display: flex; align-items: center; justify-content: center; height: 100%;&quot;>🎀</div>';">
+                                 style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; border: 2px solid blue;"
+                                 onload="console.log('✅ PNG image #2377 loaded successfully! Size:', this.naturalWidth + 'x' + this.naturalHeight);"
+                                 onerror="console.error('❌ Failed to load PNG image #2377. Full src:', this.src); console.error('Error details:', event); this.style.display='none'; this.parentElement.style.background='#ffb1dd'; this.parentElement.innerHTML='<div style=&quot;color: white; font-size: 2rem; display: flex; align-items: center; justify-content: center; height: 100%;&quot;>🎀 #2377</div>';">
                         </div>
                         <p>Doginal Dog #2377</p>
                     `;
@@ -556,8 +556,19 @@
 
         // Load assets when page loads
         document.addEventListener('DOMContentLoaded', function() {
-            console.log("Page loaded, creating Doginal Dogs with media fallbacks...");
+            console.log("🚀 Page loaded, creating Doginal Dogs with media fallbacks...");
+            console.log("Current URL:", window.location.href);
+            console.log("Base URL:", window.location.origin + window.location.pathname.replace('assets.html', ''));
             loadDoginalDogs();
+            
+            // Test if we can access the images directory
+            fetch('assets/images/BowMafia.png')
+                .then(response => {
+                    console.log('✅ assets/images/ directory is accessible, BowMafia.png response:', response.status);
+                })
+                .catch(error => {
+                    console.error('❌ Cannot access assets/images/ directory:', error);
+                });
         });
 
         // Fallback - load after a short delay if needed
