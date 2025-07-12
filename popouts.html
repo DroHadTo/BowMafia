@@ -70,6 +70,38 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
         
+        .announcement-main {
+            font-size: clamp(1.4rem, 3.5vw, 2.5rem);
+            font-weight: 300;
+            color: rgba(255,255,255,0.95);
+            margin: 0 0 2rem 0;
+            line-height: 1.5;
+            letter-spacing: 0.02em;
+            font-family: 'Georgia', 'Times New Roman', serif;
+        }
+        
+        .happening-text {
+            font-style: italic;
+            font-weight: 200;
+            opacity: 0.8;
+            font-size: 0.9em;
+        }
+        
+        .event-date {
+            font-size: clamp(1.8rem, 5vw, 3.5rem);
+            font-weight: 600;
+            color: #b19cd9;
+            margin: 1rem 0 2rem 0;
+            letter-spacing: 0.1em;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, #b19cd9 0%, #d4c5f0 50%, #b19cd9 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 2px 4px rgba(177, 156, 217, 0.3));
+        }
+        
         .city-title {
             font-size: clamp(4rem, 15vw, 12rem);
             font-weight: 900;
@@ -244,13 +276,13 @@
         
         <div class="event-content">
             <div class="event-announcement">
-                <p style="font-size: clamp(1.2rem, 3vw, 2rem); color: rgba(255,255,255,0.9); margin: 0 0 1rem 0; line-height: 1.6;">
+                <p class="announcement-main">
                     Doginal dog go to the fair<br>
-                    Happening in<br>
-                    August 2025
+                    <span class="happening-text">Happening in</span>
                 </p>
             </div>
             <h1 class="city-title">TORONTO</h1>
+            <p class="event-date">August 2025</p>
             <p class="event-details">
                 Bow Mafia X Beanie Dao <span class="coming-soon">(Details coming soon)</span>
             </p>
