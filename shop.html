@@ -35,60 +35,71 @@
             }
         }
         
+        /* Background video styling */
+        .background-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+        
         /* Back button styling */
         .back-button-container {
             position: absolute;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%);
+            top: 20px;
+            left: 20px;
             z-index: 10;
         }
         
         .back-button {
-            background: linear-gradient(135deg, #b19cd9 0%, #9d82c7 100%);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 25px;
-            font-size: 1rem;
+            background: white;
+            color: black;
+            border: 2px solid black;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(177, 156, 217, 0.3);
             letter-spacing: 0.5px;
         }
         
         .back-button:hover {
-            background: linear-gradient(135deg, #9d82c7 0%, #8968b5 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(177, 156, 217, 0.4);
+            background: #f0f0f0;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
         
         .back-button:active {
             transform: translateY(0);
-            box-shadow: 0 2px 10px rgba(177, 156, 217, 0.3);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
         }
         
         /* Mobile responsive for back button */
         @media (max-width: 768px) {
             .back-button-container {
-                bottom: 80px;
+                top: 15px;
+                left: 15px;
             }
             
             .back-button {
-                padding: 10px 20px;
-                font-size: 0.9rem;
+                padding: 6px 12px;
+                font-size: 0.8rem;
             }
         }
         
         @media (max-width: 480px) {
             .back-button-container {
-                bottom: 60px;
+                top: 10px;
+                left: 10px;
             }
             
             .back-button {
-                padding: 8px 16px;
-                font-size: 0.8rem;
+                padding: 5px 10px;
+                font-size: 0.75rem;
             }
         }
     </style>
@@ -112,6 +123,11 @@
     </div>
     
     <div class="shop-page">
+        <!-- Background video -->
+        <video class="background-video" autoplay muted loop playsinline>
+            <source src="assets/videos/shopsilkbg.mp4" type="video/mp4">
+        </video>
+        
         <div class="handwritten-text">
             <h1 class="silk-sicarios">Silk & Bows</h1>
             <h2 class="store">Store</h2>
