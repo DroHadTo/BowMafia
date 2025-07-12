@@ -44,6 +44,13 @@
             height: 100%;
             object-fit: cover;
             z-index: -1;
+            background-color: #1a1a1a; /* Fallback color */
+        }
+        
+        /* Ensure shop page has proper positioning */
+        .shop-page {
+            position: relative;
+            z-index: 1;
         }
         
         /* Back button styling */
@@ -124,8 +131,9 @@
     
     <div class="shop-page">
         <!-- Background video -->
-        <video class="background-video" autoplay muted loop playsinline>
+        <video class="background-video" autoplay muted loop playsinline preload="auto">
             <source src="assets/videos/Shopsilkbg.mp4" type="video/mp4">
+            Your browser does not support the video tag.
         </video>
         
         <div class="handwritten-text">
@@ -148,5 +156,26 @@
     
     <!-- Load JavaScript -->
     <script src="js/main.js"></script>
+    
+    <script>
+        // Ensure background video loads and plays
+        document.addEventListener('DOMContentLoaded', function() {
+            const video = document.querySelector('.background-video');
+            if (video) {
+                video.addEventListener('loadeddata', function() {
+                    console.log('Video loaded successfully');
+                });
+                
+                video.addEventListener('error', function(e) {
+                    console.error('Video failed to load:', e);
+                });
+                
+                // Force play the video
+                video.play().catch(function(error) {
+                    console.log('Video autoplay prevented:', error);
+                });
+            }
+        });
+    </script>
 </body>
 </html>
