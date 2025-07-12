@@ -102,6 +102,45 @@
             filter: drop-shadow(0 2px 4px rgba(177, 156, 217, 0.3));
         }
         
+        .fun-image-container {
+            margin: 2rem 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .fun-image {
+            max-width: 200px;
+            max-height: 150px;
+            width: auto;
+            height: auto;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+            transition: transform 0.3s ease;
+        }
+        
+        .fun-image:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Mobile responsive for fun image */
+        @media (max-width: 768px) {
+            .fun-image {
+                max-width: 150px;
+                max-height: 120px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .fun-image {
+                max-width: 120px;
+                max-height: 90px;
+            }
+            
+            .fun-image-container {
+                margin: 1.5rem 0;
+            }
+        }
+        
         .city-title {
             font-size: clamp(4rem, 15vw, 12rem);
             font-weight: 900;
@@ -281,6 +320,12 @@
                     <span class="happening-text">Happening in</span>
                 </p>
             </div>
+            
+            <!-- Fun image -->
+            <div class="fun-image-container">
+                <img src="assets/images/Fun.png" alt="Fun" class="fun-image">
+            </div>
+            
             <h1 class="city-title">TORONTO</h1>
             <p class="event-date">August 2025</p>
             <p class="event-details">
