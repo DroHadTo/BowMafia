@@ -471,8 +471,8 @@
                         <div class="video-container">
                             <img src="assets/images/${asset.file}"
                                  alt="Doginal Dog #${asset.num}"
-                                 style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;"
-                                 onerror="this.style.display='none'; this.parentElement.style.background='#ffb1dd'; this.parentElement.innerHTML='<div style=&quot;color: white; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; height: 100%; text-align: center;&quot;>🎀<br>#${asset.num}<br>Missing</div>'">
+                                 style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; background: #fff; border: 2px solid #b19cd9;"
+                                 onerror="this.onerror=null; this.src='assets/images/doginal-placeholder.gif'; this.alt='Doginal Dog #${asset.num} Missing'; this.style.background='#ffb1dd'; this.style.border='2px dashed red';">
                         </div>
                         <p>Doginal Dog #${asset.num}</p>
                     `;
