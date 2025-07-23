@@ -429,7 +429,7 @@
             <div class="treasury-assets">
                 <div class="treasury-item">
                     <h3>Doginal Dogs</h3>
-                    <p>5</p>
+                    <p>6</p>
                 </div>
             </div>
         </div>
@@ -448,47 +448,42 @@
     </footer>
 
     <script>
-        // Create 9 Doginal Dog assets with first four being specific images
         function loadDoginalDogs() {
             const assetGrid = document.getElementById("asset-grid");
-            
-            // Clear any existing content
             assetGrid.innerHTML = '';
-            
+
+            // Array of asset image info
+            const assets = [
+                { num: 5095, file: "Doginal Dog 5095.png" },
+                { num: 2377, file: "Doginal Dog 2377.png" },
+                { num: 4893, file: "Doginal Dog 4893.png" },
+                { num: 9264, file: "Doginal Dog 9264.png" },
+                { num: 1681, file: "Doginal Dog 1681.png" },
+                { num: 1939, file: "Doginal Dog 1939.png" }
+            ];
+
             for (let i = 1; i <= 9; i++) {
                 const card = document.createElement("div");
                 card.className = "asset-card";
-                let imgSrc = "";
-                let imgAlt = "";
-                let imgId = "";
-                if (i === 1) { imgSrc = "assets/images/Doginal Dog 5095.png"; imgAlt = "Doginal Dog #5095"; imgId = "5095"; }
-                else if (i === 2) { imgSrc = "assets/images/Doginal Dog 2377.png"; imgAlt = "Doginal Dog #2377"; imgId = "2377"; }
-                else if (i === 3) { imgSrc = "assets/images/Doginal Dog 4893.png"; imgAlt = "Doginal Dog #4893"; imgId = "4893"; }
-                else if (i === 4) { imgSrc = "assets/images/Doginal Dog 9264.png"; imgAlt = "Doginal Dog #9264"; imgId = "9264"; }
-                else if (i === 5) { imgSrc = "assets/images/Doginal Dog 1681.png"; imgAlt = "Doginal Dog #1681"; imgId = "1681"; }
-                else if (i === 6) { imgSrc = "assets/images/Doginal Dog 1939.png"; imgAlt = "Doginal Dog #1939"; imgId = "1939"; }
-                if (imgSrc) {
+                if (i <= assets.length) {
+                    const asset = assets[i - 1];
                     card.innerHTML = `
-                        <div class=\"video-container\">
-                            <img src=\"${imgSrc}\" 
-                                 alt=\"${imgAlt}\" 
-                                 style=\"width: 100%; height: 100%; object-fit: cover; border-radius: 8px;\"
-                                 onload=\"console.log('✅ PNG image #${imgId} loaded successfully! Size:', this.naturalWidth + 'x' + this.naturalHeight); this.style.border='2px solid #b19cd9';\"
-                                 onerror=\"console.error('❌ Failed to load PNG image #${imgId} at path:', this.src); this.style.display='none'; this.parentElement.style.background='#ffb1dd'; this.parentElement.innerHTML='<div style=\\"color: white; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; height: 100%; text-align: center;\\">🎀<br>#${imgId}<br>Missing</div>';\">
+                        <div class="video-container">
+                            <img src="assets/images/${asset.file}"
+                                 alt="Doginal Dog #${asset.num}"
+                                 style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;"
+                                 onerror="this.style.display='none'; this.parentElement.style.background='#ffb1dd'; this.parentElement.innerHTML='<div style=&quot;color: white; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; height: 100%; text-align: center;&quot;>🎀<br>#${asset.num}<br>Missing</div>'">
                         </div>
-                        <p>${imgAlt}</p>
+                        <p>Doginal Dog #${asset.num}</p>
                     `;
                 } else {
-                    // Other cards - placeholder video/GIF
+                    // Placeholder for remaining assets
                     card.innerHTML = `
-                        <div class=\"video-container\">
-                            <video autoplay muted loop playsinline 
-                                   onerror=\"this.style.display='none'; this.nextElementSibling.style.display='flex';\">
-                                <source src=\"assets/videos/doginal-placeholder.mp4\" type=\"video/mp4\" />
+                        <div class="video-container">
+                            <video autoplay muted loop playsinline>
+                                <source src="assets/videos/doginal-placeholder.mp4" type="video/mp4" />
                             </video>
-                            <div class="placeholder-gif" style="display: none;">
-                                <!-- Emoji will be shown here if GIF fails to load -->
-                            </div>
+                            <div class="placeholder-gif" style="display: none;"></div>
                         </div>
                         <p>Doginal Dog #${i}</p>
                     `;
