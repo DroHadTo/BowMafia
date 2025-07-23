@@ -30,6 +30,10 @@ self.addEventListener('install', function(event) {
 
 // Fetch event with network-first strategy for better performance
 self.addEventListener('fetch', function(event) {
+  const url = event.request.url;
+  // Skip chrome-extension requests
+  if (url.startsWith('chrome-extension://')) return;
+  
   event.respondWith(
     fetch(event.request)
       .then(function(response) {
