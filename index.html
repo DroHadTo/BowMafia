@@ -389,7 +389,7 @@
                 data-desktop-src="assets/videos/bowmafiadao.mp4"
                 data-mobile-src="assets/videos/bowmafiadaomobile.mp4"
                 data-mobile-webm-src="assets/videos/bowmafiadaomobile.webm">
-                <source id="main-video-source-webm" src="" type="video/webm">
+                <source id="main-video-source-webm" src="assets/videos/bowmafiadaomobile.webm" type="video/webm">
                 <source id="main-video-source-mp4" src="assets/videos/bowmafiadao.mp4" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
@@ -478,20 +478,17 @@
             }
         }
 
-        // Set video sources with prioritized mobile fallback logic
+        // Set video sources with robust fallback logic for desktop and mobile
         async function setVideoSources(isMobile) {
-            console.log('Setting video sources for mobile:', isMobile);
+            console.log('Setting video sources for device:', isMobile ? 'mobile' : 'desktop');
             if (isMobile) {
                 // Prioritize bmdmobile.mp4, then bowmafiadaomobile.webm, then bowmafiadaomobile.mp4
                 const bmdMobileSrc = 'assets/videos/bmdmobile.mp4';
                 const mobileWebmSrc = mainVideo.getAttribute('data-mobile-webm-src');
                 const mobileMp4Src = mainVideo.getAttribute('data-mobile-src');
-                let selectedSrc = '';
-                let selectedType = '';
                 // Try bmdmobile.mp4 first
                 const bmdExists = await checkVideoExists(bmdMobileSrc);
                 if (bmdExists) {
-                    console.log('Using bmdmobile.mp4 for mobile background');
                     mainVideoSourceWebm.src = '';
                     mainVideoSourceMp4.src = bmdMobileSrc;
                     return;
@@ -501,31 +498,26 @@
                 if (webmSupported && mobileWebmSrc) {
                     const webmExists = await checkVideoExists(mobileWebmSrc);
                     if (webmExists) {
-                        console.log('Using mobile WebM video:', mobileWebmSrc);
                         mainVideoSourceWebm.src = mobileWebmSrc;
-                        mainVideoSourceMp4.src = mobileMp4Src; // Fallback
+                        mainVideoSourceMp4.src = mobileMp4Src;
                         return;
                     }
                 }
                 // Fallback to mobile MP4
                 const mobileMp4Exists = await checkVideoExists(mobileMp4Src);
                 if (mobileMp4Exists) {
-                    console.log('Using mobile MP4 video:', mobileMp4Src);
                     mainVideoSourceWebm.src = '';
                     mainVideoSourceMp4.src = mobileMp4Src;
                     return;
                 }
                 // Last resort: desktop video
                 const desktopSrc = mainVideo.getAttribute('data-desktop-src');
-                console.log('Using desktop video as last resort:', desktopSrc);
                 mainVideoSourceWebm.src = '';
                 mainVideoSourceMp4.src = desktopSrc;
             } else {
-                // Desktop - use original MP4
-                const desktopSrc = mainVideo.getAttribute('data-desktop-src');
-                console.log('Using desktop video:', desktopSrc);
-                mainVideoSourceWebm.src = '';
-                mainVideoSourceMp4.src = desktopSrc;
+                // Desktop - always set both sources
+                mainVideoSourceWebm.src = 'assets/videos/bowmafiadao.webm';
+                mainVideoSourceMp4.src = mainVideo.getAttribute('data-desktop-src');
             }
         }
         // Initialize video based on device type
@@ -541,41 +533,29 @@
 
             if (isMobile) {
                 // Configure for mobile
-                console.log('Configuring for mobile device');
-                
-                // Remove autoplay completely for mobile
                 mainVideo.removeAttribute('autoplay');
-                
-                // Set mobile-specific attributes
                 mainVideo.setAttribute('playsinline', 'true');
                 mainVideo.setAttribute('webkit-playsinline', 'true');
                 mainVideo.muted = true;
                 mainVideo.controls = false;
-                
-                // Reload video with new sources
                 mainVideo.load();
-                
-                // Show play overlay for mobile
                 setTimeout(() => {
                     loadingMessage.style.display = 'none';
                     videoPlayOverlay.style.display = 'flex';
                 }, 1000);
-                
             } else {
                 // Desktop configuration
-                console.log('Configuring for desktop device');
                 mainVideo.setAttribute('autoplay', 'true');
+                mainVideo.setAttribute('playsinline', 'true');
+                mainVideo.setAttribute('webkit-playsinline', 'true');
+                mainVideo.muted = true;
+                mainVideo.controls = false;
                 mainVideo.load();
-                
-                // Try autoplay for desktop
                 mainVideo.addEventListener('canplay', function() {
-                    console.log('Desktop video can play');
                     mainVideo.play().then(() => {
-                        console.log('Desktop video started playing');
                         loadingMessage.style.display = 'none';
                         isVideoPlaying = true;
                     }).catch(error => {
-                        console.log('Desktop autoplay failed:', error);
                         loadingMessage.style.display = 'none';
                         videoPlayOverlay.style.display = 'flex';
                     });

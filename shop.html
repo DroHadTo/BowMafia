@@ -207,7 +207,8 @@
     <div class="shop-page">
         <!-- Background video -->
         <video class="background-video" autoplay muted loop playsinline preload="auto">
-            <source src="assets/videos/Shopsilkbg.mp4" type="video/mp4">
+            <source id="shop-video-source-webm" src="assets/videos/Shopsilkbg.webm" type="video/webm">
+            <source id="shop-video-source-mp4" src="assets/videos/Shopsilkbg.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
 
@@ -238,20 +239,53 @@
         // Ensure background video loads and plays
         document.addEventListener('DOMContentLoaded', function() {
             const video = document.querySelector('.background-video');
-            if (video) {
-                video.addEventListener('loadeddata', function() {
-                    console.log('Video loaded successfully');
-                });
-                
-                video.addEventListener('error', function(e) {
-                    console.error('Video failed to load:', e);
-                });
-                
-                // Force play the video
+            const videoSourceWebm = document.getElementById('shop-video-source-webm');
+            const videoSourceMp4 = document.getElementById('shop-video-source-mp4');
+            function supportsWebM() {
+                const v = document.createElement('video');
+                return v.canPlayType('video/webm') !== '';
+            }
+            async function checkVideoExists(url) {
+                try {
+                    const res = await fetch(url, { method: 'HEAD' });
+                    return res.ok;
+                } catch {
+                    return false;
+                }
+            }
+            async function setVideoSources() {
+                const isMobile = window.innerWidth < 768;
+                if (isMobile) {
+                    // Prioritize MP4 for mobile
+                    const mobileMp4Src = 'assets/videos/Shopsilkbg.mp4';
+                    const mobileWebmSrc = 'assets/videos/Shopsilkbg.webm';
+                    const mp4Exists = await checkVideoExists(mobileMp4Src);
+                    if (mp4Exists) {
+                        videoSourceWebm.src = '';
+                        videoSourceMp4.src = mobileMp4Src;
+                        return;
+                    }
+                    const webmSupported = supportsWebM();
+                    if (webmSupported) {
+                        const webmExists = await checkVideoExists(mobileWebmSrc);
+                        if (webmExists) {
+                            videoSourceWebm.src = mobileWebmSrc;
+                            videoSourceMp4.src = '';
+                            return;
+                        }
+                    }
+                } else {
+                    // Desktop: always set both sources
+                    videoSourceWebm.src = 'assets/videos/Shopsilkbg.webm';
+                    videoSourceMp4.src = 'assets/videos/Shopsilkbg.mp4';
+                }
+            }
+            setVideoSources().then(() => {
+                video.load();
                 video.play().catch(function(error) {
                     console.log('Video autoplay prevented:', error);
                 });
-            }
+            });
         });
     </script>
 </body>
