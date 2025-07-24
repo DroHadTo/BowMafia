@@ -356,11 +356,7 @@
     <!-- Loading message -->
     <div class="loading-message" id="loading-message">Loading video...</div>
     
-    <!-- Mobile video play overlay -->
-    <div class="video-play-overlay" id="video-play-overlay">
-        <div class="video-play-instruction">Tap to start background video</div>
-        <button class="video-play-btn" id="video-play-btn">Play Video</button>
-    </div>
+
     
     <!-- Hamburger Menu -->
     <div class="hamburger-menu">
@@ -457,119 +453,47 @@
         const videoPlayOverlay = document.getElementById('video-play-overlay');
         const videoPlayBtn = document.getElementById('video-play-btn');
 
-        let videoInitialized = false;
-        let isVideoPlaying = false;
+
 
         // Initialize video based on device type
         function initializeVideo() {
             console.log('Initializing video...');
             loadingMessage.style.display = 'block';
 
+            // Always set autoplay and muted for best compatibility
+            mainVideo.setAttribute('autoplay', 'true');
+            mainVideo.setAttribute('muted', 'true');
+            mainVideo.setAttribute('playsinline', 'true');
+            mainVideo.setAttribute('webkit-playsinline', 'true');
+            mainVideo.controls = false;
+
+            // Select video source for mobile/desktop
             const isMobile = isMobileDevice();
-            console.log('Is mobile device:', isMobile);
-
             if (isMobile) {
-                // Configure for mobile
-                console.log('Configuring for mobile device');
-                
-                // Remove autoplay completely for mobile
-                mainVideo.removeAttribute('autoplay');
-                
-                // Set mobile-specific attributes
-                mainVideo.setAttribute('playsinline', 'true');
-                mainVideo.setAttribute('webkit-playsinline', 'true');
-                mainVideo.muted = true;
-                mainVideo.controls = false;
-                
-                // Try mobile video first if it exists
                 const mobileVideoSrc = mainVideo.getAttribute('data-mobile-src');
-                if (mobileVideoSrc) {
-                    console.log('Using mobile video source:', mobileVideoSrc);
-                    mainVideoSource.src = mobileVideoSrc;
-                } else {
-                    console.log('No mobile video source, using desktop video');
-                    mainVideoSource.src = mainVideo.getAttribute('data-desktop-src');
-                }
-                
-                // Reload video with new source
-                mainVideo.load();
-                
-                // Show play overlay for mobile
-                setTimeout(() => {
-                    loadingMessage.style.display = 'none';
-                    videoPlayOverlay.style.display = 'flex';
-                }, 1000);
-                
+                mainVideoSource.src = mobileVideoSrc || mainVideo.getAttribute('data-desktop-src');
             } else {
-                // Desktop configuration
-                console.log('Configuring for desktop device');
                 mainVideoSource.src = mainVideo.getAttribute('data-desktop-src');
-                mainVideo.setAttribute('autoplay', 'true');
-                mainVideo.load();
-                
-                // Try autoplay for desktop
-                mainVideo.addEventListener('canplay', function() {
-                    console.log('Desktop video can play');
-                    mainVideo.play().then(() => {
-                        console.log('Desktop video started playing');
-                        loadingMessage.style.display = 'none';
-                        isVideoPlaying = true;
-                    }).catch(error => {
-                        console.log('Desktop autoplay failed:', error);
-                        loadingMessage.style.display = 'none';
-                        videoPlayOverlay.style.display = 'flex';
-                    });
-                });
             }
+            mainVideo.load();
 
-            videoInitialized = true;
+            // Try to autoplay after load
+            mainVideo.addEventListener('canplay', function() {
+                mainVideo.play().then(() => {
+                    console.log('Video started playing');
+                    loadingMessage.style.display = 'none';
+                }).catch(error => {
+                    console.log('Autoplay failed:', error);
+                    loadingMessage.style.display = 'none';
+                });
+            });
         }
 
         // Handle video play button click
-        function handleVideoPlay() {
-            console.log('Play button clicked');
-            
-            const playPromise = mainVideo.play();
-            
-            if (playPromise !== undefined) {
-                playPromise.then(() => {
-                    console.log('Video started playing successfully');
-                    videoPlayOverlay.style.display = 'none';
-                    loadingMessage.style.display = 'none';
-                    isVideoPlaying = true;
-                }).catch(error => {
-                    console.error('Video play failed:', error);
-                    
-                    // Try fallback strategies
-                    setTimeout(() => {
-                        console.log('Trying video play again...');
-                        mainVideo.load();
-                        setTimeout(() => {
-                            mainVideo.play().then(() => {
-                                console.log('Video started on retry');
-                                videoPlayOverlay.style.display = 'none';
-                                loadingMessage.style.display = 'none';
-                                isVideoPlaying = true;
-                            }).catch(retryError => {
-                                console.error('Video play retry failed:', retryError);
-                                // Hide overlay anyway to show fallback background
-                                videoPlayOverlay.style.display = 'none';
-                                loadingMessage.style.display = 'none';
-                            });
-                        }, 500);
-                    }, 1000);
-                });
-            }
-        }
+
 
         // Event listeners
-        if (videoPlayBtn) {
-            videoPlayBtn.addEventListener('click', handleVideoPlay);
-            videoPlayBtn.addEventListener('touchend', function(e) {
-                e.preventDefault();
-                handleVideoPlay();
-            });
-        }
+
 
         // Video error handling
         mainVideo.addEventListener('error', function(e) {
@@ -577,16 +501,12 @@
             loadingMessage.textContent = 'Video unavailable - showing background';
             setTimeout(() => {
                 loadingMessage.style.display = 'none';
-                videoPlayOverlay.style.display = 'none';
             }, 2000);
         });
 
         // Video loaded event
         mainVideo.addEventListener('loadeddata', function() {
             console.log('Video data loaded');
-            if (isMobileDevice() && !isVideoPlaying) {
-                videoPlayOverlay.style.display = 'flex';
-            }
         });
 
         // Hamburger menu functionality
