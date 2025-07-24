@@ -376,6 +376,21 @@
         // Show loading message
         loadingMessage.style.display = 'block';
 
+        // Mobile video autoplay fix
+        function isMobileBrowser() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        }
+        // Use already-declared mainVideoSource
+        if (isMobileBrowser() && mainVideoSource) {
+            mainVideoSource.src = "assets/videos/bowmafiadaomobile.mp4";
+            mainVideo.removeAttribute('autoplay');
+            mainVideo.load();
+            // Show tap-to-play overlay immediately
+            if (videoPlayOverlay) {
+                videoPlayOverlay.style.display = 'flex';
+            }
+        }
+
         // Function to handle video loading
         function handleVideoLoad(video) {
             video.addEventListener('loadeddata', function() {
@@ -411,15 +426,7 @@
         }
 
         // Initialize main video
-        // Mobile video source swap
-        function isMobileBrowser() {
-            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        }
-        const mainVideoSource = document.getElementById('main-video-source');
-        if (isMobileBrowser() && mainVideoSource) {
-            mainVideoSource.src = "assets/videos/bowmafiadaomobile.mp4";
-            mainVideo.load();
-        }
+        // ...existing code...
         handleVideoLoad(mainVideo);
         
         // Hamburger menu functionality
