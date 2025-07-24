@@ -146,6 +146,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
             letter-spacing: 0.5px;
+            text-transform: uppercase;
         }
         
         .back-button:hover {
@@ -209,17 +210,19 @@
             <source src="assets/videos/Shopsilkbg.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
-        
-        <div class="handwritten-text">
+
+        <div class="handwritten-text" style="position: relative; display: inline-block;">
+            <!-- Angled floating-element.png above the dot of the i in Silk -->
+            <img src="assets/images/floating-element.png" alt="Floating Element" class="floating-above-i" style="position: absolute; left: 18px; top: -4px; width: 88px; transform: rotate(-18deg); z-index: 2; pointer-events: none;" />
             <h1 class="silk-sicarios" style="color: #f74ea2; -webkit-text-stroke: 2px #000;">Silk & Bows</h1>
             <h2 class="store" style="color: #f74ea2; -webkit-text-stroke: 2px #000;">Store</h2>
             <h3 class="coming" style="color: #f74ea2; -webkit-text-stroke: 2px #000;">Coming</h3>
             <h4 class="soon" style="color: #f74ea2; -webkit-text-stroke: 2px #000;">Soon...</h4>
         </div>
-        
+
         <!-- Back to Home button -->
         <div class="back-button-container">
-            <button class="back-button" onclick="window.location.href='index.html'">Back to Home</button>
+            <button class="back-button" onclick="window.location.href='index.html'">BACK TO HOME</button>
         </div>
     </div>
 
