@@ -113,6 +113,8 @@ h1 {
     height: 100vh;
     position: relative;
     min-height: 100vh;
+    background: url('assets/images/bowmafiadao.svg') center center / cover no-repeat fixed;
+    background-color: #1a1a1a;
 }
 
 .hero-content h2 {
