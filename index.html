@@ -347,13 +347,32 @@
                 font-size: 1.2rem;
             }
         }
+
+        /* Debug info */
+        .debug-info {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px;
+            font-size: 12px;
+            z-index: 2000;
+            display: none;
+        }
     </style>
 </head>
 <body>
+    <!-- Debug info -->
+    <div class="debug-info" id="debug-info"></div>
+    
     <!-- Video fallback background -->
     <div class="video-fallback"></div>
     
-    <!-- Mobile video play overlay (single instance) -->
+    <!-- Loading message -->
+    <div class="loading-message" id="loading-message">Loading video...</div>
+    
+    <!-- Mobile video play overlay -->
     <div class="video-play-overlay" id="video-play-overlay">
         <div class="video-play-instruction">Tap to start background video</div>
         <button class="video-play-btn" id="video-play-btn">Play Video</button>
@@ -385,12 +404,7 @@
                 loop 
                 playsinline 
                 webkit-playsinline
-                preload="metadata"
-                data-desktop-src="assets/videos/bowmafiadao.mp4"
-                data-mobile-src="assets/videos/bowmafiadaomobile.mp4"
-                data-mobile-webm-src="assets/videos/bowmafiadaomobile.webm">
-                <source id="main-video-source-webm" src="assets/videos/bowmafiadaomobile.webm" type="video/webm">
-                <source id="main-video-source-mp4" src="assets/videos/bowmafiadao.mp4" type="video/mp4">
+                preload="metadata">
                 Your browser does not support the video tag.
             </video>
             
@@ -426,6 +440,25 @@
     </footer>
 
     <script>
+        // Debug toggle (press 'd' key to show/hide debug info)
+        let debugMode = false;
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'd' || e.key === 'D') {
+                debugMode = !debugMode;
+                const debugInfo = document.getElementById('debug-info');
+                debugInfo.style.display = debugMode ? 'block' : 'none';
+            }
+        });
+
+        function updateDebugInfo(message) {
+            if (debugMode) {
+                const debugInfo = document.getElementById('debug-info');
+                const timestamp = new Date().toLocaleTimeString();
+                debugInfo.innerHTML += `<div>${timestamp}: ${message}</div>`;
+            }
+            console.log(message);
+        }
+
         // Enhanced mobile detection
         function isMobileDevice() {
             const userAgent = navigator.userAgent.toLowerCase();
@@ -434,24 +467,13 @@
             const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
             const isSmallScreen = window.innerWidth <= 768 || window.innerHeight <= 768;
             
-            console.log('Mobile detection:', { isMobileUA, isTouchDevice, isSmallScreen });
-            return isMobileUA || (isTouchDevice && isSmallScreen);
-        }
-
-        // iOS specific detection
-        function isIOS() {
-            return /iPad|iPhone|iPod/.test(navigator.userAgent);
-        }
-
-        // Android specific detection
-        function isAndroid() {
-            return /Android/.test(navigator.userAgent);
+            const result = isMobileUA || (isTouchDevice && isSmallScreen);
+            updateDebugInfo(`Mobile detection - UA: ${isMobileUA}, Touch: ${isTouchDevice}, Small: ${isSmallScreen}, Result: ${result}`);
+            return result;
         }
 
         // Get DOM elements
         const mainVideo = document.getElementById('main-video');
-        const mainVideoSourceWebm = document.getElementById('main-video-source-webm');
-        const mainVideoSourceMp4 = document.getElementById('main-video-source-mp4');
         const aboutVideo = document.getElementById('about-video');
         const loadingMessage = document.getElementById('loading-message');
         const videoPlayOverlay = document.getElementById('video-play-overlay');
@@ -459,196 +481,169 @@
 
         let videoInitialized = false;
         let isVideoPlaying = false;
-        let currentVideoAttempt = 0; // Track which video format we're trying
 
-        // Check if browser supports WebM
-        function supportsWebM() {
-            const video = document.createElement('video');
-            return video.canPlayType('video/webm') !== '';
-        }
+        // Video file paths
+        const videoSources = {
+            desktop: 'assets/videos/bowmafiadao.mp4',
+            mobile: 'assets/videos/bmdmobile.mp4',
+            mobileFallback: 'assets/videos/bowmafiadaomobile.mp4'
+        };
 
         // Check if video file exists
         async function checkVideoExists(url) {
             try {
                 const response = await fetch(url, { method: 'HEAD' });
-                return response.ok;
+                const exists = response.ok;
+                updateDebugInfo(`Video check for ${url}: ${exists ? 'EXISTS' : 'NOT FOUND'}`);
+                return exists;
             } catch (error) {
-                console.log('Video check failed for:', url, error);
+                updateDebugInfo(`Video check failed for ${url}: ${error.message}`);
                 return false;
             }
         }
 
-        // Set video sources with robust fallback logic for desktop and mobile
-        async function setVideoSources(isMobile) {
-            console.log('Setting video sources for device:', isMobile ? 'mobile' : 'desktop');
+        // Set video source
+        async function setVideoSource(isMobile) {
+            updateDebugInfo(`Setting video source for ${isMobile ? 'mobile' : 'desktop'}`);
+            
+            // Clear existing sources
+            mainVideo.innerHTML = '';
+            
+            let videoSrc = '';
+            
             if (isMobile) {
-                // Prioritize bmdmobile.mp4, then bowmafiadaomobile.webm, then bowmafiadaomobile.mp4
-                const bmdMobileSrc = 'assets/videos/bmdmobile.mp4';
-                const mobileWebmSrc = mainVideo.getAttribute('data-mobile-webm-src');
-                const mobileMp4Src = mainVideo.getAttribute('data-mobile-src');
                 // Try bmdmobile.mp4 first
-                const bmdExists = await checkVideoExists(bmdMobileSrc);
+                const bmdExists = await checkVideoExists(videoSources.mobile);
                 if (bmdExists) {
-                    mainVideoSourceWebm.src = '';
-                    mainVideoSourceMp4.src = bmdMobileSrc;
-                    return;
-                }
-                // Next, try mobile WebM if supported and exists
-                const webmSupported = supportsWebM();
-                if (webmSupported && mobileWebmSrc) {
-                    const webmExists = await checkVideoExists(mobileWebmSrc);
-                    if (webmExists) {
-                        mainVideoSourceWebm.src = mobileWebmSrc;
-                        mainVideoSourceMp4.src = mobileMp4Src;
-                        return;
+                    videoSrc = videoSources.mobile;
+                    updateDebugInfo('Using bmdmobile.mp4 for mobile');
+                } else {
+                    // Fallback to bowmafiadaomobile.mp4
+                    const mobileExists = await checkVideoExists(videoSources.mobileFallback);
+                    if (mobileExists) {
+                        videoSrc = videoSources.mobileFallback;
+                        updateDebugInfo('Using bowmafiadaomobile.mp4 as mobile fallback');
+                    } else {
+                        // Last resort: desktop video
+                        videoSrc = videoSources.desktop;
+                        updateDebugInfo('Using desktop video as final mobile fallback');
                     }
                 }
-                // Fallback to mobile MP4
-                const mobileMp4Exists = await checkVideoExists(mobileMp4Src);
-                if (mobileMp4Exists) {
-                    mainVideoSourceWebm.src = '';
-                    mainVideoSourceMp4.src = mobileMp4Src;
-                    return;
-                }
-                // Last resort: desktop video
-                const desktopSrc = mainVideo.getAttribute('data-desktop-src');
-                mainVideoSourceWebm.src = '';
-                mainVideoSourceMp4.src = desktopSrc;
             } else {
-                // Desktop - always set both sources
-                mainVideoSourceWebm.src = 'assets/videos/bowmafiadao.webm';
-                mainVideoSourceMp4.src = mainVideo.getAttribute('data-desktop-src');
+                // Desktop
+                videoSrc = videoSources.desktop;
+                updateDebugInfo('Using bowmafiadao.mp4 for desktop');
             }
+
+            // Add source element
+            const sourceElement = document.createElement('source');
+            sourceElement.src = videoSrc;
+            sourceElement.type = 'video/mp4';
+            mainVideo.appendChild(sourceElement);
+            
+            // Add fallback text
+            mainVideo.appendChild(document.createTextNode('Your browser does not support the video tag.'));
+            
+            updateDebugInfo(`Final video source set to: ${videoSrc}`);
+            return videoSrc;
         }
-        // Initialize video based on device type
+
+        // Initialize video
         async function initializeVideo() {
-            console.log('Initializing video...');
+            updateDebugInfo('Starting video initialization...');
             loadingMessage.style.display = 'block';
 
             const isMobile = isMobileDevice();
-            console.log('Is mobile device:', isMobile);
+            
+            // Set video source
+            const videoSrc = await setVideoSource(isMobile);
 
-            // Set appropriate video sources
-            await setVideoSources(isMobile);
+            // Configure video element
+            mainVideo.muted = true;
+            mainVideo.loop = true;
+            mainVideo.setAttribute('playsinline', 'true');
+            mainVideo.setAttribute('webkit-playsinline', 'true');
+            mainVideo.controls = false;
 
-            if (isMobile) {
-                // Configure for mobile
-                mainVideo.removeAttribute('autoplay');
-                mainVideo.setAttribute('playsinline', 'true');
-                mainVideo.setAttribute('webkit-playsinline', 'true');
-                mainVideo.muted = true;
-                mainVideo.controls = false;
-                mainVideo.load();
-                setTimeout(() => {
-                    loadingMessage.style.display = 'none';
-                    videoPlayOverlay.style.display = 'flex';
-                }, 1000);
-            } else {
-                // Desktop configuration
+            if (!isMobile) {
+                // Desktop: try autoplay
                 mainVideo.setAttribute('autoplay', 'true');
-                mainVideo.setAttribute('playsinline', 'true');
-                mainVideo.setAttribute('webkit-playsinline', 'true');
-                mainVideo.muted = true;
-                mainVideo.controls = false;
-                mainVideo.load();
-                mainVideo.addEventListener('canplay', function() {
-                    mainVideo.play().then(() => {
-                        loadingMessage.style.display = 'none';
-                        isVideoPlaying = true;
-                    }).catch(error => {
-                        loadingMessage.style.display = 'none';
-                        videoPlayOverlay.style.display = 'flex';
-                    });
-                });
+                updateDebugInfo('Desktop: autoplay enabled');
             }
 
+            // Load the video
+            mainVideo.load();
+
+            // Set up event listeners
+            mainVideo.addEventListener('loadeddata', function() {
+                updateDebugInfo('Video loadeddata event fired');
+                loadingMessage.style.display = 'none';
+                
+                if (isMobile && !isVideoPlaying) {
+                    videoPlayOverlay.style.display = 'flex';
+                    updateDebugInfo('Mobile: showing play overlay');
+                }
+            });
+
+            mainVideo.addEventListener('canplay', function() {
+                updateDebugInfo('Video canplay event fired');
+                
+                if (!isMobile) {
+                    // Desktop: try to play automatically
+                    const playPromise = mainVideo.play();
+                    if (playPromise !== undefined) {
+                        playPromise.then(() => {
+                            updateDebugInfo('Desktop: autoplay successful');
+                            isVideoPlaying = true;
+                        }).catch(error => {
+                            updateDebugInfo(`Desktop: autoplay failed - ${error.message}`);
+                            videoPlayOverlay.style.display = 'flex';
+                        });
+                    }
+                }
+            });
+
+            mainVideo.addEventListener('playing', function() {
+                updateDebugInfo('Video is now playing');
+                isVideoPlaying = true;
+                videoPlayOverlay.style.display = 'none';
+                loadingMessage.style.display = 'none';
+            });
+
+            mainVideo.addEventListener('error', function(e) {
+                const error = mainVideo.error;
+                const errorMessage = error ? `Code: ${error.code}, Message: ${error.message || 'Unknown'}` : 'Unknown error';
+                updateDebugInfo(`Video error: ${errorMessage}`);
+                
+                loadingMessage.textContent = 'Video unavailable - showing background';
+                setTimeout(() => {
+                    loadingMessage.style.display = 'none';
+                    videoPlayOverlay.style.display = 'none';
+                }, 3000);
+            });
+
             videoInitialized = true;
+            updateDebugInfo('Video initialization complete');
         }
 
-        // Handle video play button click with fallback logic
+        // Handle video play button click
         function handleVideoPlay() {
-            console.log('Play button clicked, attempt:', currentVideoAttempt + 1);
+            updateDebugInfo('Play button clicked');
             
             const playPromise = mainVideo.play();
             
             if (playPromise !== undefined) {
                 playPromise.then(() => {
-                    console.log('Video started playing successfully');
+                    updateDebugInfo('Manual play successful');
                     videoPlayOverlay.style.display = 'none';
-                    loadingMessage.style.display = 'none';
                     isVideoPlaying = true;
-                    currentVideoAttempt = 0; // Reset attempt counter
                 }).catch(error => {
-                    console.error('Video play failed:', error);
-                    currentVideoAttempt++;
-                    
-                    // Try fallback strategies
-                    if (currentVideoAttempt === 1) {
-                        console.log('Trying fallback video format...');
-                        tryFallbackVideo();
-                    } else if (currentVideoAttempt === 2) {
-                        console.log('Trying video reload...');
-                        setTimeout(() => {
-                            mainVideo.load();
-                            setTimeout(() => {
-                                mainVideo.play().then(() => {
-                                    console.log('Video started on reload retry');
-                                    videoPlayOverlay.style.display = 'none';
-                                    loadingMessage.style.display = 'none';
-                                    isVideoPlaying = true;
-                                    currentVideoAttempt = 0;
-                                }).catch(retryError => {
-                                    console.error('Video play retry failed:', retryError);
-                                    // Hide overlay anyway to show fallback background
-                                    videoPlayOverlay.style.display = 'none';
-                                    loadingMessage.style.display = 'none';
-                                    currentVideoAttempt = 0;
-                                });
-                            }, 500);
-                        }, 1000);
-                    } else {
-                        // Final fallback - hide overlay and show gradient background
-                        console.log('All video attempts failed, showing fallback background');
+                    updateDebugInfo(`Manual play failed: ${error.message}`);
+                    // Hide overlay anyway to show fallback background
+                    setTimeout(() => {
                         videoPlayOverlay.style.display = 'none';
-                        loadingMessage.style.display = 'none';
-                        currentVideoAttempt = 0;
-                    }
+                    }, 2000);
                 });
-            }
-        }
-
-        // Try fallback video format (switch between WebM and MP4)
-        async function tryFallbackVideo() {
-            console.log('Trying fallback video format');
-            const isMobile = isMobileDevice();
-            
-            if (isMobile) {
-                // If WebM was being used, try MP4 only
-                if (mainVideoSourceWebm.src) {
-                    console.log('Switching from WebM to MP4 only');
-                    mainVideoSourceWebm.src = '';
-                    mainVideoSourceMp4.src = mainVideo.getAttribute('data-mobile-src');
-                } else {
-                    // If MP4 was being used, try desktop version as last resort
-                    console.log('Trying desktop video on mobile as fallback');
-                    mainVideoSourceMp4.src = mainVideo.getAttribute('data-desktop-src');
-                }
-                
-                mainVideo.load();
-                
-                // Auto-retry play after loading
-                setTimeout(() => {
-                    mainVideo.play().then(() => {
-                        console.log('Fallback video started playing');
-                        videoPlayOverlay.style.display = 'none';
-                        loadingMessage.style.display = 'none';
-                        isVideoPlaying = true;
-                        currentVideoAttempt = 0;
-                    }).catch(fallbackError => {
-                        console.error('Fallback video also failed:', fallbackError);
-                        // Will trigger the retry logic in handleVideoPlay
-                    });
-                }, 1000);
             }
         }
 
@@ -660,24 +655,6 @@
                 handleVideoPlay();
             });
         }
-
-        // Video error handling
-        mainVideo.addEventListener('error', function(e) {
-            console.error('Video error:', e);
-            loadingMessage.textContent = 'Video unavailable - showing background';
-            setTimeout(() => {
-                loadingMessage.style.display = 'none';
-                videoPlayOverlay.style.display = 'none';
-            }, 2000);
-        });
-
-        // Video loaded event
-        mainVideo.addEventListener('loadeddata', function() {
-            console.log('Video data loaded');
-            if (isMobileDevice() && !isVideoPlaying) {
-                videoPlayOverlay.style.display = 'flex';
-            }
-        });
 
         // Hamburger menu functionality
         const hamburgerBtn = document.getElementById('hamburger-btn');
@@ -712,7 +689,7 @@
                 
                 // Start about video
                 aboutVideo.play().catch(error => {
-                    console.log('About video autoplay failed:', error);
+                    updateDebugInfo(`About video play failed: ${error.message}`);
                 });
             });
         }
@@ -735,7 +712,7 @@
 
         // Initialize everything when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM loaded, initializing video...');
+            updateDebugInfo('DOM loaded, initializing...');
             setTimeout(initializeVideo, 500);
         });
 
@@ -743,6 +720,7 @@
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', initializeVideo);
         } else {
+            updateDebugInfo('DOM already loaded, initializing immediately');
             setTimeout(initializeVideo, 500);
         }
     </script>
