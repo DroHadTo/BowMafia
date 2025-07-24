@@ -374,8 +374,7 @@
     
     <!-- Mobile video play overlay -->
     <div class="video-play-overlay" id="video-play-overlay">
-        <div class="video-play-instruction">Tap to start background video</div>
-        <button class="video-play-btn" id="video-play-btn">Play Video</button>
+        <div class="video-play-instruction" id="video-play-instruction">Loading background video...</div>
     </div>
     
     <!-- Hamburger Menu -->
@@ -578,10 +577,16 @@
             mainVideo.addEventListener('loadeddata', function() {
                 updateDebugInfo('Video loadeddata event fired');
                 loadingMessage.style.display = 'none';
-                
                 if (isMobile && !isVideoPlaying) {
-                    videoPlayOverlay.style.display = 'flex';
-                    updateDebugInfo('Mobile: showing play overlay');
+                    // Try to play automatically
+                    mainVideo.play().then(() => {
+                        updateDebugInfo('Mobile: autoplay successful');
+                        isVideoPlaying = true;
+                        videoPlayOverlay.style.display = 'none';
+                    }).catch(error => {
+                        updateDebugInfo('Mobile: autoplay failed, hiding overlay');
+                        videoPlayOverlay.style.display = 'none';
+                    });
                 }
             });
 
@@ -627,34 +632,7 @@
         }
 
         // Handle video play button click
-        function handleVideoPlay() {
-            updateDebugInfo('Play button clicked');
-            
-            const playPromise = mainVideo.play();
-            
-            if (playPromise !== undefined) {
-                playPromise.then(() => {
-                    updateDebugInfo('Manual play successful');
-                    videoPlayOverlay.style.display = 'none';
-                    isVideoPlaying = true;
-                }).catch(error => {
-                    updateDebugInfo(`Manual play failed: ${error.message}`);
-                    // Hide overlay anyway to show fallback background
-                    setTimeout(() => {
-                        videoPlayOverlay.style.display = 'none';
-                    }, 2000);
-                });
-            }
-        }
-
-        // Event listeners
-        if (videoPlayBtn) {
-            videoPlayBtn.addEventListener('click', handleVideoPlay);
-            videoPlayBtn.addEventListener('touchend', function(e) {
-                e.preventDefault();
-                handleVideoPlay();
-            });
-        }
+        // Play button logic removed; video will autoplay on mobile if possible
 
         // Hamburger menu functionality
         const hamburgerBtn = document.getElementById('hamburger-btn');
