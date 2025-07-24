@@ -26,30 +26,83 @@ function loadVideoSources() {
     // Clear existing sources
     video.innerHTML = '';
     
-    // Add appropriate sources based on screen size
+    // Add appropriate sources based on screen size and prioritized fallback
     const isMobile = window.innerWidth < 768;
-    
-    if (isMobile) {
-        // Mobile sources
-        video.innerHTML = `
-            <source src="assets/videos/bowmafia-videomobile.webm" type="video/webm">
-            <source src="assets/videos/bowmafia-videomobile.mp4" type="video/mp4">
-        `;
-    } else {
-        // Desktop sources
-        video.innerHTML = `
-            <source src="assets/videos/bowmafia-video.webm" type="video/webm">
-            <source src="assets/videos/bowmafia-video.mp4" type="video/mp4">
-        `;
+    async function setSources() {
+        let sources = '';
+        if (isMobile) {
+            // 1. Try bmdmobile.mp4
+            const bmdMobileSrc = 'assets/videos/bmdmobile.mp4';
+            const bmdExists = await checkVideoExists(bmdMobileSrc);
+            if (bmdExists) {
+                sources = `<source src="${bmdMobileSrc}" type="video/mp4">`;
+            } else {
+                // 2. Try bowmafiadaomobile.webm
+                const mobileWebmSrc = 'assets/videos/bowmafiadaomobile.webm';
+                const webmSupported = supportsWebM();
+                if (webmSupported) {
+                    const webmExists = await checkVideoExists(mobileWebmSrc);
+                    if (webmExists) {
+                        sources = `<source src="${mobileWebmSrc}" type="video/webm">`;
+                    }
+                }
+                // 3. Try bowmafiadaomobile.mp4
+                if (!sources) {
+                    const mobileMp4Src = 'assets/videos/bowmafiadaomobile.mp4';
+                    const mp4Exists = await checkVideoExists(mobileMp4Src);
+                    if (mp4Exists) {
+                        sources = `<source src="${mobileMp4Src}" type="video/mp4">`;
+                    }
+                }
+            }
+        }
+        // 4. Desktop fallback
+        if (!sources) {
+            sources = `
+                <source src="assets/videos/bowmafia-video.webm" type="video/webm">
+                <source src="assets/videos/bowmafia-video.mp4" type="video/mp4">
+            `;
+        }
+        video.innerHTML = sources;
+        video.load();
+        video.play().catch(e => {
+            console.log('Video autoplay prevented by browser');
+            showPlayOverlay();
+        });
     }
-    
-    // Load the video
-    video.load();
-    
-    // Play if possible
-    video.play().catch(e => {
-        console.log('Video autoplay prevented by browser');
-    });
+    // Helper: check if video file exists
+    async function checkVideoExists(url) {
+        try {
+            const res = await fetch(url, { method: 'HEAD' });
+            return res.ok;
+        } catch {
+            return false;
+        }
+    }
+    // Helper: check WebM support
+    function supportsWebM() {
+        const v = document.createElement('video');
+        return v.canPlayType('video/webm') !== '';
+    }
+    // Overlay logic
+    function showPlayOverlay() {
+        const overlay = document.getElementById('video-play-overlay');
+        if (overlay && overlay.style.display !== 'flex') {
+            overlay.style.display = 'flex';
+        }
+    }
+    setSources();
+    // Overlay play button event
+    const playBtn = document.getElementById('video-play-btn');
+    if (playBtn) {
+        playBtn.onclick = function() {
+            video.muted = true;
+            video.play().then(() => {
+                const overlay = document.getElementById('video-play-overlay');
+                if (overlay) overlay.style.display = 'none';
+            });
+        };
+    }
 }
 
 // Hamburger menu - simple toggle

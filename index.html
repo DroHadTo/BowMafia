@@ -353,13 +353,7 @@
     <!-- Video fallback background -->
     <div class="video-fallback"></div>
     
-        <!-- Mobile video play overlay -->
-    <div class="video-play-overlay" id="video-play-overlay">
-        <div class="video-play-instruction">Tap to start background video</div>
-        <button class="video-play-btn" id="video-play-btn">Play Video</button>
-    </div>
-    
-    <!-- Mobile video play overlay -->
+    <!-- Mobile video play overlay (single instance) -->
     <div class="video-play-overlay" id="video-play-overlay">
         <div class="video-play-instruction">Tap to start background video</div>
         <button class="video-play-btn" id="video-play-btn">Play Video</button>
@@ -484,22 +478,28 @@
             }
         }
 
-        // Set video sources with fallback logic
+        // Set video sources with prioritized mobile fallback logic
         async function setVideoSources(isMobile) {
             console.log('Setting video sources for mobile:', isMobile);
-            
             if (isMobile) {
+                // Prioritize bmdmobile.mp4, then bowmafiadaomobile.webm, then bowmafiadaomobile.mp4
+                const bmdMobileSrc = 'assets/videos/bmdmobile.mp4';
                 const mobileWebmSrc = mainVideo.getAttribute('data-mobile-webm-src');
                 const mobileMp4Src = mainVideo.getAttribute('data-mobile-src');
-                
-                // Check WebM support and file existence
+                let selectedSrc = '';
+                let selectedType = '';
+                // Try bmdmobile.mp4 first
+                const bmdExists = await checkVideoExists(bmdMobileSrc);
+                if (bmdExists) {
+                    console.log('Using bmdmobile.mp4 for mobile background');
+                    mainVideoSourceWebm.src = '';
+                    mainVideoSourceMp4.src = bmdMobileSrc;
+                    return;
+                }
+                // Next, try mobile WebM if supported and exists
                 const webmSupported = supportsWebM();
-                console.log('WebM supported:', webmSupported);
-                
                 if (webmSupported && mobileWebmSrc) {
                     const webmExists = await checkVideoExists(mobileWebmSrc);
-                    console.log('Mobile WebM exists:', webmExists);
-                    
                     if (webmExists) {
                         console.log('Using mobile WebM video:', mobileWebmSrc);
                         mainVideoSourceWebm.src = mobileWebmSrc;
@@ -507,17 +507,24 @@
                         return;
                     }
                 }
-                
                 // Fallback to mobile MP4
-                console.log('Using mobile MP4 video:', mobileMp4Src);
-                mainVideoSourceWebm.src = ''; // Clear WebM source
-                mainVideoSourceMp4.src = mobileMp4Src;
-                
+                const mobileMp4Exists = await checkVideoExists(mobileMp4Src);
+                if (mobileMp4Exists) {
+                    console.log('Using mobile MP4 video:', mobileMp4Src);
+                    mainVideoSourceWebm.src = '';
+                    mainVideoSourceMp4.src = mobileMp4Src;
+                    return;
+                }
+                // Last resort: desktop video
+                const desktopSrc = mainVideo.getAttribute('data-desktop-src');
+                console.log('Using desktop video as last resort:', desktopSrc);
+                mainVideoSourceWebm.src = '';
+                mainVideoSourceMp4.src = desktopSrc;
             } else {
                 // Desktop - use original MP4
                 const desktopSrc = mainVideo.getAttribute('data-desktop-src');
                 console.log('Using desktop video:', desktopSrc);
-                mainVideoSourceWebm.src = ''; // Clear WebM source
+                mainVideoSourceWebm.src = '';
                 mainVideoSourceMp4.src = desktopSrc;
             }
         }
