@@ -176,6 +176,15 @@
             top: -18px !important;
             width: 70px !important;
         }
+    /* iOS only: move image right and slightly down */
+    @media only screen and (max-width: 768px) and (pointer: coarse) and (hover: none) {
+        /* iOS detection via device pixel ratio and webkit appearance */
+        .floating-above-i {
+            left: 32px !important;
+            top: 8px !important;
+            width: 70px !important;
+        }
+    }
         }
         
         @media (max-width: 480px) {
