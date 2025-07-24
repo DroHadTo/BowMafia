@@ -264,7 +264,7 @@ h1 {
 
 .button-container {
     position: absolute;
-    top: 65%;
+    top: 70%; /* Lowered from 65% to 70% */
     left: 50%;
     transform: translate(-50%, -50%);
     display: flex;
@@ -306,7 +306,7 @@ h1 {
 /* Left button - light purple */
 .left-button {
     background: #b19cd9;
-    color: white;
+    color: #fff;
 }
 
 .left-button:hover {
@@ -317,8 +317,8 @@ h1 {
 
 /* Right button - off white with light purple text */
 .right-button {
-    background: #f8f8f8;
-    color: #b19cd9;
+    background: #fff;
+    color: #222;
 }
 
 .right-button:hover {

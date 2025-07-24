@@ -8,23 +8,278 @@
     <meta name="robots" content="index, follow">
     <title>BowMafia - BowDAO</title>
     
-    <!-- Critical CSS first -->
-    <link rel="stylesheet" href="css/styles.css">
-    
     <!-- DNS prefetch for external resources -->
     <link rel="dns-prefetch" href="//fonts.googleapis.com">
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="assets/images/BowMafia.png">
     
     <!-- Mobile optimization -->
     <meta name="theme-color" content="#b19cd9">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            overflow-x: hidden;
+            background-color: #1a1a1a;
+        }
+        
+        .fullscreen-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            z-index: -1;
+            background-color: #1a1a1a;
+        }
+        
+        .hero {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .video-fallback {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            z-index: -2;
+        }
+        
+        .button-container {
+            display: flex;
+            gap: 2rem;
+            z-index: 10;
+            position: relative;
+            top: 120px; /* Lower the buttons vertically */
+        }
+        
+        .left-button, .right-button {
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .left-button {
+            background: rgba(177, 156, 217, 0.9); /* Purple background */
+            color: #fff; /* White text */
+        }
+        
+        .right-button {
+            background: rgba(255, 255, 255, 0.9); /* White background */
+            color: #333; /* Dark text */
+        }
+        
+        .left-button:hover, .right-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .hamburger-menu {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 1000;
+        }
+        
+        .hamburger-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            padding: 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        
+        .hamburger-line {
+            width: 25px;
+            height: 3px;
+            background: #333;
+            transition: 0.3s;
+        }
+        
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            z-index: 999;
+        }
+        
+        .menu-overlay.active {
+            display: flex;
+        }
+        
+        .menu-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            gap: 2rem;
+        }
+        
+        .menu-item {
+            color: white;
+            text-decoration: none;
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+        }
+        
+        .menu-item:hover {
+            color: #b19cd9;
+        }
+        
+        .about-section {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1000;
+            background: rgba(34, 34, 34, 0.95);
+            color: white;
+            overflow-y: auto;
+        }
+        
+        .about-content {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .about-content h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1.2rem;
+            letter-spacing: 1px;
+        }
+        
+        .about-content div {
+            max-width: 700px;
+            width: 90vw;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+        
+        .about-content p {
+            margin-bottom: 1rem;
+        }
+        
+        .about-content h3 {
+            margin-top: 2rem;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+        
+        #about-close {
+            margin-top: 2.5rem;
+            padding: 0.7em 2em;
+            font-size: 1.2em;
+            background: #fff;
+            color: #222;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        #about-close:hover {
+            background: #f0f0f0;
+        }
+        
+        .footer {
+            position: fixed;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.8);
+            text-align: center;
+            z-index: 10;
+            font-size: 0.9rem;
+        }
+        
+        .footer a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            color: white;
+        }
+        
+        .loading-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 1.2rem;
+            z-index: 5;
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .button-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .left-button, .right-button {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+            }
+            
+            .about-content h1 {
+                font-size: 2rem;
+            }
+            
+            .about-content div {
+                padding: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
+    <!-- Video fallback background -->
+    <div class="video-fallback"></div>
+    
+    <!-- Loading message -->
+    <div class="loading-message" id="loading-message">Loading video...</div>
+    
     <!-- Hamburger Menu -->
     <div class="hamburger-menu">
         <button class="hamburger-btn" id="hamburger-btn">
@@ -41,33 +296,36 @@
         </nav>
     </div>
 
-    <main style="margin-left:-2px;">
+    <main>
         <section id="home" class="hero">
-            <video class="fullscreen-video" autoplay muted loop playsinline preload="auto">
+            <!-- Main background video -->
+            <video class="fullscreen-video" id="main-video" muted loop playsinline preload="metadata">
                 <source src="assets/videos/bowmafiadao.mp4" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
+            
             <div class="button-container">
                 <button class="left-button" onclick="window.location.href='dao.html'">Join the DAO</button>
                 <button class="right-button" onclick="window.location.href='shop.html'">Silk & Bows</button>
             </div>
         </section>
-        <!-- About Us Section (hidden by default, shown when About Us is clicked) -->
-        <section id="about" class="about-section" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:1000;">
-            <video class="fullscreen-video" autoplay muted loop playsinline preload="none" style="z-index:-1; position:absolute; top:0; left:0; width:100vw; height:100vh; object-fit:cover;">
-                <!-- Sources will be added by JavaScript -->
+        
+        <!-- About Us Section -->
+        <section id="about" class="about-section">
+            <video class="fullscreen-video" id="about-video" muted loop playsinline preload="none">
+                <source src="assets/videos/bowmafiadao.mp4" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
-            <div class="about-content" style="position:absolute; top:0; left:0; width:100vw; height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; background:rgba(34,34,34,0.92); color:#fff; border:none; box-shadow:none;">
-                <h1 style="font-size:2.8rem; margin-bottom:1.2rem; text-align:center; letter-spacing:1px;">About Us</h1>
-                <div style="max-width:700px; width:90vw; padding:2rem; border-radius:0; box-shadow:none; background:none; border:none;">
+            <div class="about-content">
+                <h1>About Us</h1>
+                <div>
                     <p>Welcome to the Bow Mafia, home of the Bow DAO — a decentralized community built around passion, purpose, and the power of the Doginal Dogs.</p>
-                    <p>We’re not just another DAO. We're a movement focused on elevating one of the most iconic traits in the Doginals universe: the Bow Dog. These rare and expressive collectibles are at the heart of our mission — and we’re here to raise their floor, build meaningful utility, and unlock real value for holders and contributors alike.</p>
-                    <p>But you don’t need to own a Bow Dog to be part of the family. The Bow Mafia is open to anyone who wants to support the Doginal ecosystem, contribute ideas, and help build something bigger than themselves. Whether you're an artist, developer, collector, or simply a DOGE enthusiast — there's a place for you here.</p>
-                    <h3 style="margin-top:2rem; font-size:1.3rem;">Powered by Community</h3>
+                    <p>We're not just another DAO. We're a movement focused on elevating one of the most iconic traits in the Doginals universe: the Bow Dog. These rare and expressive collectibles are at the heart of our mission — and we're here to raise their floor, build meaningful utility, and unlock real value for holders and contributors alike.</p>
+                    <p>But you don't need to own a Bow Dog to be part of the family. The Bow Mafia is open to anyone who wants to support the Doginal ecosystem, contribute ideas, and help build something bigger than themselves. Whether you're an artist, developer, collector, or simply a DOGE enthusiast — there's a place for you here.</p>
+                    <h3>Powered by Community</h3>
                     <p>Bow DAO is 100% community-led. That means decisions are made by the members — not a centralized team. Got an idea? Share it. Want to launch a new project? Pitch it. Proposals are discussed openly in our DAO channels, and votes happen transparently. While Bow Dog holders may hold more sway in future decisions, every voice matters.</p>
                 </div>
-                <button id="about-close" style="margin-top:2.5rem; padding:0.7em 2em; font-size:1.2em; background:#fff; color:#222; border:none; border-radius:8px; cursor:pointer; box-shadow:none;">Close</button>
+                <button id="about-close">Close</button>
             </div>
         </section>
     </main>
@@ -77,46 +335,136 @@
         BowMafiaDAO © 2025 | <a href="#terms">Terms & Conditions</a>
     </footer>
 
-    <!-- Load JavaScript -->
-    <script src="js/main.js"></script>
     <script>
-    // Show About Us section and hide others when About Us is clicked
-    document.getElementById('about-link').addEventListener('click', function(e) {
-        e.preventDefault();
-        document.getElementById('home').style.display = 'none';
-        document.getElementById('about').style.display = 'block';
-        document.getElementById('main-footer').style.display = 'none';
-        // Set video sources for About Us section (same as index background)
-        var aboutVideo = document.querySelector('#about .fullscreen-video');
-        if (aboutVideo && aboutVideo.children.length === 0) {
-            var mp4 = document.createElement('source');
-            mp4.src = 'assets/videos/indexbg.mp4';
-            mp4.type = 'video/mp4';
-            aboutVideo.appendChild(mp4);
+        // Video loading and error handling
+        const mainVideo = document.getElementById('main-video');
+        const aboutVideo = document.getElementById('about-video');
+        const loadingMessage = document.getElementById('loading-message');
+        
+        // Show loading message
+        loadingMessage.style.display = 'block';
+        
+        // Function to handle video loading
+        function handleVideoLoad(video) {
+            video.addEventListener('loadeddata', function() {
+                loadingMessage.style.display = 'none';
+                console.log('Video loaded successfully');
+            });
+            
+            video.addEventListener('error', function(e) {
+                console.error('Video failed to load:', e);
+                loadingMessage.textContent = 'Video unavailable';
+                setTimeout(() => {
+                    loadingMessage.style.display = 'none';
+                }, 3000);
+            });
+            
+            video.addEventListener('canplay', function() {
+                video.play().catch(function(error) {
+                    console.log('Autoplay prevented:', error);
+                    // Create a play button if autoplay fails
+                    createPlayButton(video);
+                });
+            });
         }
-    });
-    // Add close button logic to return to home and restore footer
-    document.getElementById('about-close').addEventListener('click', function() {
-        document.getElementById('about').style.display = 'none';
-        document.getElementById('home').style.display = '';
-        document.getElementById('main-footer').style.display = '';
-    });
+        
+        // Create play button for manual video start
+        function createPlayButton(video) {
+            const playBtn = document.createElement('button');
+            playBtn.textContent = 'Play Video';
+            playBtn.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 20px;
+                z-index: 1001;
+                padding: 10px 20px;
+                background: rgba(255,255,255,0.9);
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                font-weight: bold;
+            `;
+            document.body.appendChild(playBtn);
+            
+            playBtn.addEventListener('click', function() {
+                video.play();
+                playBtn.remove();
+            });
+        }
+        
+        // Initialize main video
+        handleVideoLoad(mainVideo);
+        
+        // Hamburger menu functionality
+        const hamburgerBtn = document.getElementById('hamburger-btn');
+        const menuOverlay = document.getElementById('menu-overlay');
+        
+        hamburgerBtn.addEventListener('click', function() {
+            menuOverlay.classList.toggle('active');
+        });
+        
+        // Close menu when clicking on overlay
+        menuOverlay.addEventListener('click', function(e) {
+            if (e.target === menuOverlay) {
+                menuOverlay.classList.remove('active');
+            }
+        });
+        
+        // About Us functionality
+        document.getElementById('about-link').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('home').style.display = 'none';
+            document.getElementById('about').style.display = 'block';
+            document.getElementById('main-footer').style.display = 'none';
+            menuOverlay.classList.remove('active');
+            
+            // Start about video
+            handleVideoLoad(aboutVideo);
+        });
+        
+        // Close about section
+        document.getElementById('about-close').addEventListener('click', function() {
+            document.getElementById('about').style.display = 'none';
+            document.getElementById('home').style.display = '';
+            document.getElementById('main-footer').style.display = '';
+            
+            // Pause about video to save resources
+            aboutVideo.pause();
+        });
+        
+        // Close menu items when clicked
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', function() {
+                menuOverlay.classList.remove('active');
+            });
+        });
+        
+        // Optimize video loading based on connection
+        if ('connection' in navigator) {
+            const connection = navigator.connection;
+            if (connection.effectiveType === 'slow-2g' || connection.effectiveType === '2g') {
+                mainVideo.preload = 'none';
+                aboutVideo.preload = 'none';
+            }
+        }
+        
+        // Check if video file exists
+        function checkVideoExists(url) {
+            return fetch(url, { method: 'HEAD' })
+                .then(response => response.ok)
+                .catch(() => false);
+        }
+        
+        // Check video availability on load
+        checkVideoExists('assets/videos/bowmafiadao.mp4').then(exists => {
+            if (!exists) {
+                console.warn('Video file not found at assets/videos/bowmafiadao.mp4');
+                loadingMessage.textContent = 'Video file not found';
+                setTimeout(() => {
+                    loadingMessage.style.display = 'none';
+                }, 3000);
+            }
+        });
     </script>
-    <style>
-    .fullscreen-video {
-        position: absolute;
-        top: 0; left: 0;
-        width: 100vw;
-        height: 100vh;
-        object-fit: cover;
-        z-index: -1;
-    }
-    .hero {
-        position: relative;
-        width: 100vw;
-        height: 100vh;
-        overflow: hidden;
-    }
-    </style>
 </body>
 </html>
