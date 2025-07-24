@@ -14,6 +14,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Eagle+Lake&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="css/styles.css">
     
@@ -26,26 +27,29 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     
     <style>
-        /* Eagle Lake font for the main title */
-        .dao-content h2 {
-            font-family: "Eagle Lake", serif;
-            font-weight: 400;
+        /* Roboto font for the main title */
+        .roboto-title {
+            font-family: "Roboto", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: 700;
             font-style: normal;
+            font-variation-settings: "wdth" 100;
             font-size: 2.5rem;
             margin-bottom: 1.5rem;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-            letter-spacing: 1px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
         }
         
         /* Mobile responsive for title */
         @media (max-width: 768px) {
-            .dao-content h2 {
+            .roboto-title {
                 font-size: 2rem;
             }
         }
         
         @media (max-width: 480px) {
-            .dao-content h2 {
+            .roboto-title {
                 font-size: 1.6rem;
                 margin-bottom: 1rem;
             }
@@ -285,7 +289,7 @@
         <section id="dao" class="hero">
             <img src="assets/images/dao-background.jpg" alt="BowMafia DAO" class="fullscreen-image" />
             <div class="dao-content">
-                <h2>Join the Mafia</h2>
+                <h2 class="roboto-title">JOIN THE MAFIA</h2>
                 
                 <!-- DAO Pricing Information -->
                 <div class="dao-pricing">
