@@ -41,6 +41,16 @@
             z-index: -1;
             background-color: #1a1a1a;
         }
+
+        /* Mobile-specific video styling */
+        @media (max-width: 768px) {
+            .fullscreen-video {
+                width: 100vw;
+                height: 100vh;
+                object-fit: cover;
+                background: #1a1a1a;
+            }
+        }
         
         .hero {
             position: relative;
@@ -67,6 +77,7 @@
             gap: 2rem;
             z-index: 10;
             position: relative;
+            top: 120px;
         }
         
         .left-button, .right-button {
@@ -82,13 +93,13 @@
         }
         
         .left-button {
-            background: rgba(255, 255, 255, 0.9);
-            color: #333;
+            background: rgba(177, 156, 217, 0.9);
+            color: #fff;
         }
         
         .right-button {
-            background: rgba(177, 156, 217, 0.9);
-            color: white;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
         }
         
         .left-button:hover, .right-button:hover {
@@ -104,7 +115,7 @@
         }
         
         .hamburger-btn {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(177, 156, 217, 0.9);
             border: none;
             padding: 0.5rem;
             border-radius: 4px;
@@ -112,6 +123,12 @@
             display: flex;
             flex-direction: column;
             gap: 3px;
+            box-shadow: 0 4px 12px rgba(177, 156, 217, 0.2);
+            transition: background 0.3s;
+        }
+
+        .hamburger-btn:hover {
+            background: #b19cd9;
         }
         
         .hamburger-line {
@@ -147,14 +164,27 @@
         }
         
         .menu-item {
-            color: white;
+            display: inline-block;
+            background: rgba(177, 156, 217, 0.9);
+            color: #fff;
             text-decoration: none;
-            font-size: 1.5rem;
-            transition: color 0.3s ease;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            padding: 0.8rem 2rem;
+            margin: 0.3rem 0;
+            cursor: pointer;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            box-shadow: 0 2px 8px rgba(177, 156, 217, 0.15);
+            transition: background 0.3s, color 0.3s, box-shadow 0.3s;
         }
         
         .menu-item:hover {
-            color: #b19cd9;
+            background: #9b7bc7;
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(177, 156, 217, 0.25);
         }
         
         .about-section {
@@ -251,6 +281,48 @@
             display: none;
         }
         
+        /* Mobile video play overlay */
+        .video-play-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(34, 34, 34, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1001;
+            flex-direction: column;
+        }
+        
+        .video-play-btn {
+            padding: 1.5rem 3rem;
+            font-size: 1.4rem;
+            border-radius: 12px;
+            background: #b19cd9;
+            color: #fff;
+            border: none;
+            font-weight: bold;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .video-play-btn:hover {
+            background: #9b7bc7;
+            transform: translateY(-2px);
+        }
+        
+        .video-play-instruction {
+            margin-bottom: 2rem;
+            color: white;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+        
         @media (max-width: 768px) {
             .button-container {
                 flex-direction: column;
@@ -269,6 +341,11 @@
             .about-content div {
                 padding: 1rem;
             }
+            
+            .video-play-btn {
+                padding: 1.2rem 2.5rem;
+                font-size: 1.2rem;
+            }
         }
     </style>
 </head>
@@ -279,6 +356,12 @@
     <!-- Loading message -->
     <div class="loading-message" id="loading-message">Loading video...</div>
     
+    <!-- Mobile video play overlay -->
+    <div class="video-play-overlay" id="video-play-overlay">
+        <div class="video-play-instruction">Tap to start background video</div>
+        <button class="video-play-btn" id="video-play-btn">Play Video</button>
+    </div>
+    
     <!-- Hamburger Menu -->
     <div class="hamburger-menu">
         <button class="hamburger-btn" id="hamburger-btn">
@@ -288,9 +371,9 @@
         </button>
         <nav class="menu-overlay" id="menu-overlay">
             <div class="menu-content">
-                <a href="assets.html" class="menu-item">Assets</a>
+                <a href="assets.html" class="menu-item">ASSETS</a>
                 <a href="popouts.html" class="menu-item">BOW X BOB</a>
-                <a href="#about" class="menu-item" id="about-link">About Us</a>
+                <a href="#about" class="menu-item" id="about-link">ABOUT US</a>
             </div>
         </nav>
     </div>
@@ -298,8 +381,17 @@
     <main>
         <section id="home" class="hero">
             <!-- Main background video -->
-            <video class="fullscreen-video" id="main-video" muted loop playsinline preload="metadata">
-                <source src="assets/videos/bowmafiadao.mp4" type="video/mp4">
+            <video 
+                class="fullscreen-video" 
+                id="main-video" 
+                muted 
+                loop 
+                playsinline 
+                webkit-playsinline
+                preload="metadata"
+                data-desktop-src="assets/videos/bowmafiadao.mp4"
+                data-mobile-src="assets/videos/bowmafiadaomobile.mp4">
+                <source id="main-video-source" src="assets/videos/bowmafiadao.mp4" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
             
@@ -335,163 +427,233 @@
     </footer>
 
     <script>
-        // Video loading and error handling
+        // Enhanced mobile detection
+        function isMobileDevice() {
+            const userAgent = navigator.userAgent.toLowerCase();
+            const mobileKeywords = ['android', 'webos', 'iphone', 'ipad', 'ipod', 'blackberry', 'windows phone', 'mobile'];
+            const isMobileUA = mobileKeywords.some(keyword => userAgent.includes(keyword));
+            const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+            const isSmallScreen = window.innerWidth <= 768 || window.innerHeight <= 768;
+            
+            console.log('Mobile detection:', { isMobileUA, isTouchDevice, isSmallScreen });
+            return isMobileUA || (isTouchDevice && isSmallScreen);
+        }
+
+        // iOS specific detection
+        function isIOS() {
+            return /iPad|iPhone|iPod/.test(navigator.userAgent);
+        }
+
+        // Android specific detection
+        function isAndroid() {
+            return /Android/.test(navigator.userAgent);
+        }
+
+        // Get DOM elements
         const mainVideo = document.getElementById('main-video');
+        const mainVideoSource = document.getElementById('main-video-source');
         const aboutVideo = document.getElementById('about-video');
         const loadingMessage = document.getElementById('loading-message');
-        
-        // Show loading message
-        loadingMessage.style.display = 'block';
-        
-        // Function to handle video loading
-        function handleVideoLoad(video) {
-            video.addEventListener('loadeddata', function() {
-                loadingMessage.style.display = 'none';
-                console.log('Video loaded successfully');
-            });
-            
-            video.addEventListener('error', function(e) {
-                console.error('Video failed to load:', e);
-                loadingMessage.textContent = 'Video unavailable';
+        const videoPlayOverlay = document.getElementById('video-play-overlay');
+        const videoPlayBtn = document.getElementById('video-play-btn');
+
+        let videoInitialized = false;
+        let isVideoPlaying = false;
+
+        // Initialize video based on device type
+        function initializeVideo() {
+            console.log('Initializing video...');
+            loadingMessage.style.display = 'block';
+
+            const isMobile = isMobileDevice();
+            console.log('Is mobile device:', isMobile);
+
+            if (isMobile) {
+                // Configure for mobile
+                console.log('Configuring for mobile device');
+                
+                // Remove autoplay completely for mobile
+                mainVideo.removeAttribute('autoplay');
+                
+                // Set mobile-specific attributes
+                mainVideo.setAttribute('playsinline', 'true');
+                mainVideo.setAttribute('webkit-playsinline', 'true');
+                mainVideo.muted = true;
+                mainVideo.controls = false;
+                
+                // Try mobile video first if it exists
+                const mobileVideoSrc = mainVideo.getAttribute('data-mobile-src');
+                if (mobileVideoSrc) {
+                    console.log('Using mobile video source:', mobileVideoSrc);
+                    mainVideoSource.src = mobileVideoSrc;
+                } else {
+                    console.log('No mobile video source, using desktop video');
+                    mainVideoSource.src = mainVideo.getAttribute('data-desktop-src');
+                }
+                
+                // Reload video with new source
+                mainVideo.load();
+                
+                // Show play overlay for mobile
                 setTimeout(() => {
                     loadingMessage.style.display = 'none';
-                }, 3000);
-            });
-            
-            video.addEventListener('canplay', function() {
-                video.play().catch(function(error) {
-                    console.log('Autoplay prevented:', error);
-                    // Create a play button if autoplay fails
-                    createPlayButton(video);
+                    videoPlayOverlay.style.display = 'flex';
+                }, 1000);
+                
+            } else {
+                // Desktop configuration
+                console.log('Configuring for desktop device');
+                mainVideoSource.src = mainVideo.getAttribute('data-desktop-src');
+                mainVideo.setAttribute('autoplay', 'true');
+                mainVideo.load();
+                
+                // Try autoplay for desktop
+                mainVideo.addEventListener('canplay', function() {
+                    console.log('Desktop video can play');
+                    mainVideo.play().then(() => {
+                        console.log('Desktop video started playing');
+                        loadingMessage.style.display = 'none';
+                        isVideoPlaying = true;
+                    }).catch(error => {
+                        console.log('Desktop autoplay failed:', error);
+                        loadingMessage.style.display = 'none';
+                        videoPlayOverlay.style.display = 'flex';
+                    });
                 });
-            });
+            }
+
+            videoInitialized = true;
         }
-        
-        // Create play button for manual video start
-        function createPlayButton(video) {
-            const playBtn = document.createElement('button');
-            playBtn.textContent = 'Play Video';
-            playBtn.style.cssText = `
-                position: fixed;
-                top: 20px;
-                left: 20px;
-                z-index: 1001;
-                padding: 10px 20px;
-                background: rgba(255,255,255,0.9);
-                border: none;
-                border-radius: 5px;
-                cursor: pointer;
-                font-weight: bold;
-            `;
-            document.body.appendChild(playBtn);
+
+        // Handle video play button click
+        function handleVideoPlay() {
+            console.log('Play button clicked');
             
-            playBtn.addEventListener('click', function() {
-                video.play();
-                playBtn.remove();
+            const playPromise = mainVideo.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    console.log('Video started playing successfully');
+                    videoPlayOverlay.style.display = 'none';
+                    loadingMessage.style.display = 'none';
+                    isVideoPlaying = true;
+                }).catch(error => {
+                    console.error('Video play failed:', error);
+                    
+                    // Try fallback strategies
+                    setTimeout(() => {
+                        console.log('Trying video play again...');
+                        mainVideo.load();
+                        setTimeout(() => {
+                            mainVideo.play().then(() => {
+                                console.log('Video started on retry');
+                                videoPlayOverlay.style.display = 'none';
+                                loadingMessage.style.display = 'none';
+                                isVideoPlaying = true;
+                            }).catch(retryError => {
+                                console.error('Video play retry failed:', retryError);
+                                // Hide overlay anyway to show fallback background
+                                videoPlayOverlay.style.display = 'none';
+                                loadingMessage.style.display = 'none';
+                            });
+                        }, 500);
+                    }, 1000);
+                });
+            }
+        }
+
+        // Event listeners
+        if (videoPlayBtn) {
+            videoPlayBtn.addEventListener('click', handleVideoPlay);
+            videoPlayBtn.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                handleVideoPlay();
             });
         }
-        
-        // Initialize main video
-        handleVideoLoad(mainVideo);
-        
+
+        // Video error handling
+        mainVideo.addEventListener('error', function(e) {
+            console.error('Video error:', e);
+            loadingMessage.textContent = 'Video unavailable - showing background';
+            setTimeout(() => {
+                loadingMessage.style.display = 'none';
+                videoPlayOverlay.style.display = 'none';
+            }, 2000);
+        });
+
+        // Video loaded event
+        mainVideo.addEventListener('loadeddata', function() {
+            console.log('Video data loaded');
+            if (isMobileDevice() && !isVideoPlaying) {
+                videoPlayOverlay.style.display = 'flex';
+            }
+        });
+
         // Hamburger menu functionality
         const hamburgerBtn = document.getElementById('hamburger-btn');
         const menuOverlay = document.getElementById('menu-overlay');
         
-        hamburgerBtn.addEventListener('click', function() {
-            menuOverlay.classList.toggle('active');
-        });
-        
-        // Close menu when clicking on overlay
-        menuOverlay.addEventListener('click', function(e) {
-            if (e.target === menuOverlay) {
-                menuOverlay.classList.remove('active');
-            }
-        });
+        if (hamburgerBtn && menuOverlay) {
+            hamburgerBtn.addEventListener('click', function() {
+                menuOverlay.classList.toggle('active');
+            });
+            
+            menuOverlay.addEventListener('click', function(e) {
+                if (e.target === menuOverlay) {
+                    menuOverlay.classList.remove('active');
+                }
+            });
+        }
         
         // About Us functionality
-        document.getElementById('about-link').addEventListener('click', function(e) {
-            e.preventDefault();
-            document.getElementById('home').style.display = 'none';
-            document.getElementById('about').style.display = 'block';
-            document.getElementById('main-footer').style.display = 'none';
-            menuOverlay.classList.remove('active');
-            
-            // Start about video
-            handleVideoLoad(aboutVideo);
-        });
+        const aboutLink = document.getElementById('about-link');
+        const aboutClose = document.getElementById('about-close');
+        const homeSection = document.getElementById('home');
+        const aboutSection = document.getElementById('about');
+        const mainFooter = document.getElementById('main-footer');
         
-        // Close about section
-        document.getElementById('about-close').addEventListener('click', function() {
-            document.getElementById('about').style.display = 'none';
-            document.getElementById('home').style.display = '';
-            document.getElementById('main-footer').style.display = '';
-            
-            // Pause about video to save resources
-            aboutVideo.pause();
-        });
+        if (aboutLink) {
+            aboutLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                homeSection.style.display = 'none';
+                aboutSection.style.display = 'block';
+                mainFooter.style.display = 'none';
+                menuOverlay.classList.remove('active');
+                
+                // Start about video
+                aboutVideo.play().catch(error => {
+                    console.log('About video autoplay failed:', error);
+                });
+            });
+        }
         
-        // Close menu items when clicked
+        if (aboutClose) {
+            aboutClose.addEventListener('click', function() {
+                aboutSection.style.display = 'none';
+                homeSection.style.display = '';
+                mainFooter.style.display = '';
+                aboutVideo.pause();
+            });
+        }
+        
+        // Close menu when menu items are clicked
         document.querySelectorAll('.menu-item').forEach(item => {
             item.addEventListener('click', function() {
                 menuOverlay.classList.remove('active');
             });
         });
-        
-        // Optimize video loading based on connection
-        if ('connection' in navigator) {
-            const connection = navigator.connection;
-            if (connection.effectiveType === 'slow-2g' || connection.effectiveType === '2g') {
-                mainVideo.preload = 'none';
-                aboutVideo.preload = 'none';
-            }
-        }
-        
-        // Check if video file exists
-        function checkVideoExists(url) {
-            return fetch(url, { method: 'HEAD' })
-                .then(response => response.ok)
-                .catch(() => false);
-        }
-        
-        // Enhanced video existence check with mobile fallback
-        checkVideoExists('assets/videos/bowmafiadao.mp4').then(exists => {
-            if (!exists) {
-                console.warn('Video file not found at assets/videos/bowmafiadao.mp4');
-                loadingMessage.textContent = 'Video file not found';
-                setTimeout(() => {
-                    loadingMessage.style.display = 'none';
-                }, 3000);
-            }
+
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing video...');
+            setTimeout(initializeVideo, 500);
         });
-        
-        // Also check mobile video if on mobile device
-        if (isMobileDevice()) {
-            checkVideoExists('assets/videos/bowmafiadaomobile.mp4').then(exists => {
-                if (!exists) {
-                    console.warn('Mobile video not found, using regular video');
-                    // Fallback to regular video
-                    const mainVideoSource = document.getElementById('main-video-source');
-                    if (mainVideoSource) {
-                        mainVideoSource.src = "assets/videos/bowmafiadao.mp4";
-                        mainVideo.load();
-                    }
-                }
-            });
-        }
-        
-        // iOS-specific video handling
-        if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
-            mainVideo.setAttribute('playsinline', true);
-            mainVideo.setAttribute('webkit-playsinline', true);
-            mainVideo.muted = true;
-            
-            // iOS sometimes needs a slight delay
-            setTimeout(() => {
-                if (videoPlayOverlay) {
-                    videoPlayOverlay.style.display = 'flex';
-                }
-            }, 500);
+
+        // Fallback initialization
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeVideo);
+        } else {
+            setTimeout(initializeVideo, 500);
         }
     </script>
 </body>
