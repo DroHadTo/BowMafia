@@ -44,7 +44,7 @@
     <main>
         <section id="home" class="hero">
             <video class="fullscreen-video" autoplay muted loop playsinline preload="none">
-                <source src="assets/videos/bowmafia-video-hd.mp4" type="video/mp4">
+                <source src="assets/videos/bowmafia-video.mp4" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
             <div class="button-container">
@@ -93,7 +93,7 @@
         var aboutVideo = document.querySelector('#about .fullscreen-video');
         if (aboutVideo && aboutVideo.children.length === 0) {
             var mp4 = document.createElement('source');
-            mp4.src = 'assets/videos/bowmafia-video-hd.mp4';
+            mp4.src = 'assets/videos/bowmafia-video.mp4';
             mp4.type = 'video/mp4';
             aboutVideo.appendChild(mp4);
         }
