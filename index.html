@@ -44,7 +44,7 @@
     <main style="margin-left:-2px;">
         <section id="home" class="hero">
             <video class="fullscreen-video" autoplay muted loop playsinline preload="none">
-                <source src="assets/videos/INDEXBG.mp4" type="video/mp4">
+                <source src="assets/videos/indexbg.mp4" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
             <div class="button-container">
@@ -76,12 +76,9 @@
     <footer class="footer" id="main-footer">
         BowMafiaDAO © 2025 | <a href="#terms">Terms & Conditions</a>
     </footer>
-    
+
     <!-- Load JavaScript -->
     <script src="js/main.js"></script>
-    <script>
-    // (Removed Our Members button logic)
-    </script>
     <script>
     // Show About Us section and hide others when About Us is clicked
     document.getElementById('about-link').addEventListener('click', function(e) {
@@ -93,7 +90,7 @@
         var aboutVideo = document.querySelector('#about .fullscreen-video');
         if (aboutVideo && aboutVideo.children.length === 0) {
             var mp4 = document.createElement('source');
-            mp4.src = 'assets/videos/INDEXBG.mp4';
+            mp4.src = 'assets/videos/indexbg.mp4';
             mp4.type = 'video/mp4';
             aboutVideo.appendChild(mp4);
         }
