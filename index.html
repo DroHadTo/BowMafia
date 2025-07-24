@@ -386,9 +386,10 @@
                 playsinline 
                 webkit-playsinline
                 preload="metadata">
-                <!-- WebM first for browsers that support it -->
+                <!-- Mobile browsers: WebM first, then MP4 fallback -->
                 <source src="assets/videos/bowmafiadaomobile.webm" type="video/webm" media="(max-width: 768px)">
                 <source src="assets/videos/bowmafiadaomobile.mp4" type="video/mp4" media="(max-width: 768px)">
+                <!-- Desktop browsers: MP4 -->
                 <source src="assets/videos/bowmafiadao.mp4" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
@@ -466,6 +467,31 @@
             mainVideo.setAttribute('playsinline', 'true');
             mainVideo.setAttribute('webkit-playsinline', 'true');
             mainVideo.controls = false;
+
+            // Remove all sources
+            while (mainVideo.firstChild) {
+                mainVideo.removeChild(mainVideo.firstChild);
+            }
+
+            // Detect mobile
+            if (isMobileDevice()) {
+                // Prefer webm, fallback to mp4
+                var webm = document.createElement('source');
+                webm.src = 'assets/videos/bowmafiadaomobile.webm';
+                webm.type = 'video/webm';
+                mainVideo.appendChild(webm);
+
+                var mp4 = document.createElement('source');
+                mp4.src = 'assets/videos/bowmafiadaomobile.mp4';
+                mp4.type = 'video/mp4';
+                mainVideo.appendChild(mp4);
+            } else {
+                // Desktop: use main mp4
+                var mp4 = document.createElement('source');
+                mp4.src = 'assets/videos/bowmafiadao.mp4';
+                mp4.type = 'video/mp4';
+                mainVideo.appendChild(mp4);
+            }
 
             // Try to autoplay after load
             mainVideo.load();
