@@ -41,15 +41,6 @@
             z-index: -1;
             background-color: #1a1a1a;
         }
-
-        @media (max-width: 768px) {
-            .fullscreen-video {
-                width: 100vw;
-                height: 100vh;
-                object-fit: contain;
-                background: #1a1a1a;
-            }
-        }
         
         .hero {
             position: relative;
@@ -76,7 +67,6 @@
             gap: 2rem;
             z-index: 10;
             position: relative;
-            top: 120px; /* Lower the buttons vertically */
         }
         
         .left-button, .right-button {
@@ -92,13 +82,13 @@
         }
         
         .left-button {
-            background: rgba(177, 156, 217, 0.9); /* Purple background */
-            color: #fff; /* White text */
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
         }
         
         .right-button {
-            background: rgba(255, 255, 255, 0.9); /* White background */
-            color: #333; /* Dark text */
+            background: rgba(177, 156, 217, 0.9);
+            color: white;
         }
         
         .left-button:hover, .right-button:hover {
@@ -114,7 +104,7 @@
         }
         
         .hamburger-btn {
-            background: rgba(177, 156, 217, 0.9); /* Purple background */
+            background: rgba(255, 255, 255, 0.9);
             border: none;
             padding: 0.5rem;
             border-radius: 4px;
@@ -122,13 +112,8 @@
             display: flex;
             flex-direction: column;
             gap: 3px;
-            box-shadow: 0 4px 12px rgba(177, 156, 217, 0.2);
-            transition: background 0.3s;
         }
-
-        .hamburger-btn:hover {
-            background: #b19cd9;
-        }
+        
         .hamburger-line {
             width: 25px;
             height: 3px;
@@ -162,27 +147,14 @@
         }
         
         .menu-item {
-            display: inline-block;
-            background: rgba(177, 156, 217, 0.9); /* Purple background */
-            color: #fff;
+            color: white;
             text-decoration: none;
-            font-size: 1.1rem;
-            font-weight: bold;
-            border: none;
-            border-radius: 8px;
-            padding: 0.8rem 2rem;
-            margin: 0.3rem 0;
-            cursor: pointer;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            box-shadow: 0 2px 8px rgba(177, 156, 217, 0.15);
-            transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
         }
         
         .menu-item:hover {
-            background: #9b7bc7;
-            color: #fff;
-            box-shadow: 0 4px 16px rgba(177, 156, 217, 0.25);
+            color: #b19cd9;
         }
         
         .about-section {
@@ -316,9 +288,9 @@
         </button>
         <nav class="menu-overlay" id="menu-overlay">
             <div class="menu-content">
-                <a href="assets.html" class="menu-item">ASSETS</a>
+                <a href="assets.html" class="menu-item">Assets</a>
                 <a href="popouts.html" class="menu-item">BOW X BOB</a>
-                <a href="#about" class="menu-item" id="about-link">ABOUT US</a>
+                <a href="#about" class="menu-item" id="about-link">About Us</a>
             </div>
         </nav>
     </div>
@@ -326,14 +298,11 @@
     <main>
         <section id="home" class="hero">
             <!-- Main background video -->
-            <video class="fullscreen-video" id="main-video" muted autoplay playsinline loop preload="metadata">
-                <source id="main-video-source" src="assets/videos/bowmafiadao.mp4" type="video/mp4">
+            <video class="fullscreen-video" id="main-video" muted loop playsinline preload="metadata">
+                <source src="assets/videos/bowmafiadao.mp4" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
-            <!-- Tap-to-play overlay for mobile browsers -->
-            <div id="video-play-overlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(34,34,34,0.7); z-index:1001; align-items:center; justify-content:center;">
-                <button id="video-play-btn" style="padding:1.2em 2.5em; font-size:1.3em; border-radius:10px; background:#b19cd9; color:#fff; border:none; font-weight:bold; box-shadow:0 2px 8px rgba(0,0,0,0.2); cursor:pointer;">Tap to Play</button>
-            </div>
+            
             <div class="button-container">
                 <button class="left-button" onclick="window.location.href='dao.html'">Join the DAO</button>
                 <button class="right-button" onclick="window.location.href='shop.html'">Silk & Bows</button>
@@ -370,34 +339,17 @@
         const mainVideo = document.getElementById('main-video');
         const aboutVideo = document.getElementById('about-video');
         const loadingMessage = document.getElementById('loading-message');
-        const videoPlayOverlay = document.getElementById('video-play-overlay');
-        const videoPlayBtn = document.getElementById('video-play-btn');
-
+        
         // Show loading message
         loadingMessage.style.display = 'block';
-
-        // Mobile video autoplay fix
-        function isMobileBrowser() {
-            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        }
-        // Use already-declared mainVideoSource
-        if (isMobileBrowser() && mainVideoSource) {
-            mainVideoSource.src = "assets/videos/bowmafiadaomobile.mp4";
-            mainVideo.removeAttribute('autoplay');
-            mainVideo.load();
-            // Show tap-to-play overlay immediately
-            if (videoPlayOverlay) {
-                videoPlayOverlay.style.display = 'flex';
-            }
-        }
-
+        
         // Function to handle video loading
         function handleVideoLoad(video) {
             video.addEventListener('loadeddata', function() {
                 loadingMessage.style.display = 'none';
                 console.log('Video loaded successfully');
             });
-
+            
             video.addEventListener('error', function(e) {
                 console.error('Video failed to load:', e);
                 loadingMessage.textContent = 'Video unavailable';
@@ -405,28 +357,41 @@
                     loadingMessage.style.display = 'none';
                 }, 3000);
             });
-
+            
             video.addEventListener('canplay', function() {
                 video.play().catch(function(error) {
                     console.log('Autoplay prevented:', error);
-                    // Show tap-to-play overlay for mobile browsers
-                    if (video === mainVideo && videoPlayOverlay) {
-                        videoPlayOverlay.style.display = 'flex';
-                    }
+                    // Create a play button if autoplay fails
+                    createPlayButton(video);
                 });
             });
         }
-
-        // Tap-to-play overlay for mobile browsers
-        if (videoPlayBtn && mainVideo) {
-            videoPlayBtn.addEventListener('click', function() {
-                mainVideo.play();
-                videoPlayOverlay.style.display = 'none';
+        
+        // Create play button for manual video start
+        function createPlayButton(video) {
+            const playBtn = document.createElement('button');
+            playBtn.textContent = 'Play Video';
+            playBtn.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 20px;
+                z-index: 1001;
+                padding: 10px 20px;
+                background: rgba(255,255,255,0.9);
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                font-weight: bold;
+            `;
+            document.body.appendChild(playBtn);
+            
+            playBtn.addEventListener('click', function() {
+                video.play();
+                playBtn.remove();
             });
         }
-
+        
         // Initialize main video
-        // ...existing code...
         handleVideoLoad(mainVideo);
         
         // Hamburger menu functionality
@@ -489,7 +454,7 @@
                 .catch(() => false);
         }
         
-        // Check video availability on load
+        // Enhanced video existence check with mobile fallback
         checkVideoExists('assets/videos/bowmafiadao.mp4').then(exists => {
             if (!exists) {
                 console.warn('Video file not found at assets/videos/bowmafiadao.mp4');
@@ -499,6 +464,35 @@
                 }, 3000);
             }
         });
+        
+        // Also check mobile video if on mobile device
+        if (isMobileDevice()) {
+            checkVideoExists('assets/videos/bowmafiadaomobile.mp4').then(exists => {
+                if (!exists) {
+                    console.warn('Mobile video not found, using regular video');
+                    // Fallback to regular video
+                    const mainVideoSource = document.getElementById('main-video-source');
+                    if (mainVideoSource) {
+                        mainVideoSource.src = "assets/videos/bowmafiadao.mp4";
+                        mainVideo.load();
+                    }
+                }
+            });
+        }
+        
+        // iOS-specific video handling
+        if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+            mainVideo.setAttribute('playsinline', true);
+            mainVideo.setAttribute('webkit-playsinline', true);
+            mainVideo.muted = true;
+            
+            // iOS sometimes needs a slight delay
+            setTimeout(() => {
+                if (videoPlayOverlay) {
+                    videoPlayOverlay.style.display = 'flex';
+                }
+            }, 500);
+        }
     </script>
 </body>
 </html>
