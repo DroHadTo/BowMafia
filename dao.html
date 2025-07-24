@@ -27,6 +27,47 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     
     <style>
+        /* Match menu button style to index.html */
+        .hamburger-btn {
+            background: rgba(177, 156, 217, 0.9);
+            border: none;
+            padding: 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            box-shadow: 0 4px 12px rgba(177, 156, 217, 0.2);
+            transition: background 0.3s;
+        }
+
+        .hamburger-btn:hover {
+            background: #b19cd9;
+        }
+
+        .menu-item {
+            display: inline-block;
+            background: rgba(177, 156, 217, 0.9);
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            padding: 0.8rem 2rem;
+            margin: 0.3rem 0;
+            cursor: pointer;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            box-shadow: 0 2px 8px rgba(177, 156, 217, 0.15);
+            transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+        }
+
+        .menu-item:hover {
+            background: #9b7bc7;
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(177, 156, 217, 0.25);
+        }
         /* Roboto font for the main title */
         .roboto-title {
             font-family: "Roboto", sans-serif;
