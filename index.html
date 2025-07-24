@@ -381,15 +381,15 @@
                 class="fullscreen-video" 
                 id="main-video" 
                 muted 
+                autoplay
                 loop 
                 playsinline 
                 webkit-playsinline
-                preload="metadata"
-                data-desktop-src="assets/videos/bowmafiadao.mp4"
-                data-mobile-src-mp4="assets/videos/bowmafiadaomobile.mp4"
-                data-mobile-src-webm="assets/videos/bowmafiadaomobile.webm">
-                <source id="main-video-source-mp4" src="assets/videos/bowmafiadao.mp4" type="video/mp4">
-                <source id="main-video-source-webm" src="assets/videos/bowmafiadaomobile.webm" type="video/webm">
+                preload="metadata">
+                <!-- WebM first for browsers that support it -->
+                <source src="assets/videos/bowmafiadaomobile.webm" type="video/webm" media="(max-width: 768px)">
+                <source src="assets/videos/bowmafiadaomobile.mp4" type="video/mp4" media="(max-width: 768px)">
+                <source src="assets/videos/bowmafiadao.mp4" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
             
@@ -449,8 +449,6 @@
 
         // Get DOM elements
         const mainVideo = document.getElementById('main-video');
-        const mainVideoSourceMp4 = document.getElementById('main-video-source-mp4');
-        const mainVideoSourceWebm = document.getElementById('main-video-source-webm');
         const aboutVideo = document.getElementById('about-video');
         const loadingMessage = document.getElementById('loading-message');
         const videoPlayOverlay = document.getElementById('video-play-overlay');
@@ -463,36 +461,14 @@
             console.log('Initializing video...');
             loadingMessage.style.display = 'block';
 
-            // Always set autoplay and muted for best compatibility
-            mainVideo.setAttribute('autoplay', 'true');
-            mainVideo.setAttribute('muted', 'true');
+            // Always set muted, playsinline, and autoplay for best compatibility
+            mainVideo.muted = true;
             mainVideo.setAttribute('playsinline', 'true');
             mainVideo.setAttribute('webkit-playsinline', 'true');
             mainVideo.controls = false;
 
-            // Select video source for mobile/desktop
-            const isMobile = isMobileDevice();
-            if (isMobile) {
-                // Prefer webm for mobile if supported
-                const mobileMp4 = mainVideo.getAttribute('data-mobile-src-mp4');
-                const mobileWebm = mainVideo.getAttribute('data-mobile-src-webm');
-                // Check if browser supports webm
-                const canPlayWebm = mainVideo.canPlayType('video/webm') !== '';
-                if (canPlayWebm && mobileWebm) {
-                    mainVideoSourceWebm.src = mobileWebm;
-                    mainVideoSourceMp4.src = '';
-                } else if (mobileMp4) {
-                    mainVideoSourceMp4.src = mobileMp4;
-                    mainVideoSourceWebm.src = '';
-                }
-            } else {
-                // Desktop: use MP4
-                mainVideoSourceMp4.src = mainVideo.getAttribute('data-desktop-src');
-                mainVideoSourceWebm.src = '';
-            }
-            mainVideo.load();
-
             // Try to autoplay after load
+            mainVideo.load();
             mainVideo.addEventListener('canplay', function() {
                 mainVideo.play().then(() => {
                     console.log('Video started playing');
