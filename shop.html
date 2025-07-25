@@ -100,14 +100,6 @@
             color: #fff;
             box-shadow: 0 4px 16px rgba(177, 156, 217, 0.25);
         }
-        /* Mobile responsiveness */
-        @media (max-width: 768px) {
-            .hamburger-menu {
-                top: 15px;
-                right: 15px;
-                left: auto;
-            }
-        }
         
         /* Background video styling */
         .background-video {
@@ -160,8 +152,25 @@
             box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
         }
         
-        /* Mobile responsive for back button */
+        /* Desktop positioning for floating image */
+        .floating-above-i {
+            position: absolute;
+            left: 18px;
+            top: -4px;
+            width: 88px;
+            transform: rotate(-18deg);
+            z-index: 2;
+            pointer-events: none;
+        }
+        
+        /* Mobile responsive styles */
         @media (max-width: 768px) {
+            .hamburger-menu {
+                top: 15px;
+                right: 15px;
+                left: auto;
+            }
+            
             .back-button-container {
                 top: 15px;
                 left: 15px;
@@ -171,29 +180,13 @@
                 padding: 6px 12px;
                 font-size: 0.8rem;
             }
-        /* Shift floating-above-i more left and slightly up for all devices */
-        .floating-above-i {
-            left: -2px !important;
-            top: -18px !important;
-            width: 88px !important;
-        }
-        /* Android only: slightly smaller and left */
-        @media only screen and (max-width: 768px) and (pointer: coarse) and (hover: none) {
-            /* Android detection: not iOS, so userAgent check */
+            
+            /* Mobile positioning for floating image - adjust to sit on dot of 'i' */
             .floating-above-i {
-                left: -8px !important;
-                top: -18px !important;
-                width: 80px !important;
+                left: 12px !important;  /* Adjust this value to position over the 'i' dot */
+                top: -8px !important;   /* Adjust this value for vertical positioning */
+                width: 60px !important; /* Smaller size for mobile */
             }
-        }
-        /* iOS only: move image more left */
-        @media only screen and (max-width: 768px) and (pointer: coarse) and (hover: none) and (-webkit-touch-callout: none) {
-            .floating-above-i {
-                left: -16px !important;
-                top: -18px !important;
-                width: 88px !important;
-            }
-        }
         }
         
         @media (max-width: 480px) {
@@ -205,6 +198,13 @@
             .back-button {
                 padding: 5px 10px;
                 font-size: 0.75rem;
+            }
+            
+            /* Fine-tune positioning for very small screens */
+            .floating-above-i {
+                left: 10px !important;
+                top: -6px !important;
+                width: 50px !important;
             }
         }
     </style>
@@ -237,7 +237,7 @@
 
         <div class="handwritten-text" style="position: relative; display: inline-block;">
             <!-- Angled floating-element.png above the dot of the i in Silk -->
-            <img src="assets/images/floating-element.png" alt="Floating Element" class="floating-above-i" style="position: absolute; left: 18px; top: -4px; width: 88px; transform: rotate(-18deg); z-index: 2; pointer-events: none;" />
+            <img src="assets/images/floating-element.png" alt="Floating Element" class="floating-above-i" />
             <h1 class="silk-sicarios" style="color: #f74ea2; -webkit-text-stroke: 2px #000;">Silk & Bows</h1>
             <h2 class="store" style="color: #f74ea2; -webkit-text-stroke: 2px #000;">Store</h2>
             <h3 class="coming" style="color: #f74ea2; -webkit-text-stroke: 2px #000;">Coming</h3>
