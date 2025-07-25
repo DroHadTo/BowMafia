@@ -177,6 +177,15 @@
             top: -18px !important;
             width: 88px !important;
         }
+        /* Android only: slightly smaller and left */
+        @media only screen and (max-width: 768px) and (pointer: coarse) and (hover: none) {
+            /* Android detection: not iOS, so userAgent check */
+            .floating-above-i {
+                left: -8px !important;
+                top: -18px !important;
+                width: 80px !important;
+            }
+        }
         }
         
         @media (max-width: 480px) {
