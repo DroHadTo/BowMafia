@@ -281,46 +281,42 @@
             display: none;
         }
         
-        /* Mobile video play overlay */
-        .video-play-overlay {
+        /* Mobile video tap-to-play overlay */
+        .video-tap-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(34, 34, 34, 0.8);
+            background: rgba(34, 34, 34, 0.3);
             display: none;
             align-items: center;
             justify-content: center;
             z-index: 1001;
             flex-direction: column;
-        }
-        
-        .video-play-btn {
-            padding: 1.5rem 3rem;
-            font-size: 1.4rem;
-            border-radius: 12px;
-            background: #b19cd9;
-            color: #fff;
-            border: none;
-            font-weight: bold;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.3);
             cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
         }
         
-        .video-play-btn:hover {
-            background: #9b7bc7;
-            transform: translateY(-2px);
-        }
-        
-        .video-play-instruction {
-            margin-bottom: 2rem;
+        .video-tap-text {
             color: white;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             text-align: center;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        
+        .video-play-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #333;
         }
         
         @media (max-width: 768px) {
@@ -341,10 +337,59 @@
             .about-content div {
                 padding: 1rem;
             }
+        }
+
+        /* Join Community Button */
+        .join-community-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 100;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            background: none;
+            padding: 0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .join-community-btn:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .join-community-btn:active {
+            transform: translateY(0) scale(1.02);
+        }
+        
+        .join-community-video {
+            width: 150px;
+            height: auto;
+            display: block;
+            border-radius: 8px;
+        }
+        
+        /* Mobile responsive for join community button */
+        @media (max-width: 768px) {
+            .join-community-btn {
+                bottom: 1.5rem;
+                right: 1.5rem;
+            }
             
-            .video-play-btn {
-                padding: 1.2rem 2.5rem;
-                font-size: 1.2rem;
+            .join-community-video {
+                width: 120px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .join-community-btn {
+                bottom: 1rem;
+                right: 1rem;
+            }
+            
+            .join-community-video {
+                width: 100px;
             }
         }
 
@@ -359,6 +404,9 @@
             font-size: 12px;
             z-index: 2000;
             display: none;
+            max-height: 200px;
+            overflow-y: auto;
+            width: 300px;
         }
     </style>
 </head>
@@ -372,9 +420,10 @@
     <!-- Loading message -->
     <div class="loading-message" id="loading-message">Loading video...</div>
     
-    <!-- Mobile video play overlay -->
-    <div class="video-play-overlay" id="video-play-overlay">
-        <div class="video-play-instruction" id="video-play-instruction">Loading background video...</div>
+    <!-- Mobile tap to play overlay -->
+    <div class="video-tap-overlay" id="video-tap-overlay">
+        <div class="video-tap-text">Tap to play video</div>
+        <div class="video-play-icon">▶</div>
     </div>
     
     <!-- Hamburger Menu -->
@@ -411,6 +460,15 @@
                 <button class="left-button" onclick="window.location.href='dao.html'">Join the DAO</button>
                 <button class="right-button" onclick="window.location.href='shop.html'">Silk & Bows</button>
             </div>
+            
+            <!-- Join Community Button -->
+            <button class="join-community-btn" onclick="window.open('https://www.doginaldogs.com/join-the-community', '_blank')">
+                <video class="join-community-video" autoplay muted loop playsinline>
+                    <source src="assets/images/jointhecommunity.mp4" type="video/mp4">
+                    <!-- Fallback image if video fails -->
+                    <img src="assets/images/jointhecommunity.png" alt="Join the Community" style="width: 150px; height: auto; border-radius: 8px;">
+                </video>
+            </button>
         </section>
         
         <!-- About Us Section -->
@@ -454,6 +512,7 @@
                 const debugInfo = document.getElementById('debug-info');
                 const timestamp = new Date().toLocaleTimeString();
                 debugInfo.innerHTML += `<div>${timestamp}: ${message}</div>`;
+                debugInfo.scrollTop = debugInfo.scrollHeight;
             }
             console.log(message);
         }
@@ -464,22 +523,29 @@
             const mobileKeywords = ['android', 'webos', 'iphone', 'ipad', 'ipod', 'blackberry', 'windows phone', 'mobile'];
             const isMobileUA = mobileKeywords.some(keyword => userAgent.includes(keyword));
             const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-            const isSmallScreen = window.innerWidth <= 768 || window.innerHeight <= 768;
+            const isSmallScreen = window.innerWidth <= 768;
             
             const result = isMobileUA || (isTouchDevice && isSmallScreen);
-            updateDebugInfo(`Mobile detection - UA: ${isMobileUA}, Touch: ${isTouchDevice}, Small: ${isSmallScreen}, Result: ${result}`);
+            updateDebugInfo(`Mobile detection - UA: ${isMobileUA}, Touch: ${isTouchDevice}, Small: ${isSmallScreen}, UserAgent: ${navigator.userAgent}, Result: ${result}`);
             return result;
+        }
+
+        function isAndroidDevice() {
+            const userAgent = navigator.userAgent.toLowerCase();
+            const isAndroid = userAgent.includes('android');
+            updateDebugInfo(`Android detection: ${isAndroid}`);
+            return isAndroid;
         }
 
         // Get DOM elements
         const mainVideo = document.getElementById('main-video');
         const aboutVideo = document.getElementById('about-video');
         const loadingMessage = document.getElementById('loading-message');
-        const videoPlayOverlay = document.getElementById('video-play-overlay');
-        const videoPlayBtn = document.getElementById('video-play-btn');
+        const videoTapOverlay = document.getElementById('video-tap-overlay');
 
         let videoInitialized = false;
         let isVideoPlaying = false;
+        let userHasInteracted = false;
 
         // Video file paths
         const videoSources = {
@@ -547,12 +613,50 @@
             return videoSrc;
         }
 
+        // Try to play video
+        async function tryPlayVideo() {
+            if (isVideoPlaying) {
+                updateDebugInfo('Video already playing, skipping');
+                return;
+            }
+
+            try {
+                updateDebugInfo('Attempting to play video...');
+                await mainVideo.play();
+                updateDebugInfo('Video play successful!');
+                isVideoPlaying = true;
+                videoTapOverlay.style.display = 'none';
+                loadingMessage.style.display = 'none';
+            } catch (error) {
+                updateDebugInfo(`Video play failed: ${error.name} - ${error.message}`);
+                
+                if (isMobileDevice() && !userHasInteracted) {
+                    updateDebugInfo('Showing tap overlay for mobile user interaction');
+                    videoTapOverlay.style.display = 'flex';
+                    loadingMessage.style.display = 'none';
+                } else {
+                    updateDebugInfo('Video play failed - hiding loading message');
+                    loadingMessage.style.display = 'none';
+                    videoTapOverlay.style.display = 'none';
+                }
+            }
+        }
+
+        // Handle user interaction
+        function handleUserInteraction() {
+            updateDebugInfo('User interaction detected');
+            userHasInteracted = true;
+            videoTapOverlay.style.display = 'none';
+            tryPlayVideo();
+        }
+
         // Initialize video
         async function initializeVideo() {
             updateDebugInfo('Starting video initialization...');
             loadingMessage.style.display = 'block';
 
             const isMobile = isMobileDevice();
+            const isAndroid = isAndroidDevice();
             
             // Set video source
             const videoSrc = await setVideoSource(isMobile);
@@ -564,55 +668,44 @@
             mainVideo.setAttribute('webkit-playsinline', 'true');
             mainVideo.controls = false;
 
-            if (!isMobile) {
-                // Desktop: try autoplay
+            // For Android, don't set autoplay at all
+            if (!isAndroid) {
                 mainVideo.setAttribute('autoplay', 'true');
-                updateDebugInfo('Desktop: autoplay enabled');
+                updateDebugInfo('Autoplay enabled (not Android)');
+            } else {
+                updateDebugInfo('Autoplay disabled for Android');
             }
-
-            // Load the video
-            mainVideo.load();
 
             // Set up event listeners
             mainVideo.addEventListener('loadeddata', function() {
                 updateDebugInfo('Video loadeddata event fired');
                 loadingMessage.style.display = 'none';
-                if (isMobile && !isVideoPlaying) {
-                    // Try to play automatically
-                    mainVideo.play().then(() => {
-                        updateDebugInfo('Mobile: autoplay successful');
-                        isVideoPlaying = true;
-                        videoPlayOverlay.style.display = 'none';
-                    }).catch(error => {
-                        updateDebugInfo('Mobile: autoplay failed, hiding overlay');
-                        videoPlayOverlay.style.display = 'none';
-                    });
-                }
+                
+                // Try to play after a short delay
+                setTimeout(() => {
+                    tryPlayVideo();
+                }, 100);
             });
 
             mainVideo.addEventListener('canplay', function() {
                 updateDebugInfo('Video canplay event fired');
                 
-                if (!isMobile) {
-                    // Desktop: try to play automatically
-                    const playPromise = mainVideo.play();
-                    if (playPromise !== undefined) {
-                        playPromise.then(() => {
-                            updateDebugInfo('Desktop: autoplay successful');
-                            isVideoPlaying = true;
-                        }).catch(error => {
-                            updateDebugInfo(`Desktop: autoplay failed - ${error.message}`);
-                            videoPlayOverlay.style.display = 'flex';
-                        });
-                    }
-                }
+                // Try to play again
+                setTimeout(() => {
+                    tryPlayVideo();
+                }, 100);
             });
 
             mainVideo.addEventListener('playing', function() {
                 updateDebugInfo('Video is now playing');
                 isVideoPlaying = true;
-                videoPlayOverlay.style.display = 'none';
+                videoTapOverlay.style.display = 'none';
                 loadingMessage.style.display = 'none';
+            });
+
+            mainVideo.addEventListener('pause', function() {
+                updateDebugInfo('Video paused');
+                isVideoPlaying = false;
             });
 
             mainVideo.addEventListener('error', function(e) {
@@ -623,16 +716,35 @@
                 loadingMessage.textContent = 'Video unavailable - showing background';
                 setTimeout(() => {
                     loadingMessage.style.display = 'none';
-                    videoPlayOverlay.style.display = 'none';
+                    videoTapOverlay.style.display = 'none';
                 }, 3000);
             });
+
+            // Load the video
+            mainVideo.load();
 
             videoInitialized = true;
             updateDebugInfo('Video initialization complete');
         }
 
-        // Handle video play button click
-        // Play button logic removed; video will autoplay on mobile if possible
+        // Set up tap overlay handler
+        if (videoTapOverlay) {
+            videoTapOverlay.addEventListener('click', handleUserInteraction);
+            videoTapOverlay.addEventListener('touchstart', handleUserInteraction);
+        }
+
+        // Set up document interaction handlers for fallback
+        document.addEventListener('click', function() {
+            if (!userHasInteracted && !isVideoPlaying) {
+                handleUserInteraction();
+            }
+        }, { once: true });
+
+        document.addEventListener('touchstart', function() {
+            if (!userHasInteracted && !isVideoPlaying) {
+                handleUserInteraction();
+            }
+        }, { once: true });
 
         // Hamburger menu functionality
         const hamburgerBtn = document.getElementById('hamburger-btn');
